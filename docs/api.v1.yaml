@@ -112,7 +112,9 @@ paths:
           description: No Content
       operationId: post-v1-admin-positives
       description: |-
-        - Retrieve the TempIDs for the past n days of the new positive person from the phone number received and write them out to a text file placed in Cloud Storage.
+        - Store the phone number of the new positive person and the test date in Amazon DynamoDB.
+        - Those data are periodically retrieved and processed by AWS Lambda's Scheduled Event.
+        - The Lambda retrieves the TempIDs for the past n days of the positive people from the phone number and write them out to a text file placed in Cloud Storage for Firebase.
           - The TempIDs recorded in this file will be rotated in n days.
       security:
         - Bearer for Admin: []
@@ -127,9 +129,11 @@ paths:
                 testDate:
                   type: string
                   format: date
+                  description: 'MEMO: unnecessary?'
                 onsetDate:
                   type: string
                   format: date
+                  description: 'MEMO: unnecessary?'
               required:
                 - phone
     parameters: []
