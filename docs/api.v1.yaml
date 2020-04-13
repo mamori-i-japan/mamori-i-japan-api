@@ -6,7 +6,9 @@ info:
   contact:
     url: 'https://github.com/codeforjapan/contact-tracing-api'
 servers:
-  - url: 'http://localhost:3000/'
+  - url: 'http://localhost:3100'
+    description: Mock
+  - url: 'http://localhost:3000'
     description: Local
 paths:
   /v1/login:
@@ -146,3 +148,6 @@ components:
     Bearer for Admin:
       type: http
       scheme: bearer
+tags:
+  - name: app
+  - name: admin
