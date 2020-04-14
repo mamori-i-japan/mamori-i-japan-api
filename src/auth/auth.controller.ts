@@ -1,5 +1,4 @@
-import { Controller, Post, Body, Request, UseGuards } from '@nestjs/common'
-import { AuthService } from './auth.service'
+import { Controller, Post, Request, UseGuards } from '@nestjs/common'
 import {
   ApiOperation,
   ApiResponse,
@@ -11,8 +10,6 @@ import { FirebaseNormalUserLoginGuard } from './guards/firebase-normal-user-logi
 
 @Controller('auth')
 export class AuthController {
-  constructor() {}
-
   @ApiOperation({ summary: 'Login endpoint for normal user' })
   @ApiBearerAuth()
   @ApiHeader({

@@ -9,6 +9,7 @@ import { eventContext } from 'aws-serverless-express/middleware'
 import { ConfigService } from '@nestjs/config'
 import * as express from 'express'
 import * as firebaseAdmin from 'firebase-admin'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const serviceAccount = require('../serviceAccountKey.json')
 
 let cachedServer: Server

@@ -3,6 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
 import * as firebaseAdmin from 'firebase-admin'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const serviceAccount = require('../serviceAccountKey.json')
 
 async function bootstrap() {
