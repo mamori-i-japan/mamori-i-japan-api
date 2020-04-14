@@ -1,0 +1,136 @@
+---
+version: 2.1
+
+anchors:
+  filters_dev: &filters_dev
+    branches:
+      only: develop
+
+  filters_stg: &filters_stg
+    branches:
+      only: master
+
+  filters_prd: &filters_prd
+    tags:
+      only:
+        - /^v\d+\.\d+\.\d+$/
+    branches:
+      ignore:
+        - /.*/
+
+orbs:
+  slack: circleci/slack@3.4.2
+
+executors:
+  default:
+    docker:
+      - image: circleci/node:12.16.2
+    working_directory: ~/repo
+
+commands:
+  npm_install:
+    steps:
+      - restore_cache:
+          name: restore cache
+          keys:
+            - dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: install
+          command: npm ci
+      - save_cache:
+          name: save cache
+          key: dependencies-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
+  npm_lint:
+    steps:
+      - run:
+          name: lint
+          command: npm run lint
+
+  npm_test:
+    steps:
+      - run:
+          name: test
+          command: npm run test
+      - run:
+          name: coverage
+          command: npm run test:cov
+      - run:
+          name: e2e test
+          command: npm run test:e2e
+
+  npm_deploy:
+    parameters:
+      environment:
+        type: enum
+        enum:
+          - dev
+          - stg
+          - prd
+    steps:
+      - deploy:
+          name: deploy
+          command: npm run deploy:<< parameters.environment >>
+
+jobs:
+  lint:
+    executor: default
+    steps:
+      - checkout
+      - npm_install
+      - npm_lint
+  test:
+    executor: default
+    steps:
+      - checkout
+      - npm_install
+      - npm_test
+  deploy_dev:
+    executor: default
+    steps:
+      - checkout
+      - npm_install
+      - npm_deploy: { environment: dev }
+      - slack/status
+  deploy_stg:
+    executor: default
+    steps:
+      - checkout
+      - npm_install
+      - npm_deploy: { environment: stg }
+      - slack/status
+  deploy_prd_notification:
+    executor: default
+    steps:
+      - slack/status
+  deploy_prd:
+    executor: default
+    steps:
+      - checkout
+      - npm_install
+      - npm_deploy: { environment: prd }
+      - slack/status
+
+workflows:
+  service:
+    jobs:
+      - lint
+      - test:
+          requires: [lint]
+      - deploy_dev:
+          requires: [test]
+          filters: *filters_dev
+      - deploy_stg:
+          requires: [test]
+          filters: *filters_stg
+      - slack/approval-notification:
+          filters: *filters_prd
+      - approve_deploy:
+          type: approval
+          requires: [slack/approval-notification]
+          filters: *filters_prd
+      - deploy_prd:
+          requires: [approve_deploy]
+          filters: *filters_prd
