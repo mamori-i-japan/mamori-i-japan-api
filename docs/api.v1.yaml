@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: contact-tracing-api
+  version: '1.0'
+  description: contact-tracing-api
+  contact:
+    url: 'https://github.com/codeforjapan/contact-tracing-api'
+servers:
+  - url: 'http://localhost:3100'
+    description: Mock
+  - url: 'http://localhost:3000'
+    description: Local
+paths:
+  /v1/login:
+    post:
+      summary: Authenticate app users
+      tags:
+        - app
+      operationId: post-v1-login
+      description: |-
+        - Receives `ACCESS_TOKEN_DEFAULT`.
+        - Validates / Verifies it.
+        - Validates if `secret_random_token (generated on mobile)` matches existing entry in `user` Firestore entry.
+        - Adds custom claims:
+          - `{ isNormalUser: true }`
+      responses:
+        '204':
+          description: No Content
+    parameters: []
+  /v1/users/me/temp_ids:
+    get:
+      summary: "Find users' own TempIDs"
+      tags:
+        - app
+      operationId: get-v1-users-me-temp_ids
+      security:
+        - Bearer for APP: []
+      description: |
+        - This time-limited TempIDs is used to increase anonymity when devices communicate with each other in BLE.
+        - Considering the case when the device will be offline, multiple TempIDs are returned.
+        - refs. https://github.com/opentrace-community/opentrace-cloud-functions/blob/master/functions/src/opentrace/getTempIDs.ts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    tempID:
+                      type: string
+                      format: uuid
+                  required:
+                    - tempID
+    parameters: []
+  /v1/users/me/close_contacts:
+    post:
+      summary: Add new close contacts
+      tags:
+        - app
+      responses:
+        '204':
+          description: No Content
+      operationId: post-v1-users-me-close_contacts
+      security:
+        - Bearer for APP: []
+      description: |-
+        - Store the list of close contacts of the positive user in Amazon DynamoDB.
+          - These data will be used for the analysis of cluster occurrence.
+        - The request is only made if the user agrees to provide information.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  tempID:
+                    type: string
+                    format: uuid
+                  contactedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - tempID
+                  - contactedAt
+    parameters: []
+  /v1/admin/login:
+    post:
+      summary: Authenticate admin users
+      tags:
+        - admin
+      operationId: post-v1-admin-login
+      description: |-
+        - Receives `ACCESS_TOKEN_DEFAULT`.
+        - Validates / Verifies it.
+        - Checks `admin` Firestore list to see if the mobile number is whitelisted for admin access.
+        - Adds custom claims:
+          - `{ isAdminUser: true }`
+      responses:
+        '204':
+          description: No Content
+    parameters: []
+  /v1/admin/positives:
+    post:
+      summary: Add a new positive
+      tags:
+        - admin
+      responses:
+        '204':
+          description: No Content
+      operationId: post-v1-admin-positives
+      description: |-
+        - Store the phone number of the new positive person and the test date in Amazon DynamoDB.
+        - Those data are periodically retrieved and processed by AWS Lambda's Scheduled Event.
+        - The Lambda retrieves the TempIDs for the past n days of the positive people from the phone number and write them out to a text file placed in Cloud Storage for Firebase.
+          - The TempIDs recorded in this file will be rotated in n days.
+      security:
+        - Bearer for Admin: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                testDate:
+                  type: string
+                  format: date
+                  description: 'MEMO: unnecessary?'
+                onsetDate:
+                  type: string
+                  format: date
+                  description: 'MEMO: unnecessary?'
+              required:
+                - phone
+    parameters: []
+components:
+  schemas: {}
+  securitySchemes:
+    Bearer for APP:
+      type: http
+      scheme: bearer
+    Bearer for Admin:
+      type: http
+      scheme: bearer
+tags:
+  - name: app
+  - name: admin
