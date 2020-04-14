@@ -4,19 +4,16 @@ import { FirebaseService } from '../firebase/firebase.service'
 
 @Injectable()
 export class CatsRepository {
-  // db: firebaseAdmin.firestore.Firestore
-  // catsCollectionRef = db.collection('cats')
-
   constructor(private firebaseService: FirebaseService) {}
   async createOne(cat: Cat) {
-    return (await this.firebaseService.firebaseFirestore())
+    return (await this.firebaseService.Firestore())
       .collection('cats')
       .doc(cat.name)
       .set(cat)
   }
 
   async findOne(name: string): Promise<Cat | undefined> {
-    const getDoc = await (await this.firebaseService.firebaseFirestore())
+    const getDoc = await (await this.firebaseService.Firestore())
       .collection('cats')
       .doc(name)
       .get()

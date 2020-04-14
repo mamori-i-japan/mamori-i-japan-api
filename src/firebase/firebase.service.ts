@@ -15,7 +15,7 @@ export class FirebaseService {
     })
   }
 
-  async firebaseFirestore(): Promise<firebaseAdmin.firestore.Firestore> {
+  async Firestore(): Promise<firebaseAdmin.firestore.Firestore> {
     return firebaseAdmin.firestore()
   }
 }
