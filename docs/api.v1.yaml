@@ -58,8 +58,16 @@ paths:
                     tempID:
                       type: string
                       format: uuid
+                    validFrom:
+                      type: string
+                      format: date-time
+                    validTo:
+                      type: string
+                      format: date-time
                   required:
                     - tempID
+                    - validFrom
+                    - validTo
     parameters: []
   /v1/users/me/close_contacts:
     post:
