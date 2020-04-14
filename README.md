@@ -15,22 +15,23 @@ This is a proof-of-concept app which utilizes the following projects/technologie
 - Push Data
   - Do we need Data push feature to spread affected people list using tech like Firebase Firestore?
 
-### Progress
+### Progress of PoC
 
 | Technology        | Sub-task           | Progress    |
 | ----------------- | ------------------ | ----------- |
 | NestJS            | -                  | In-Progress |
 |                   | Initial Setup      | Done        |
 |                   | Lambda Handler     | Done        |
-|                   | Auth JWT Generator | Done        |
-|                   | SMS Integration    | In-Progress |
+|                   | SMS Integration    | Done        |
+|                   | Swagger            | Done        |
 | Serverless        | -                  | Done        |
 |                   | Lambda deployment  | Done        |
 |                   | Provisioned Lambda | Done        |
 | Firestore         | -                  | Not Started |
 | Firebase Auth     | -                  | Done        |
 | CI/CD support     | -                  | Done        |
-|                   | CircleCI           | Done        |
+|                   | CircleCI Config    | Done        |
+|                   | CircleCI github    | Done        |
 | Push Notification | -                  | Not Started |
 |                   | Pinpoint           | -           |
 | Push Data         | -                  | Not Started |
@@ -39,7 +40,7 @@ This is a proof-of-concept app which utilizes the following projects/technologie
 ### Secondary Tasks for PoC
 
 - `docker-compose` - It would be good to have it for local development.
-  - This would be a good alternative since `serverless offline` does not support hot-reload (at least the way it's implemented right now in this repo). This should consider the use of `offline DynamoDB`.
+  - This would be a good alternative since `serverless offline` does not support hot-reload (at least the way it's implemented right now in this repo). This should consider the use of `offline DynamoDB or Firestore?`.
 - `Swagger/openapi` - Investigate how to auto-generate it with decorators, etc. (We should not think about maintaining it manually).
 - `Stages` - Configure various deployment stages like `dev`, `stg`, `prd`.
 - `APIGateway` - Configure domain routing, etc. via `serverless` resources (we do not need `terraform` if we can do all config via `serverless` YAML.)
@@ -49,6 +50,10 @@ This is a proof-of-concept app which utilizes the following projects/technologie
 ```bash
 $ npm install
 ```
+
+- Make sure you add the `env` values in `.env` file. Just copy the `.env.template` file.
+- Make sure you download the `serviceAccountKey.json` file and add it to root.
+  - Official doc [link](https://firebase.google.com/docs/admin/setup#initialize-sdk).
 
 ## Running the app
 
@@ -80,6 +85,14 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+```
+
+## Deploying the app
+
+- In the future we will deploy via `CircleCi`, but for local deployment to `dev`, run:
+
+```bash
+npm run deploy:dev
 ```
 
 ## Contributors

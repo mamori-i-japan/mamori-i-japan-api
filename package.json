@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-serverless",
+  "name": "contact-tracing-api",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -22,7 +22,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "sls-offline": "npm run build && serverless offline start",
-    "deploy:dev": "npm run build && serverless create_domain --stage dev && serverless deploy --stage dev",
+    "deploy:dev": "npm run build && serverless deploy --stage dev",
     "deploy:stg": "npm run build && serverless create_domain --stage stg && serverless deploy --stage stg",
     "deploy:prd": "npm run build && serverless create_domain --stage prd && serverless deploy --stage prd",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

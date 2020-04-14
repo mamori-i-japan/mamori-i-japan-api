@@ -1,16 +1,18 @@
-service: nestjs-serverless
+service: contact-tracing-api
 
 provider:
   name: aws
   runtime: nodejs12.x
+  stage: ${opt:stage, "dev"}
 
 plugins:
   # - serverless-domain-manager
   - serverless-offline
 
+# TODO : Needs Route 53 domain first I guess?
 # custom:
 #   customDomain:
-#     domainName: nestjs-serverless.example.com
+#     domainName: contact-tracing-api.example.com
 
 package:
   exclude:
@@ -34,60 +36,5 @@ functions:
           cors: true
           path: '{proxy+}'
           method: any
-
-resources:
-  Resources:
-    ### Cognito ###
-    CognitoUserPool:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        AutoVerifiedAttributes:
-          - phone_number
-        MfaConfiguration: OPTIONAL
-        Policies:
-          PasswordPolicy:
-            MinimumLength: 6
-            RequireLowercase: true
-            RequireNumbers: false
-            RequireSymbols: false
-            RequireUppercase: true
-        Schema:
-          - Name: phone_number
-            Required: true
-        SmsConfiguration:
-          ExternalId: ${self:provider.stage}-cognito-external-id
-          SnsCallerArn: !GetAtt CognitoUserPoolSMSRole.Arn
-        SmsVerificationMessage: |
-          Your verification code is {####}.
-
-          APP ID: e4o18vjD6V2
-        UsernameAttributes:
-          - phone_number
-        UserPoolName: ${self:service}-${self:provider.stage}
-
-    CognitoUserPoolSMSRole:
-      Type: AWS::IAM::Role
-      Properties:
-        AssumeRolePolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Principal:
-                Service:
-                  - cognito-idp.amazonaws.com
-              Action:
-                - 'sts:AssumeRole'
-              Condition:
-                StringEquals:
-                  sts:ExternalId: ${self:provider.stage}-cognito-external-id
-        Policies:
-          - PolicyName: ${self:provider.stage}-cognito-sms-policy
-            PolicyDocument:
-              Version: '2012-10-17'
-              Statement:
-                - Effect: Allow
-                  Resource:
-                    - '*'
-                  Action:
-                    - 'sns:publish'
-        RoleName: ${self:provider.stage}-cognito-sms-role
+# resources:
+#   Resources:
