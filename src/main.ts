@@ -18,8 +18,8 @@ async function bootstrap() {
   })
 
   const options = new DocumentBuilder()
-    .setTitle('nestjs-serverless')
-    .setDescription('SwaggerUI for nestjs-serverless API')
+    .setTitle('contact-tracing-api')
+    .setDescription('SwaggerUI for contact-tracing-api API')
     .setVersion('1.0')
     .addBearerAuth()
     .build()

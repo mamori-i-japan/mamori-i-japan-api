@@ -1,4 +1,4 @@
-service: nestjs-serverless
+service: contact-tracing-api
 
 provider:
   name: aws
@@ -10,7 +10,7 @@ plugins:
 
 # custom:
 #   customDomain:
-#     domainName: nestjs-serverless.example.com
+#     domainName: contact-tracing-api.example.com
 
 package:
   exclude:
