@@ -2,21 +2,24 @@ import { NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
-import * as firebaseAdmin from 'firebase-admin'
+// import * as firebaseAdmin from 'firebase-admin'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const serviceAccount = require('../serviceAccountKey.json')
+// const serviceAccount = require('../serviceAccountKey.json')
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   const configService = app.get(ConfigService)
   const backendAppPort = configService.get('BACKEND_APP_PORT')
-  const firebaseDatabaseURL = configService.get('FIREBASE_DATABASE_URL')
+  // const firebaseDatabaseURL = configService.get('FIREBASE_DATABASE_URL')
 
-  firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: firebaseDatabaseURL,
-  })
+  // firebaseAdmin.initializeApp({
+  //   credential: firebaseAdmin.credential.cert(serviceAccount),
+  //   databaseURL: firebaseDatabaseURL,
+  // })
+
+  // console.log('------')
+  // console.log(firebaseAdmin.credential.applicationDefault())
 
   const options = new DocumentBuilder()
     .setTitle('contact-tracing-api')

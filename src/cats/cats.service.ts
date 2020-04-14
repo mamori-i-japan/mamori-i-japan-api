@@ -6,7 +6,7 @@ import { CatsRepository } from './cats.repository'
 export class CatsService {
   constructor(private catsRepository: CatsRepository) {}
   create(cat: Cat) {
-    this.catsRepository.createOne(cat)
+    return this.catsRepository.createOne(cat)
   }
 
   async findOne(name: string): Promise<Cat | undefined> {
