@@ -8,7 +8,7 @@ export class CreateUserDto {
   prefecture: string
 
   @ApiPropertyOptional()
-  age: string
+  age: number
 
   @ApiPropertyOptional()
   gender: string

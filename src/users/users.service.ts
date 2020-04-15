@@ -1,32 +1,18 @@
 import { Injectable } from '@nestjs/common'
+import { UsersRepository } from './users.repository'
+import { CreateUserDto } from './dto/create-user.dto'
 
 export type User = any
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[]
+  constructor(private usersRepository: UsersRepository) {}
 
-  constructor() {
-    this.users = [
-      {
-        userId: 1,
-        username: 'john',
-        password: 'changeme',
-      },
-      {
-        userId: 2,
-        username: 'chris',
-        password: 'secret',
-      },
-      {
-        userId: 3,
-        username: 'maria',
-        password: 'guess',
-      },
-    ]
+  create(user: CreateUserDto) {
+    return this.usersRepository.createOne(user)
   }
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username)
+  async findOne(userId: string): Promise<User | undefined> {
+    return this.usersRepository.findOne(userId)
   }
 }
