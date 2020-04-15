@@ -22,18 +22,17 @@ This is a proof-of-concept app which utilizes the following projects/technologie
 | NestJS            | -                  | In-Progress |
 |                   | Initial Setup      | Done        |
 |                   | Lambda Handler     | Done        |
-|                   | SMS Integration    | Done        |
 |                   | Swagger            | Done        |
 | Serverless        | -                  | Done        |
 |                   | Lambda deployment  | Done        |
 |                   | Provisioned Lambda | Done        |
-| Firestore         | -                  | Not Started |
+| Firestore         | -                  | In-Progress |
 | Firebase Auth     | -                  | Done        |
 | CI/CD support     | -                  | Done        |
 |                   | CircleCI Config    | Done        |
-|                   | CircleCI github    | Done        |
+|                   | CircleCI github    | In-Progress |
 | Push Notification | -                  | Not Started |
-|                   | Pinpoint           | -           |
+|                   | FCM                | -           |
 | Push Data         | -                  | Not Started |
 |                   | Firestore          | -           |
 
