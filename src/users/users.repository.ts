@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { User } from './interfaces/user.interface'
+import { User, UserProfile } from './interfaces/user.interface'
 import { FirebaseService } from '../firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 
@@ -10,11 +10,18 @@ export class UsersRepository {
   constructor(private firebaseService: FirebaseService) {
     this.firestoreDB = this.firebaseService.Firestore()
   }
-  async createOne(user: User) {
-    return (await this.firestoreDB)
+  async createOne(user: User, userProfile?: UserProfile) {
+    await (await this.firestoreDB)
       .collection('users')
       .doc(user.userId)
       .set(JSON.parse(JSON.stringify(user)))
+
+    return (await this.firestoreDB)
+      .collection('users')
+      .doc(user.userId)
+      .collection('profile')
+      .doc(user.userId)
+      .set(JSON.parse(JSON.stringify(userProfile)))
   }
 
   async findOne(userId: string): Promise<User | undefined> {
