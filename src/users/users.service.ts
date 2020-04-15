@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
 import { User } from './interfaces/user.interface'
-import { TEMPID_BATCH_SIZE, TEMPID_VALIDITY_PERIOD } from './constants'
-import CustomEncrypter from '../utils/CustomEncrypter'
-import * as moment from 'moment'
+import { TEMPID_BATCH_SIZE } from './constants'
 
 @Injectable()
 export class UsersService {
@@ -24,39 +22,10 @@ export class UsersService {
 
     const tempIDs = await Promise.all(
       [...Array(TEMPID_BATCH_SIZE).keys()].map(async (i) =>
-        this.generateTempId(encryptionKey, userId, i)
+        this.usersRepository.generateTempId(encryptionKey, userId, i)
       )
     )
 
     return tempIDs
-  }
-
-  private async generateTempId(encryptionKey: Buffer, userId: string, i: number) {
-    // allow the first message to be valid a minute earlier
-    const start = moment.utc().add(TEMPID_VALIDITY_PERIOD * i, 'hours').add(-1, 'minute')
-    const expiry = start.add(TEMPID_VALIDITY_PERIOD, 'hours')
-
-    // Prepare encrypter
-    const customEncrypter = new CustomEncrypter(encryptionKey)
-
-    // Encrypt userId, start, expiry and encode payload
-    // 21 bytes for userId, 4 bytes each for start and expiry timestamp
-    const USERID_SIZE = 21
-    const TIME_SIZE = 4
-    const TEMPID_SIZE = USERID_SIZE + TIME_SIZE * 2
-
-    const plainData = Buffer.alloc(TEMPID_SIZE)
-    plainData.write(userId, 0, USERID_SIZE, 'base64')
-    plainData.writeInt32BE(start.unix(), USERID_SIZE)
-    plainData.writeInt32BE(expiry.unix(), USERID_SIZE + TIME_SIZE)
-
-    const encodedData = customEncrypter.encryptAndEncode(plainData)
-    const tempID = encodedData.toString('base64')
-
-    return {
-      tempID: tempID,
-      validFrom: start,
-      validTo: expiry,
-    }
   }
 }
