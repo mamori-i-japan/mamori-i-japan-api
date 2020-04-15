@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, "dev"}
+  region: ${opt:region, 'ap-northeast-1'}
 
 plugins:
   # - serverless-domain-manager
