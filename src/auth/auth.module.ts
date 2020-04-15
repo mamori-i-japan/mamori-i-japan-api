@@ -4,9 +4,10 @@ import { FirebaseNormalUserLoginStrategy } from './strategies/firebase-normal-us
 import { UsersModule } from '../users/users.module'
 import { FirebaseNormalUserValidateStrategy } from './strategies/firebase-normal-user-validate.strategy'
 import { AuthController } from './auth.controller'
+import { FirebaseModule } from '../firebase/firebase.module'
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, FirebaseModule],
   providers: [AuthService, FirebaseNormalUserLoginStrategy, FirebaseNormalUserValidateStrategy],
   controllers: [AuthController],
   exports: [AuthService],

@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { Cat } from './interfaces/cat.interface'
+import { CatsRepository } from './cats.repository'
 
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = []
-
+  constructor(private catsRepository: CatsRepository) {}
   create(cat: Cat) {
-    this.cats.push(cat)
+    return this.catsRepository.createOne(cat)
+  }
+
+  async findOne(name: string): Promise<Cat | undefined> {
+    return this.catsRepository.findOne(name)
   }
 }
