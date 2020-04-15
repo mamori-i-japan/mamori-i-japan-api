@@ -1,21 +1,14 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
 import { UsersService } from '../users/users.service'
+import { User } from '../users/interfaces/user.interface'
+import { CreateUserDto } from '../users/dto/create-user.dto'
+import { validateOrReject } from 'class-validator'
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username)
-    if (user && user.password === pass) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user
-      return result
-    }
-    return null
-  }
-
-  async login(userDecodedToken: any) {
+  async login(userDecodedToken: any, secretRandomToken: string) {
     // await firebaseAdmin
     //   .auth()
     //   .setCustomUserClaims(user.uid, { isAdminUser: false, isNormalUser: true })
@@ -28,23 +21,37 @@ export class AuthService {
     // 3. If user does not exist, create new one and also save secret_random_token,
     // and add custom claim of isNormalUser.
 
-    const user = await this.usersService.findOne(userDecodedToken.uid)
-    console.log('user : ', user)
-
-    if (!user) {
-      await this.createFirstTimeUser(userDecodedToken)
+    const userObj = await this.usersService.findOne(userDecodedToken.uid)
+    if (!userObj) {
+      await this.createFirstTimeLoginUser(userDecodedToken, secretRandomToken)
     } else {
-      await this.verifySecretRandomToken(userDecodedToken)
+      await this.verifySecretRandomToken(userObj, secretRandomToken)
     }
 
     return userDecodedToken
   }
 
-  async createFirstTimeUser(userDecodedToken: any) {
-    console.log('userDecodedToken : ', userDecodedToken)
+  async createFirstTimeLoginUser(userDecodedToken: any, secretRandomToken: string) {
+    const createUserDto: CreateUserDto = new CreateUserDto()
+    createUserDto.userId = userDecodedToken.uid
+    createUserDto.secretRandomToken = secretRandomToken
+    try {
+      await validateOrReject(createUserDto)
+    } catch (errors) {
+      throw new BadRequestException(errors, 'Request validation failed')
+    }
+
+    await this.usersService.create(createUserDto)
   }
 
-  async verifySecretRandomToken(userDecodedToken: any) {
-    console.log('userDecodedToken : ', userDecodedToken)
+  async verifySecretRandomToken(userObj: User, secretRandomToken: string) {
+    if (userObj.secretRandomToken !== secretRandomToken) {
+      // TODO @yashmurty :
+      // Later on this behavior should be
+      // 1. Revoke access token for this uid.
+      // 2. Delete existing user with this uid.
+      // 3. Create new user with new uid for this phone number.
+      throw new ForbiddenException('Secret random token does not match with existing one')
+    }
   }
 }
