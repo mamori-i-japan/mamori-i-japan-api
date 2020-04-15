@@ -94,6 +94,33 @@ $ npm run test:cov
 npm run deploy:dev
 ```
 
+### Project Layout (Brief explaination)
+
+```
+.
+├── .env (Make sure to create this file locally and fill the env vars)
+├── .serviceAccount.json (Make sure to get this file for firebase admin SDK)
+├── src
+|   ├── main.ts (This entry point is used for local server)
+|   ├── lambda-main.ts (This entry point is used for lambda server)
+|   ├── auth (module)
+|       ├── guards
+|       └── strategies (Implementation of Firebase Auth access token check)
+|   └── users (module)
+|       ├── users.service.ts (Services can call other services and their own repository)
+|       └── user.repository.ts (Repositroy should be called only by its parent service)
+
+```
+
+As mentioned briefly in the project layout for `users`, to keep layout clean, we follow this convention:
+
+1. Controllers: HTTP routes map to handler functions in controllers.
+2. Services: Controllers call their service function.  
+   A) A `user controller` must call only a `user service`, and not any other service if it can be avoided.  
+   B) A `user service` can call other services like `cats service`, etc.  
+   C) A `user service` must call only a `user repository`, and not any other repository if it can be avoided. If a `user service` wants to modify data in `cats repository`, it must call corresponding `cats service` funtion to do it.
+3. Repositories: Repositories have data layer implementation, ex: `Firestore` in this project. They must be called only by their direct parent service, ex: A `user repository` is called by a `user service`.
+
 ## Contributors
 
 - [Yash Murty](https://github.com/yashmurty)
