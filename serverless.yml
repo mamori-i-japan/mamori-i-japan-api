@@ -10,6 +10,18 @@ provider:
     name: contact-tracing-api-serverless
     blockPublicAccess: true
     serverSideEncryption: AES256
+  environment:
+    FIREBASE_DATABASE_URL: ${ssm:/envvars/${self:provider.stage}/FIREBASE_DATABASE_URL~true}
+    FIREBASE_type: ${ssm:/envvars/${self:provider.stage}/FIREBASE_type~true}
+    FIREBASE_project_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_project_id~true}
+    FIREBASE_private_key_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_private_key_id~true}
+    FIREBASE_private_key: ${ssm:/envvars/${self:provider.stage}/FIREBASE_private_key~true}
+    FIREBASE_client_email: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_email~true}
+    FIREBASE_client_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_id~true}
+    FIREBASE_auth_uri: ${ssm:/envvars/${self:provider.stage}/FIREBASE_auth_uri~true}
+    FIREBASE_token_uri: ${ssm:/envvars/${self:provider.stage}/FIREBASE_token_uri~true}
+    FIREBASE_auth_provider_x509_cert_url: ${ssm:/envvars/${self:provider.stage}/FIREBASE_auth_provider_x509_cert_url~true}
+    FIREBASE_client_x509_cert_url: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_x509_cert_url~true}
 
 package:
   include:
