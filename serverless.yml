@@ -37,11 +37,16 @@ plugins:
   - serverless-deployment-bucket
   - serverless-layers
   - serverless-offline
+  - serverless-prune-plugin
 
 # TODO : Needs Route 53 domain first I guess?
-# custom:
+custom:
 #   customDomain:
 #     domainName: contact-tracing-api.example.com
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 5
 
 # resources:
 #   Resources:
