@@ -1,14 +1,36 @@
+---
 service: contact-tracing-api
 
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${opt:stage, "dev"}
+  stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-1'}
   deploymentBucket:
     name: contact-tracing-api-serverless
     blockPublicAccess: true
     serverSideEncryption: AES256
+
+package:
+  exclude:
+    - .git/**
+    - src/**
+    - test/**
+    - README.md
+
+functions:
+  lambda-main:
+    handler: dist/lambda-main.handler
+    provisionedConcurrency: 1
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
 
 plugins:
   # - serverless-domain-manager
@@ -20,27 +42,5 @@ plugins:
 #   customDomain:
 #     domainName: contact-tracing-api.example.com
 
-package:
-  exclude:
-    - .git/**
-    - src/**
-    - test/**
-    - e2e/**
-    - nodemon.json
-    - README.md
-
-functions:
-  lambda-main:
-    handler: dist/lambda-main.handler
-    provisionedConcurrency: 1
-    events:
-      - http:
-          cors: true
-          path: '/'
-          method: any
-      - http:
-          cors: true
-          path: '{proxy+}'
-          method: any
 # resources:
 #   Resources:
