@@ -26,6 +26,6 @@ export class AuthController {
   @UseGuards(FirebaseNormalUserLoginGuard)
   @Post('login')
   async loginFirebase(@Request() req) {
-    return this.authService.login(req.user, 'FIX-ME-Controller')
+    return this.authService.login(req.user, req.headers[X_MOBILE_SECRET_RANDOM_TOKEN_HEADER])
   }
 }
