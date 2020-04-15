@@ -1,5 +1,11 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common'
-import { ApiOperation, ApiBearerAuth, ApiHeader, ApiOkResponse, ApiUnauthorizedResponse } from '@nestjs/swagger'
+import {
+  ApiOperation,
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOkResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { TempID } from './interfaces/temp-id.interface'
 import { FirebaseNormalUserLoginGuard } from '../auth/guards/firebase-normal-user-login.guard'
