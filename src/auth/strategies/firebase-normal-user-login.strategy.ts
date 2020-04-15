@@ -17,19 +17,14 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
       throw new UnauthorizedException('No bearer token found in the header')
     }
 
-    let user: firebaseAdmin.auth.DecodedIdToken
+    let userDecodedToken: firebaseAdmin.auth.DecodedIdToken
     try {
-      user = await firebaseAdmin.auth().verifyIdToken(token)
+      userDecodedToken = await firebaseAdmin.auth().verifyIdToken(token)
     } catch (error) {
       throw new UnauthorizedException(error.message)
     }
 
-    await firebaseAdmin
-      .auth()
-      .setCustomUserClaims(user.uid, { isAdminUser: false, isNormalUser: true })
-
-    const updatedUser = await firebaseAdmin.auth().getUser(user.uid)
-
-    done(null, updatedUser)
+    // NOTE : Passport automatically creates a user object, based on the value we return here.
+    done(null, userDecodedToken)
   }
 }

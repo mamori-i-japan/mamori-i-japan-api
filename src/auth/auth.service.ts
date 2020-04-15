@@ -15,8 +15,36 @@ export class AuthService {
     return null
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId }
-    return payload
+  async login(userDecodedToken: any) {
+    // await firebaseAdmin
+    //   .auth()
+    //   .setCustomUserClaims(user.uid, { isAdminUser: false, isNormalUser: true })
+
+    // const updatedUser = await firebaseAdmin.auth().getUser(user.uid)
+
+    // 1. Fetch users firestore and see if users exists.
+    // 2. If user exists, check if secret_random_token matches and return 200,
+    // otherwise throw error (also force set isNormalUser claim again?).
+    // 3. If user does not exist, create new one and also save secret_random_token,
+    // and add custom claim of isNormalUser.
+
+    const user = await this.usersService.findOne(userDecodedToken.uid)
+    console.log('user : ', user)
+
+    if (!user) {
+      await this.createFirstTimeUser(userDecodedToken)
+    } else {
+      await this.verifySecretRandomToken(userDecodedToken)
+    }
+
+    return userDecodedToken
+  }
+
+  async createFirstTimeUser(userDecodedToken: any) {
+    console.log('userDecodedToken : ', userDecodedToken)
+  }
+
+  async verifySecretRandomToken(userDecodedToken: any) {
+    console.log('userDecodedToken : ', userDecodedToken)
   }
 }

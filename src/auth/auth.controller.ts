@@ -7,13 +7,16 @@ import {
   ApiNoContentResponse,
 } from '@nestjs/swagger'
 import { FirebaseNormalUserLoginGuard } from './guards/firebase-normal-user-login.guard'
+import { AuthService } from './auth.service'
 
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
   @ApiOperation({ summary: 'Login endpoint for normal user' })
   @ApiBearerAuth()
   @ApiHeader({
-    name: 'X-Mobile-Secret-Random-Token',
+    name: 'x-mobile-secret-random-token',
     description: 'Secret Random Token associated with the physical mobile device',
   })
   @ApiNoContentResponse({ description: 'No Content.' })
@@ -21,6 +24,7 @@ export class AuthController {
   @UseGuards(FirebaseNormalUserLoginGuard)
   @Post('login')
   async loginFirebase(@Request() req) {
-    return req.user
+    console.log('headers : ', req.headers)
+    return this.authService.login(req.user)
   }
 }
