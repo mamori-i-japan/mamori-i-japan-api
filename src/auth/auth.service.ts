@@ -32,6 +32,7 @@ export class AuthService {
     const createUserDto: CreateUserDto = new CreateUserDto()
     createUserDto.userId = userDecodedToken.uid
     createUserDto.secretRandomToken = secretRandomToken
+    // Validate the create User data object which will be saved to firestore.
     try {
       await validateOrReject(createUserDto)
     } catch (errors) {
