@@ -1,27 +1,33 @@
+---
 service: contact-tracing-api
 
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: ${opt:stage, "dev"}
-
-plugins:
-  # - serverless-domain-manager
-  - serverless-offline
-
-# TODO : Needs Route 53 domain first I guess?
-# custom:
-#   customDomain:
-#     domainName: contact-tracing-api.example.com
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'ap-northeast-1'}
+  deploymentBucket:
+    name: contact-tracing-api-serverless
+    blockPublicAccess: true
+    serverSideEncryption: AES256
+  environment:
+    FIREBASE_DATABASE_URL: ${ssm:/envvars/${self:provider.stage}/FIREBASE_DATABASE_URL~true}
+    FIREBASE_type: ${ssm:/envvars/${self:provider.stage}/FIREBASE_type~true}
+    FIREBASE_project_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_project_id~true}
+    FIREBASE_private_key_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_private_key_id~true}
+    FIREBASE_private_key: ${ssm:/envvars/${self:provider.stage}/FIREBASE_private_key~true}
+    FIREBASE_client_email: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_email~true}
+    FIREBASE_client_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_id~true}
+    FIREBASE_auth_uri: ${ssm:/envvars/${self:provider.stage}/FIREBASE_auth_uri~true}
+    FIREBASE_token_uri: ${ssm:/envvars/${self:provider.stage}/FIREBASE_token_uri~true}
+    FIREBASE_auth_provider_x509_cert_url: ${ssm:/envvars/${self:provider.stage}/FIREBASE_auth_provider_x509_cert_url~true}
+    FIREBASE_client_x509_cert_url: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_x509_cert_url~true}
 
 package:
+  include:
+    - dist/**
   exclude:
-    - .git/**
-    - src/**
-    - test/**
-    - e2e/**
-    - nodemon.json
-    - README.md
+    - '**'
 
 functions:
   lambda-main:
@@ -29,12 +35,29 @@ functions:
     provisionedConcurrency: 1
     events:
       - http:
-          cors: true
-          path: '/'
+          path: /
           method: any
+          cors: true
       - http:
-          cors: true
-          path: '{proxy+}'
+          path: /{proxy+}
           method: any
+          cors: true
+
+plugins:
+  # - serverless-domain-manager
+  - serverless-deployment-bucket
+  - serverless-layers
+  - serverless-offline
+  - serverless-prune-plugin
+
+# TODO : Needs Route 53 domain first I guess?
+custom:
+#   customDomain:
+#     domainName: contact-tracing-api.example.com
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 5
+
 # resources:
 #   Resources:
