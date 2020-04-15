@@ -4,8 +4,6 @@ export default () => ({
     host: process.env.DATABASE_HOST,
     port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
   },
-  // TODO @yashmurty : Populate this via env file, to support CircleCI env params
-  // instead of a serviceAccount JSON file.
   firebase: {
     /*eslint-disable */
     type: process.env.FIREBASE_type,
@@ -20,4 +18,5 @@ export default () => ({
     client_x509_cert_url: process.env.FIREBASE_client_x509_cert_url,
     /*eslint-enable */
   },
+  encryptionKey: process.env.ENCRYPTION_KEY,
 })

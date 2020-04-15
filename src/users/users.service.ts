@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
 import { User } from './interfaces/user.interface'
+import { ConfigService } from '@nestjs/config'
 import { TEMPID_BATCH_SIZE } from './constants'
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(
+    private usersRepository: UsersRepository,
+    private configService: ConfigService,
+  ) {}
 
   create(user: CreateUserDto, userProfile?: CreateUserProfileDto) {
     return this.usersRepository.createOne(user, userProfile)
@@ -17,8 +21,7 @@ export class UsersService {
   }
 
   async getTempIDs(userId: string): Promise<any[]> {
-    // TODO @shogo-mitomo : make the key envvar
-    const encryptionKey = Buffer.from('0QCvPzM2eQnEmp1C5R8voY7K81NNPXX0+INFe5kgn5w=', 'base64')
+    const encryptionKey = Buffer.from(this.configService.get('encryptionKey').toString(), 'base64')
 
     const tempIDs = await Promise.all(
       [...Array(TEMPID_BATCH_SIZE).keys()].map(async (i) =>
