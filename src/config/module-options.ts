@@ -18,5 +18,7 @@ export const configModuleOptions: ConfigModuleOptions = {
       .allow('')
       .optional(),
     FIREBASE_DATABASE_URL: Joi.string().required(),
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    FIREBASE_private_key: Joi.string().required(),
   }),
 }
