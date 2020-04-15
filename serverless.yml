@@ -12,11 +12,10 @@ provider:
     serverSideEncryption: AES256
 
 package:
+  include:
+    - dist/**
   exclude:
-    - .git/**
-    - src/**
-    - test/**
-    - README.md
+    - '**'
 
 functions:
   lambda-main:
