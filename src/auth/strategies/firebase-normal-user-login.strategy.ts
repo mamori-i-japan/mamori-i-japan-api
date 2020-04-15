@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
+import { X_MOBILE_SECRET_RANDOM_TOKEN_HEADER } from '../constants'
 
 @Injectable()
 export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
@@ -17,19 +18,18 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
       throw new UnauthorizedException('No bearer token found in the header')
     }
 
-    let user: firebaseAdmin.auth.DecodedIdToken
+    if (!req.headers[X_MOBILE_SECRET_RANDOM_TOKEN_HEADER]) {
+      throw new UnauthorizedException('No x-mobile-secret-random-token found in the header')
+    }
+
+    let userDecodedToken: firebaseAdmin.auth.DecodedIdToken
     try {
-      user = await firebaseAdmin.auth().verifyIdToken(token)
+      userDecodedToken = await firebaseAdmin.auth().verifyIdToken(token)
     } catch (error) {
       throw new UnauthorizedException(error.message)
     }
 
-    await firebaseAdmin
-      .auth()
-      .setCustomUserClaims(user.uid, { isAdminUser: false, isNormalUser: true })
-
-    const updatedUser = await firebaseAdmin.auth().getUser(user.uid)
-
-    done(null, updatedUser)
+    // NOTE : Passport automatically creates a user object, based on the value we return here.
+    done(null, userDecodedToken)
   }
 }

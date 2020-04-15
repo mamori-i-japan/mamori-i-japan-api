@@ -14,7 +14,7 @@ export class UsersRepository {
     return (await this.firestoreDB)
       .collection('users')
       .doc(user.userId)
-      .set(user)
+      .set(JSON.parse(JSON.stringify(user)))
   }
 
   async findOne(userId: string): Promise<User | undefined> {

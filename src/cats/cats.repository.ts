@@ -14,7 +14,7 @@ export class CatsRepository {
     return (await this.firestoreDB)
       .collection('cats')
       .doc(cat.name)
-      .set(cat)
+      .set(JSON.parse(JSON.stringify(cat)))
   }
 
   async findOne(name: string): Promise<Cat | undefined> {
