@@ -5,9 +5,14 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, "dev"}
   region: ${opt:region, 'ap-northeast-1'}
+  deploymentBucket:
+    name: contact-tracing-api-serverless
+    blockPublicAccess: true
+    serverSideEncryption: AES256
 
 plugins:
   # - serverless-domain-manager
+  - serverless-deployment-bucket
   - serverless-offline
 
 # TODO : Needs Route 53 domain first I guess?
