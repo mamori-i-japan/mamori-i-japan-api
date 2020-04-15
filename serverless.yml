@@ -35,6 +35,7 @@ functions:
 plugins:
   # - serverless-domain-manager
   - serverless-deployment-bucket
+  - serverless-layers
   - serverless-offline
 
 # TODO : Needs Route 53 domain first I guess?
