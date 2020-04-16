@@ -17,16 +17,16 @@ export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException('No bearer token found in the header')
     }
 
-    let user: firebaseAdmin.auth.DecodedIdToken
+    let userDecodedToken: firebaseAdmin.auth.DecodedIdToken
     try {
-      user = await firebaseAdmin.auth().verifyIdToken(token)
+      userDecodedToken = await firebaseAdmin.auth().verifyIdToken(token)
     } catch (error) {
       throw new UnauthorizedException(error.message)
     }
 
     // TODO @yashmurty : Check isAdminUser custom claim.
-    console.log(user)
+    console.log(userDecodedToken)
 
-    done(null, user)
+    done(null, userDecodedToken)
   }
 }
