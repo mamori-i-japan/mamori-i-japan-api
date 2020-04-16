@@ -7,9 +7,11 @@ import { ConfigModule } from '@nestjs/config'
 import { configModuleOptions } from './config/module-options'
 import { CatsModule } from './cats/cats.module'
 import { FirebaseModule } from './firebase/firebase.module'
+import { AdminsModule } from './admins/admins.module'
 
 @Module({
   imports: [
+    AdminsModule,
     AuthModule,
     UsersModule,
     FirebaseModule,
