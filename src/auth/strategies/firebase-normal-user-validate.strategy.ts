@@ -24,6 +24,7 @@ export class FirebaseNormalUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
+    // TODO @yashmurty : Check isNormalUser custom claim.
     console.log(user)
 
     done(null, user)

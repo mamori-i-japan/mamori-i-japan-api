@@ -24,6 +24,7 @@ export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
+    // TODO @yashmurty : Check isAdminUser custom claim.
     console.log(user)
 
     done(null, user)
