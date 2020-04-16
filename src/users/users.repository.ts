@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { User, UserProfile } from './interfaces/user.interface'
 import { FirebaseService } from '../firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
+import { TEMPID_VALIDITY_PERIOD, TEMPID_SWITCHOVER_TIME } from './constants'
+import * as moment from 'moment'
 
 @Injectable()
 export class UsersRepository {
@@ -10,6 +12,7 @@ export class UsersRepository {
   constructor(private firebaseService: FirebaseService) {
     this.firestoreDB = this.firebaseService.Firestore()
   }
+
   async createOne(user: User, userProfile?: UserProfile): Promise<void> {
     await (await this.firestoreDB)
       .collection('users')
@@ -32,5 +35,41 @@ export class UsersRepository {
       .doc(userId)
       .get()
     return getDoc.data() as User
+  }
+
+  async generateTempId(userId: string, i: number) {
+    const yesterday = moment.utc().subtract(1, 'day')
+    const startTime = yesterday
+      .startOf('day')
+      .hour(TEMPID_SWITCHOVER_TIME)
+      .add(TEMPID_VALIDITY_PERIOD * i, 'hours')
+    const validFrom = startTime.clone();
+    const validTo = startTime.add(TEMPID_VALIDITY_PERIOD, 'hours')
+
+    const collection = (await this.firestoreDB)
+      .collection('userStatuses')
+      .doc(userId)
+      .collection('tempIDs')
+
+    let tempID = await collection
+      .where('validFrom', '==', validFrom)
+      .where('validTo', '==', validTo)
+      .limit(1)
+      .get()
+      .then((query) => {
+        return query.docs.length === 0 ? undefined : query.docs[0].id
+      })
+
+    tempID =
+      tempID ||
+      (await collection.add({ validFrom, validTo }).then((doc) => {
+        return doc.id
+      }))
+
+    return {
+      tempID,
+      validFrom,
+      validTo,
+    }
   }
 }

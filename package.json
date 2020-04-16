@@ -46,6 +46,7 @@
     "class-transformer": "^0.2.3",
     "class-validator": "0.11.1",
     "firebase-admin": "^8.10.0",
+    "moment": "^2.24.0",
     "passport": "^0.4.1",
     "passport-custom": "^1.1.1",
     "passport-jwt": "^4.0.0",

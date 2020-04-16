@@ -39,12 +39,12 @@ paths:
         - This time-limited TempIDs is used to increase anonymity when devices communicate with each other in BLE.
         - Considering the case when the device will be offline, multiple TempIDs are returned.
         - refs. https://github.com/opentrace-community/opentrace-cloud-functions/blob/master/functions/src/opentrace/getTempIDs.ts
-        - Steps
-          - verify access token provided by a client.
-          - get uid from the access token.
-          - generate TempIDs.
-          - store uid and generated TempIDs into DataStore.
-          - return TempIDs to the client
+        - Processing Steps
+          1. verify access token provided by a client.
+          1. get uid from the access token.
+          1. generate TempIDs.
+          1. store uid and generated TempIDs into Firebase Cloud Firestore.
+          1. return TempIDs to the client.
       responses:
         '200':
           description: OK
@@ -58,8 +58,16 @@ paths:
                     tempID:
                       type: string
                       format: uuid
+                    validFrom:
+                      type: string
+                      format: date-time
+                    validTo:
+                      type: string
+                      format: date-time
                   required:
                     - tempID
+                    - validFrom
+                    - validTo
     parameters: []
   /v1/users/me/close_contacts:
     post:
