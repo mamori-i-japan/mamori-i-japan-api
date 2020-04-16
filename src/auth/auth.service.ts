@@ -25,8 +25,11 @@ export class AuthService {
   }
 
   async adminUserlogin(userDecodedToken: any) {
+    console.log('userDecodedToken : ', userDecodedToken)
     const adminObj = await this.adminsService.findOne(userDecodedToken.uid)
-    console.log('adminObj : ', adminObj)
+    if (!adminObj) {
+      throw new ForbiddenException('User Id does not belong to an admin')
+    }
 
     return userDecodedToken
   }
