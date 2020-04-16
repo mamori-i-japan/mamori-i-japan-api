@@ -26,6 +26,12 @@ paths:
       responses:
         '204':
           description: No Content
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-mobile-secret-random-token
+          required: true
     parameters: []
   /users/me/temp_ids:
     get:
@@ -117,6 +123,12 @@ paths:
       responses:
         '204':
           description: No Content
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-mobile-secret-random-token
+          required: true
     parameters: []
   /admin/positives:
     post:
