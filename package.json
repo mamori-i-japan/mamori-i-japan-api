@@ -43,6 +43,7 @@
     "@nestjs/platform-express": "^7.0.0",
     "@nestjs/swagger": "^4.5.1",
     "aws-serverless-express": "^3.3.8",
+    "class-transformer": "^0.2.3",
     "class-validator": "0.11.1",
     "firebase-admin": "^8.10.0",
     "passport": "^0.4.1",
