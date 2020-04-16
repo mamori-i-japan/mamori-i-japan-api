@@ -27,7 +27,10 @@ export class AuthController {
   @UseGuards(FirebaseNormalUserLoginGuard)
   @Post('login')
   async loginFirebase(@Request() req) {
-    return this.authService.login(req.user, req.headers[X_MOBILE_SECRET_RANDOM_TOKEN_HEADER])
+    return this.authService.normalUserLogin(
+      req.user,
+      req.headers[X_MOBILE_SECRET_RANDOM_TOKEN_HEADER]
+    )
   }
 
   @ApiOperation({ summary: 'Login endpoint for admin user' })
@@ -37,7 +40,6 @@ export class AuthController {
   @UseGuards(FirebaseAdminUserLoginGuard)
   @Post('admin/login')
   async adminUserLoginFirebase(@Request() req) {
-    // return this.authService.adminUserlogin(req.user)
-    return 'OK'
+    return this.authService.adminUserlogin(req.user)
   }
 }
