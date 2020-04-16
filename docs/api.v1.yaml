@@ -11,7 +11,7 @@ servers:
   - url: 'http://localhost:3000'
     description: Local
 paths:
-  /v1/login:
+  /auth/login:
     post:
       summary: Authenticate app users
       tags:
@@ -27,7 +27,7 @@ paths:
         '204':
           description: No Content
     parameters: []
-  /v1/users/me/temp_ids:
+  /users/me/temp_ids:
     get:
       summary: "Find users' own TempIDs"
       tags:
@@ -69,7 +69,7 @@ paths:
                     - validFrom
                     - validTo
     parameters: []
-  /v1/users/me/close_contacts:
+  /users/me/close_contacts:
     post:
       summary: Add new close contacts
       tags:
@@ -102,7 +102,7 @@ paths:
                   - tempID
                   - contactedAt
     parameters: []
-  /v1/admin/login:
+  /admin/login:
     post:
       summary: Authenticate admin users
       tags:
@@ -118,7 +118,7 @@ paths:
         '204':
           description: No Content
     parameters: []
-  /v1/admin/positives:
+  /admin/positives:
     post:
       summary: Add a new positive
       tags:
