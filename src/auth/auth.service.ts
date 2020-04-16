@@ -19,7 +19,6 @@ export class AuthService {
     }
 
     await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
-    // const updatedUser = await firebaseAdmin.auth().getUser(user.uid)
 
     return userDecodedToken
   }
@@ -33,6 +32,8 @@ export class AuthService {
     if (adminObj.email !== userDecodedToken.email) {
       throw new ForbiddenException('Email in access token does not match with admin in firestore')
     }
+
+    await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
 
     return userDecodedToken
   }
