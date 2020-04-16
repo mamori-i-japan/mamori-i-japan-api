@@ -18,5 +18,4 @@ export default () => ({
     client_x509_cert_url: process.env.FIREBASE_client_x509_cert_url,
     /*eslint-enable */
   },
-  encryptionKey: process.env.ENCRYPTION_KEY,
 })
