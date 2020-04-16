@@ -4,7 +4,5 @@ export interface Admin {
 }
 
 export interface AdminProfile {
-  prefecture: string
-  age: number
-  gender: string
+  name: string
 }
