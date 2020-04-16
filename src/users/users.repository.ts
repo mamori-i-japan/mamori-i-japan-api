@@ -38,8 +38,8 @@ export class UsersRepository {
   }
 
   async generateTempId(userId: string, i: number) {
-    const startTime = moment
-      .utc()
+    const yesterday = moment.utc().subtract(1, 'day')
+    const startTime = yesterday
       .startOf('day')
       .hour(TEMPID_SWITCHOVER_TIME)
       .add(TEMPID_VALIDITY_PERIOD * i, 'hours')
