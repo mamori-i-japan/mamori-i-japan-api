@@ -10,18 +10,20 @@ export class UsersRepository {
   constructor(private firebaseService: FirebaseService) {
     this.firestoreDB = this.firebaseService.Firestore()
   }
-  async createOne(user: User, userProfile?: UserProfile) {
+  async createOne(user: User, userProfile?: UserProfile): Promise<void> {
     await (await this.firestoreDB)
       .collection('users')
       .doc(user.userId)
       .set(JSON.parse(JSON.stringify(user)))
 
-    return (await this.firestoreDB)
-      .collection('users')
-      .doc(user.userId)
-      .collection('profile')
-      .doc(user.userId)
-      .set(JSON.parse(JSON.stringify(userProfile)))
+    if (userProfile) {
+      await (await this.firestoreDB)
+        .collection('users')
+        .doc(user.userId)
+        .collection('profile')
+        .doc(user.userId)
+        .set(JSON.parse(JSON.stringify(userProfile)))
+    }
   }
 
   async findOne(userId: string): Promise<User | undefined> {

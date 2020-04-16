@@ -29,6 +29,8 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
+    console.log('userDecodedToken : ', userDecodedToken)
+
     // NOTE : Passport automatically creates a user object, based on the value we return here.
     done(null, userDecodedToken)
   }
