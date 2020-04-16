@@ -30,6 +30,9 @@ export class AuthService {
     if (!adminObj) {
       throw new ForbiddenException('User Id does not belong to an admin')
     }
+    if (adminObj.email !== userDecodedToken.email) {
+      throw new ForbiddenException('Email in access token does not match with admin in firestore')
+    }
 
     return userDecodedToken
   }
