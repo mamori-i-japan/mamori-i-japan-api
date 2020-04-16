@@ -6,9 +6,9 @@ import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
-export class FirebaseNormalUserValidateStrategy extends PassportStrategy(
+export class FirebaseAdminUserLoginStrategy extends PassportStrategy(
   Strategy,
-  'firebase-normal-user-validate'
+  'firebase-admin-user-login'
 ) {
   async validate(req: Request, done: VerifiedCallback): Promise<any> {
     const extractorFunction = ExtractJwt.fromAuthHeaderAsBearerToken()
@@ -24,9 +24,7 @@ export class FirebaseNormalUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
-    // TODO @yashmurty : Check isNormalUser custom claim.
-    console.log(userDecodedToken)
-
+    // NOTE : Passport automatically creates a user object, based on the value we return here.
     done(null, userDecodedToken)
   }
 }

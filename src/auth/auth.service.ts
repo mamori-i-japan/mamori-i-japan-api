@@ -9,7 +9,7 @@ import * as firebaseAdmin from 'firebase-admin'
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
-  async login(userDecodedToken: any, secretRandomToken: string) {
+  async normalUserLogin(userDecodedToken: any, secretRandomToken: string) {
     const userObj = await this.usersService.findOne(userDecodedToken.uid)
     if (!userObj) {
       await this.createFirstTimeLoginUser(userDecodedToken, secretRandomToken)
@@ -23,12 +23,16 @@ export class AuthService {
     return userDecodedToken
   }
 
+  async adminUserlogin(userDecodedToken: any) {
+    return userDecodedToken
+  }
+
   /**
    * Create a user document in firestore for first time user.
    * @param userDecodedToken: any
    * @param secretRandomToken: string
    */
-  async createFirstTimeLoginUser(userDecodedToken: any, secretRandomToken: string) {
+  private async createFirstTimeLoginUser(userDecodedToken: any, secretRandomToken: string) {
     const createUserDto: CreateUserDto = new CreateUserDto()
     createUserDto.userId = userDecodedToken.uid
     createUserDto.secretRandomToken = secretRandomToken
@@ -47,7 +51,7 @@ export class AuthService {
    * @param userObj: User
    * @param secretRandomToken: string
    */
-  async verifySecretRandomToken(userObj: User, secretRandomToken: string) {
+  private async verifySecretRandomToken(userObj: User, secretRandomToken: string) {
     if (userObj.secretRandomToken !== secretRandomToken) {
       // TODO @yashmurty :
       // Later on this behavior should be
