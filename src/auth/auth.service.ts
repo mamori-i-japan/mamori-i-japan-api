@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
 import { UsersService } from '../users/users.service'
+import { AdminsService } from '../admins/admins.service'
 import { User } from '../users/interfaces/user.interface'
 import { CreateUserDto } from '../users/dto/create-user.dto'
 import { validateOrReject } from 'class-validator'
@@ -7,7 +8,7 @@ import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService, private adminsService: AdminsService) {}
 
   async normalUserLogin(userDecodedToken: any, secretRandomToken: string) {
     const userObj = await this.usersService.findOne(userDecodedToken.uid)
@@ -24,6 +25,9 @@ export class AuthService {
   }
 
   async adminUserlogin(userDecodedToken: any) {
+    const adminObj = await this.adminsService.findOne(userDecodedToken.uid)
+    console.log('adminObj : ', adminObj)
+
     return userDecodedToken
   }
 
