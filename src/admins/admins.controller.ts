@@ -17,8 +17,8 @@ export class AdminsController {
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   @UseGuards(FirebaseAdminUserValidateGuard)
-  @Get('/profile')
-  async getMeTempIDs(@Request() req) {
-    return req.user
+  @Get('/users')
+  async getAdminUsers(@Request() req) {
+    return this.adminsService.findAllAdminUsers()
   }
 }

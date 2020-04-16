@@ -14,4 +14,8 @@ export class AdminsService {
   async findOne(adminId: string): Promise<Admin | undefined> {
     return this.adminsRepository.findOne(adminId)
   }
+
+  async findAllAdminUsers(): Promise<Admin[] | undefined> {
+    return this.adminsRepository.findAll()
+  }
 }

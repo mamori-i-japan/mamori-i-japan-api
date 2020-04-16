@@ -34,4 +34,32 @@ export class AdminsRepository {
       .get()
     return getDoc.data() as Admin
   }
+
+  async findAll(): Promise<Admin[] | undefined> {
+    const adminsArray: Admin[] = []
+
+    const adminsRef = (await this.firestoreDB).collection('admins')
+    await adminsRef
+      .limit(100)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          return
+        }
+
+        snapshot.forEach((doc) => {
+          const adminEach: Admin = {
+            adminUserId: doc.id,
+            email: doc.data().email,
+          }
+          adminsArray.push(adminEach)
+        })
+      })
+      .catch((err) => {
+        console.log('Error getting documents', err)
+        throw new Error(err)
+      })
+
+    return adminsArray
+  }
 }
