@@ -6,7 +6,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
-import { FirebaseAdminUserValidateGuard } from 'src/auth/guards/firebase-admin-user-validate.guard'
+import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 
 @Controller('admins')
 export class AdminsController {
