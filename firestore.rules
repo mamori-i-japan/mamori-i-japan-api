@@ -1,14 +1,25 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
       // No client side reads for core user data
       allow read, write: if false;
-      
+
       // Allow authenticated users to read, write their profile
-        match /profile/{userId} {
-          allow read, write: if request.auth.uid == userId;
-        }
+      match /profile/{userId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+    }
+
+    match /userStatuses/{userId} {
+      // Allow authenticated users to read their status
+      allow read: if request.auth.uid == userId;
+
+      // Allow authenticated users to read their tempIDs
+      match /tempIDs/{tempID} {
+        allow read: if request.auth.uid == userId;
+      }
     }
   }
 }
