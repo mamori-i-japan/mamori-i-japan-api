@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { User, UserProfile } from './interfaces/user.interface'
 import { FirebaseService } from '../firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
-import { TEMPID_VALIDITY_PERIOD } from './constants'
+import { TEMPID_VALIDITY_PERIOD, TEMPID_SWITCHOVER_TIME } from './constants'
 import * as moment from 'moment'
 
 @Injectable()
@@ -37,23 +37,34 @@ export class UsersRepository {
     return getDoc.data() as User
   }
 
-  // TODO @shogo-mitomo : avoid overlapping periods
   async generateTempId(userId: string, i: number) {
-    // allow the first message to be valid a minute earlier
-    const validFrom = moment
+    const startTime = moment
       .utc()
+      .startOf('day')
+      .hour(TEMPID_SWITCHOVER_TIME)
       .add(TEMPID_VALIDITY_PERIOD * i, 'hours')
-      .add(-1, 'minute')
-    const validTo = validFrom.add(TEMPID_VALIDITY_PERIOD, 'hours')
+    const validFrom = startTime.clone();
+    const validTo = startTime.add(TEMPID_VALIDITY_PERIOD, 'hours')
 
-    const userRef = (await this.firestoreDB).collection('users').doc(userId)
-
-    const tempID = await (await this.firestoreDB)
+    const collection = (await this.firestoreDB)
       .collection('userStatuses')
       .doc(userId)
       .collection('tempIDs')
-      .add({ validFrom, validTo })
-      .then(doc => { return doc.id })
+
+    let tempID = await collection
+      .where('validFrom', '==', validFrom)
+      .where('validTo', '==', validTo)
+      .limit(1)
+      .get()
+      .then((query) => {
+        return query.docs.length === 0 ? undefined : query.docs[0].id
+      })
+
+    tempID =
+      tempID ||
+      (await collection.add({ validFrom, validTo }).then((doc) => {
+        return doc.id
+      }))
 
     return {
       tempID,
