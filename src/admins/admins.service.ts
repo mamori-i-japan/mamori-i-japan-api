@@ -2,23 +2,27 @@ import { Injectable, BadRequestException } from '@nestjs/common'
 import { AdminsRepository } from './admins.repository'
 import { CreateAdminDto, CreateAdminRequestDto } from './dto/create-admin.dto'
 import { Admin } from './interfaces/admin.interface'
-import { validateOrReject } from 'class-validator'
+import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
 export class AdminsService {
   constructor(private adminsRepository: AdminsRepository) {}
 
   async createOneAdminUser(createAdminRequest: CreateAdminRequestDto) {
-    // TODO @yashmurty : Add firebase user create here and get uid.
+    let firebaseUserRecord: firebaseAdmin.auth.UserRecord
+    try {
+      firebaseUserRecord = await firebaseAdmin.auth().createUser({
+        email: createAdminRequest.email,
+        emailVerified: false,
+        disabled: false,
+      })
+    } catch (error) {
+      throw new BadRequestException(error.message)
+    }
+
     const createAdminDto: CreateAdminDto = new CreateAdminDto()
     createAdminDto.email = createAdminRequest.email
-    createAdminDto.adminUserId = 'FIX_ME_ADMIN_USER_ID'
-
-    try {
-      await validateOrReject(createAdminDto)
-    } catch (errors) {
-      throw new BadRequestException(errors, 'Request validation failed')
-    }
+    createAdminDto.adminUserId = firebaseUserRecord.uid
 
     return this.adminsRepository.createOne(createAdminDto)
   }
