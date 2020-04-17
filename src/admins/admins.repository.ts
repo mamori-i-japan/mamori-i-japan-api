@@ -12,6 +12,7 @@ export class AdminsRepository {
   }
 
   async createOne(admin: Admin, adminProfile?: AdminProfile): Promise<void> {
+    admin.created = firebaseAdmin.firestore.Timestamp.fromDate(new Date()).seconds
     await (await this.firestoreDB)
       .collection('admins')
       .doc(admin.adminUserId)
@@ -51,6 +52,7 @@ export class AdminsRepository {
           const adminEach: Admin = {
             adminUserId: doc.id,
             email: doc.data().email,
+            created: doc.data().created,
           }
           adminsArray.push(adminEach)
         })
