@@ -1,4 +1,4 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common'
+import { Controller, Get, Request, UseGuards, Post } from '@nestjs/common'
 import {
   ApiOperation,
   ApiBearerAuth,
@@ -12,13 +12,24 @@ import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-us
 export class AdminsController {
   constructor(private adminsService: AdminsService) {}
 
-  @ApiOperation({ summary: 'Get admin profile' })
+  // TODO @yashmurty : Investigate pagination for this later.
+  @ApiOperation({ summary: 'Get all admin users' })
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   @UseGuards(FirebaseAdminUserValidateGuard)
   @Get('/users')
-  async getAdminUsers(@Request() req) {
+  async getAdminUsers() {
     return this.adminsService.findAllAdminUsers()
+  }
+
+  @ApiOperation({ summary: 'Create new admin user' })
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @UseGuards(FirebaseAdminUserValidateGuard)
+  @Post('/users')
+  async postAdminUser() {
+    return 'WIP'
   }
 }
