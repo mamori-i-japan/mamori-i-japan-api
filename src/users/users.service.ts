@@ -8,12 +8,12 @@ import { TEMPID_BATCH_SIZE } from './constants'
 export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
-  create(user: CreateUserDto, userProfile?: CreateUserProfileDto) {
+  createOneUser(user: CreateUserDto, userProfile?: CreateUserProfileDto) {
     return this.usersRepository.createOne(user, userProfile)
   }
 
-  async findOne(userId: string): Promise<User | undefined> {
-    return this.usersRepository.findOne(userId)
+  async findOneUserById(userId: string): Promise<User | undefined> {
+    return this.usersRepository.findOneById(userId)
   }
 
   async getTempIDs(userId: string): Promise<any[]> {

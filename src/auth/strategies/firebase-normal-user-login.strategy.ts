@@ -5,6 +5,7 @@ import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
 import { X_MOBILE_SECRET_RANDOM_TOKEN_HEADER } from '../constants'
+import { validateNormalTokenPhonePayload } from '../util'
 
 @Injectable()
 export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
@@ -28,6 +29,9 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
     } catch (error) {
       throw new UnauthorizedException(error.message)
     }
+
+    // Expect all normal access tokens to have phone and phone_verified data.
+    validateNormalTokenPhonePayload(userDecodedToken)
 
     // NOTE : Passport automatically creates a user object, based on the value we return here.
     done(null, userDecodedToken)
