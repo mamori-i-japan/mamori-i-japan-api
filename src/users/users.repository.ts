@@ -4,6 +4,7 @@ import { FirebaseService } from '../firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import { TEMPID_VALIDITY_PERIOD, TEMPID_SWITCHOVER_TIME } from './constants'
 import * as moment from 'moment'
+import { TempID } from './interfaces/temp-id.interface'
 
 @Injectable()
 export class UsersRepository {
@@ -37,14 +38,14 @@ export class UsersRepository {
     return getDoc.data() as User
   }
 
-  async generateTempId(userId: string, i: number) {
+  async generateTempId(userId: string, i: number): Promise<TempID> {
     const yesterday = moment.utc().subtract(1, 'day')
     const startTime = yesterday
       .startOf('day')
       .hour(TEMPID_SWITCHOVER_TIME)
       .add(TEMPID_VALIDITY_PERIOD * i, 'hours')
-    const validFrom = startTime.clone()
-    const validTo = startTime.add(TEMPID_VALIDITY_PERIOD, 'hours')
+    const validFrom = startTime.clone().toDate()
+    const validTo = startTime.add(TEMPID_VALIDITY_PERIOD, 'hours').toDate()
 
     const collection = (await this.firestoreDB)
       .collection('userStatuses')
