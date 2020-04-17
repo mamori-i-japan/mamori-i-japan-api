@@ -15,3 +15,18 @@ export function validateAdminTokenEmailPayload(
     throw new UnauthorizedException('Access token states email had not been verified yet')
   }
 }
+
+/**
+ * Validate normal access tokens to have phone and phone_verified data
+ * @param userDecodedToken: firebaseAdmin.auth.DecodedIdToken
+ */
+export function validateNormalTokenPhonePayload(
+  userDecodedToken: firebaseAdmin.auth.DecodedIdToken
+) {
+  if (!userDecodedToken.phone) {
+    throw new UnauthorizedException('Access token does not have phone payload')
+  }
+  if (!userDecodedToken.phone_verified) {
+    throw new UnauthorizedException('Access token states phone had not been verified yet')
+  }
+}
