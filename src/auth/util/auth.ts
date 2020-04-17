@@ -23,10 +23,7 @@ export function validateAdminTokenEmailPayload(
 export function validateNormalTokenPhonePayload(
   userDecodedToken: firebaseAdmin.auth.DecodedIdToken
 ) {
-  if (!userDecodedToken.phone) {
-    throw new UnauthorizedException('Access token does not have phone payload')
-  }
-  if (!userDecodedToken.phone_verified) {
-    throw new UnauthorizedException('Access token states phone had not been verified yet')
+  if (!userDecodedToken.phone_number) {
+    throw new UnauthorizedException('Access token does not have phone number payload')
   }
 }
