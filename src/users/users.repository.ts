@@ -3,7 +3,7 @@ import { User, UserProfile } from './interfaces/user.interface'
 import { FirebaseService } from '../firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import { TEMPID_VALIDITY_PERIOD, TEMPID_SWITCHOVER_TIME } from './constants'
-import * as moment from 'moment'
+import * as moment from 'moment-timezone'
 import { TempID } from './interfaces/temp-id.interface'
 
 @Injectable()
@@ -39,7 +39,7 @@ export class UsersRepository {
   }
 
   async generateTempId(userId: string, i: number): Promise<TempID> {
-    const yesterday = moment.utc().subtract(1, 'day')
+    const yesterday = moment.tz('Asia/Tokyo').subtract(1, 'day')
     const startTime = yesterday
       .startOf('day')
       .hour(TEMPID_SWITCHOVER_TIME)
