@@ -21,8 +21,10 @@ export class AdminsService {
     }
 
     const createAdminDto: CreateAdminDto = new CreateAdminDto()
-    createAdminDto.email = createAdminRequest.email
     createAdminDto.adminUserId = firebaseUserRecord.uid
+    createAdminDto.email = createAdminRequest.email
+    createAdminDto.addedByAdminUserId = createAdminRequest.addedByAdminUserId
+    createAdminDto.addedByAdminEmail = createAdminRequest.addedByAdminEmail
 
     return this.adminsRepository.createOne(createAdminDto)
   }

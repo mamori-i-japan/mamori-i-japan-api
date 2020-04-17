@@ -52,6 +52,8 @@ export class AdminsRepository {
           const adminEach: Admin = {
             adminUserId: doc.id,
             email: doc.data().email,
+            addedByAdminUserId: doc.data().addedByAdminUserId,
+            addedByAdminEmail: doc.data().addedByAdminEmail,
             created: doc.data().created,
           }
           adminsArray.push(adminEach)

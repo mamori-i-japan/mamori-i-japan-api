@@ -1,4 +1,13 @@
-import { Controller, Get, UseGuards, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+  Request,
+} from '@nestjs/common'
 import {
   ApiOperation,
   ApiBearerAuth,
@@ -33,7 +42,9 @@ export class AdminsController {
   @ApiUnauthorizedResponse()
   @UseGuards(FirebaseAdminUserValidateGuard)
   @Post('/users')
-  async postAdminUser(@Body() createAdminRequest: CreateAdminRequestDto) {
+  async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
+    createAdminRequest.addedByAdminUserId = req.user.uid
+    createAdminRequest.addedByAdminEmail = req.user.email
     return this.adminsService.createOneAdminUser(createAdminRequest)
   }
 }
