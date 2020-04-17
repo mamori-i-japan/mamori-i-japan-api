@@ -19,3 +19,10 @@ export class CreateAdminDto {
   @IsNotEmpty()
   email: string
 }
+
+export class CreateAdminRequestDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  email: string
+}

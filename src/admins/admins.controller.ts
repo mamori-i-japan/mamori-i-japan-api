@@ -1,4 +1,4 @@
-import { Controller, Get, Request, UseGuards, Post } from '@nestjs/common'
+import { Controller, Get, UseGuards, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common'
 import {
   ApiOperation,
   ApiBearerAuth,
@@ -7,6 +7,8 @@ import {
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
+import { CreateAdminRequestDto } from './dto/create-admin.dto'
+import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 
 @Controller('admins')
 export class AdminsController {
@@ -23,13 +25,15 @@ export class AdminsController {
     return this.adminsService.findAllAdminUsers()
   }
 
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
   @ApiBearerAuth()
   @ApiOkResponse()
   @ApiUnauthorizedResponse()
   @UseGuards(FirebaseAdminUserValidateGuard)
   @Post('/users')
-  async postAdminUser() {
+  async postAdminUser(@Body() createAdminRequestDto: CreateAdminRequestDto) {
+    console.log('createAdminRequestDto : ', createAdminRequestDto)
     return 'WIP'
   }
 }
