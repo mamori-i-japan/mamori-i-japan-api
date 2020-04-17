@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
+import { validateAdminTokenEmailPayload } from '../util'
 
 @Injectable()
 export class FirebaseAdminUserLoginStrategy extends PassportStrategy(
@@ -23,6 +24,9 @@ export class FirebaseAdminUserLoginStrategy extends PassportStrategy(
     } catch (error) {
       throw new UnauthorizedException(error.message)
     }
+
+    // Expect all admin access tokens to have email and email_verified data.
+    validateAdminTokenEmailPayload(userDecodedToken)
 
     // NOTE : Passport automatically creates a user object, based on the value we return here.
     done(null, userDecodedToken)

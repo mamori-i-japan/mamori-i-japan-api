@@ -7,9 +7,10 @@ import { AuthController } from './auth.controller'
 import { FirebaseModule } from '../firebase/firebase.module'
 import { FirebaseAdminUserLoginStrategy } from './strategies/firebase-admin-user-login.strategy'
 import { FirebaseAdminUserValidateStrategy } from './strategies/firebase-admin-user-validate.strategy'
+import { AdminsModule } from '../admins/admins.module'
 
 @Module({
-  imports: [UsersModule, FirebaseModule],
+  imports: [AdminsModule, UsersModule, FirebaseModule],
   providers: [
     AuthService,
     FirebaseNormalUserLoginStrategy,

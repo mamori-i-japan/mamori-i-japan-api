@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
 import { UsersService } from '../users/users.service'
+import { AdminsService } from '../admins/admins.service'
 import { User } from '../users/interfaces/user.interface'
 import { CreateUserDto } from '../users/dto/create-user.dto'
 import { validateOrReject } from 'class-validator'
@@ -7,7 +8,7 @@ import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersService, private adminsService: AdminsService) {}
 
   async normalUserLogin(userDecodedToken: any, secretRandomToken: string) {
     const userObj = await this.usersService.findOne(userDecodedToken.uid)
@@ -18,12 +19,22 @@ export class AuthService {
     }
 
     await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
-    // const updatedUser = await firebaseAdmin.auth().getUser(user.uid)
 
     return userDecodedToken
   }
 
   async adminUserlogin(userDecodedToken: any) {
+    console.log('userDecodedToken : ', userDecodedToken)
+    const adminObj = await this.adminsService.findOne(userDecodedToken.uid)
+    if (!adminObj) {
+      throw new ForbiddenException('User Id does not belong to an admin')
+    }
+    if (adminObj.email !== userDecodedToken.email) {
+      throw new ForbiddenException('Email in access token does not match with admin in firestore')
+    }
+
+    await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
+
     return userDecodedToken
   }
 
