@@ -29,7 +29,7 @@ export class UsersRepository {
     }
   }
 
-  async findOne(userId: string): Promise<User | undefined> {
+  async findOneById(userId: string): Promise<User | undefined> {
     const getDoc = await (await this.firestoreDB)
       .collection('users')
       .doc(userId)
@@ -43,7 +43,7 @@ export class UsersRepository {
       .startOf('day')
       .hour(TEMPID_SWITCHOVER_TIME)
       .add(TEMPID_VALIDITY_PERIOD * i, 'hours')
-    const validFrom = startTime.clone();
+    const validFrom = startTime.clone()
     const validTo = startTime.add(TEMPID_VALIDITY_PERIOD, 'hours')
 
     const collection = (await this.firestoreDB)

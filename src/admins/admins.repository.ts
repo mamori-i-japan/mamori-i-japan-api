@@ -27,7 +27,7 @@ export class AdminsRepository {
     }
   }
 
-  async findOne(adminUserId: string): Promise<Admin | undefined> {
+  async findOneById(adminUserId: string): Promise<Admin | undefined> {
     const getDoc = await (await this.firestoreDB)
       .collection('admins')
       .doc(adminUserId)

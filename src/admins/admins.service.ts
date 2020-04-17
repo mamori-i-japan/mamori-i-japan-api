@@ -7,12 +7,12 @@ import { Admin } from './interfaces/admin.interface'
 export class AdminsService {
   constructor(private adminsRepository: AdminsRepository) {}
 
-  create(admin: CreateAdminDto, adminProfile?: CreateAdminProfileDto) {
+  createOneAdminUser(admin: CreateAdminDto, adminProfile?: CreateAdminProfileDto) {
     return this.adminsRepository.createOne(admin, adminProfile)
   }
 
-  async findOne(adminId: string): Promise<Admin | undefined> {
-    return this.adminsRepository.findOne(adminId)
+  async findOneAdminById(adminId: string): Promise<Admin | undefined> {
+    return this.adminsRepository.findOneById(adminId)
   }
 
   async findAllAdminUsers(): Promise<Admin[] | undefined> {

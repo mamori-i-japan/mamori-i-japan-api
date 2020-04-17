@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private usersService: UsersService, private adminsService: AdminsService) {}
 
   async normalUserLogin(userDecodedToken: any, secretRandomToken: string) {
-    const userObj = await this.usersService.findOne(userDecodedToken.uid)
+    const userObj = await this.usersService.findOneUserById(userDecodedToken.uid)
     if (!userObj) {
       await this.createFirstTimeLoginUser(userDecodedToken, secretRandomToken)
     } else {
@@ -25,7 +25,7 @@ export class AuthService {
 
   async adminUserlogin(userDecodedToken: any) {
     console.log('userDecodedToken : ', userDecodedToken)
-    const adminObj = await this.adminsService.findOne(userDecodedToken.uid)
+    const adminObj = await this.adminsService.findOneAdminById(userDecodedToken.uid)
     if (!adminObj) {
       throw new ForbiddenException('User Id does not belong to an admin')
     }
@@ -54,7 +54,7 @@ export class AuthService {
       throw new BadRequestException(errors, 'Request validation failed')
     }
 
-    await this.usersService.create(createUserDto)
+    await this.usersService.createOneUser(createUserDto)
   }
 
   /**
