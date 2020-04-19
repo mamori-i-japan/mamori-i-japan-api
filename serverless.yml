@@ -43,6 +43,11 @@ functions:
           path: /{proxy+}
           method: any
           cors: true
+  schedule-main:
+    handler: dist/schedule-main.handler
+    events:
+      - schedule:
+          rate: rate(10 minutes)
 
 plugins:
   # - serverless-domain-manager
