@@ -30,7 +30,7 @@ package:
     - '**'
 
 functions:
-  lambda-main:
+  lambda-swagger:
     handler: dist/lambda-swagger.handler
     events:
       - http:
