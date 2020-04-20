@@ -18,6 +18,15 @@ const bootstrapServer = async (): Promise<Server> => {
   app.use(eventContext())
   app.enableCors()
 
+  const options = new DocumentBuilder()
+    .setTitle('contact-tracing-api')
+    .setDescription('SwaggerUI for contact-tracing-api API')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build()
+  const document = SwaggerModule.createDocument(app, options)
+  SwaggerModule.setup('swagger', app, document)
+
   await app.init()
   return createServer(expressApp)
 }
