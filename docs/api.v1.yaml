@@ -10,8 +10,10 @@ servers:
     description: Mock
   - url: 'http://localhost:3000'
     description: Local
+  - url: 'https://35111ugog3.execute-api.ap-northeast-1.amazonaws.com/dev'
+    description: DEV
 paths:
-  /v1/login:
+  /auth/login:
     post:
       summary: Authenticate app users
       tags:
@@ -26,8 +28,14 @@ paths:
       responses:
         '204':
           description: No Content
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-mobile-secret-random-token
+          required: true
     parameters: []
-  /v1/users/me/temp_ids:
+  /users/me/temp_ids:
     get:
       summary: "Find users' own TempIDs"
       tags:
@@ -69,7 +77,7 @@ paths:
                     - validFrom
                     - validTo
     parameters: []
-  /v1/users/me/close_contacts:
+  /users/me/close_contacts:
     post:
       summary: Add new close contacts
       tags:
@@ -102,7 +110,7 @@ paths:
                   - tempID
                   - contactedAt
     parameters: []
-  /v1/admin/login:
+  /admin/login:
     post:
       summary: Authenticate admin users
       tags:
@@ -117,8 +125,14 @@ paths:
       responses:
         '204':
           description: No Content
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-mobile-secret-random-token
+          required: true
     parameters: []
-  /v1/admin/positives:
+  /admin/positives:
     post:
       summary: Add a new positive
       tags:

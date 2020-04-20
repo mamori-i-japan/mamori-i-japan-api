@@ -12,6 +12,7 @@ provider:
     serverSideEncryption: AES256
   environment:
     FIREBASE_DATABASE_URL: ${ssm:/envvars/${self:provider.stage}/FIREBASE_DATABASE_URL~true}
+    FIREBASE_STORAGE_BUCKET: ${ssm:/envvars/${self:provider.stage}/FIREBASE_STORAGE_BUCKET~true}
     FIREBASE_type: ${ssm:/envvars/${self:provider.stage}/FIREBASE_type~true}
     FIREBASE_project_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_project_id~true}
     FIREBASE_private_key_id: ${ssm:/envvars/${self:provider.stage}/FIREBASE_private_key_id~true}
@@ -53,6 +54,12 @@ functions:
           path: /swagger/{proxy+}
           method: any
           cors: true
+  lambda-schedule:
+    handler: dist/lambda-schedule.handler
+    reservedConcurrency: 1
+    events:
+      - schedule:
+          rate: rate(10 minutes)
 
 plugins:
   # - serverless-domain-manager
