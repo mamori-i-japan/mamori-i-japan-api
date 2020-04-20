@@ -38,3 +38,6 @@ lerna-debug.log*
 # Secrets
 .env
 serviceAccountKey.json
+
+/.firebase
+firebase-debug.log
