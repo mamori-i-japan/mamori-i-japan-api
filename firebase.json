@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "site": "contact-tracing-dev",
+    "public": "static-app",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
