@@ -45,6 +45,7 @@ functions:
           cors: true
   schedule-main:
     handler: dist/schedule-main.handler
+    reservedConcurrency: 1
     events:
       - schedule:
           rate: rate(10 minutes)
