@@ -12,7 +12,7 @@ export class AuthService {
   async normalUserLogin(userDecodedToken: any) {
     const userObj = await this.usersService.findOneUserById(userDecodedToken.uid)
     if (!userObj) {
-      await this.createFirstTimeLoginUser(userDecodedToken, userDecodedToken.phone_number)
+      await this.createFirstTimeLoginUser(userDecodedToken)
     }
 
     // Remove the phone number from the linked firebase auth user.
@@ -46,12 +46,11 @@ export class AuthService {
   /**
    * Create a user document in firestore for first time user.
    * @param userDecodedToken: any
-   * @param phoneNumber: string
    */
-  private async createFirstTimeLoginUser(userDecodedToken: any, phoneNumber: string) {
+  private async createFirstTimeLoginUser(userDecodedToken: any) {
     const createUserDto: CreateUserDto = new CreateUserDto()
     createUserDto.userId = userDecodedToken.uid
-    createUserDto.phoneNumber = phoneNumber
+    createUserDto.phoneNumber = userDecodedToken.phone_number
     // Validate the create User data object which will be saved to firestore.
     try {
       await validateOrReject(createUserDto)
