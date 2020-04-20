@@ -43,6 +43,17 @@ functions:
           path: /{proxy+}
           method: any
           cors: true
+  lambda-swagger:
+    handler: dist/lambda-swagger.handler
+    events:
+      - http:
+          path: /swagger
+          method: any
+          cors: true
+      - http:
+          path: /swagger/{proxy+}
+          method: any
+          cors: true
   lambda-schedule:
     handler: dist/lambda-schedule.handler
     reservedConcurrency: 1
@@ -59,12 +70,11 @@ plugins:
 
 # TODO : Needs Route 53 domain first I guess?
 custom:
-#   customDomain:
-#     domainName: contact-tracing-api.example.com
+  #   customDomain:
+  #     domainName: contact-tracing-api.example.com
   prune:
     automatic: true
     includeLayers: true
     number: 5
-
 # resources:
 #   Resources:

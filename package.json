@@ -21,7 +21,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "sls-offline": "npm run build && serverless offline start",
+    "sls-offline": "npm run build && serverless offline start --useChildProcesses",
     "deploy:dev": "npm run build && serverless deploy --stage dev",
     "deploy:stg": "npm run build && serverless create_domain --stage stg && serverless deploy --stage stg",
     "deploy:prd": "npm run build && serverless create_domain --stage prd && serverless deploy --stage prd",
