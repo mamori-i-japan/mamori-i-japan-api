@@ -1,5 +1,5 @@
 ---
-service: contact-tracing-main-api
+service: contact-tracing-api
 
 provider:
   name: aws
@@ -7,7 +7,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-1'}
   deploymentBucket:
-    name: contact-tracing-main-api-serverless
+    name: contact-tracing-api-serverless
     blockPublicAccess: true
     serverSideEncryption: AES256
   environment:
