@@ -102,26 +102,23 @@ export class UsersRepository {
     const tempIDs = await Promise.all(
       userIDs.map(async (doc) => {
         const id = doc.id
-        const testDate = doc.testDate
-        const reproductionDate = moment(testDate)
-          .subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
+        const testDate = moment(doc.testDate.toDate())
+          .tz('Asia/Tokyo')
           .startOf('day')
+        const reproductionDate = testDate.clone().subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
 
-        return (
-          (await this.firestoreDB)
-            .collection('userStatuses')
-            .doc(id)
-            .collection('tempIDs')
-            .where('validFrom', '>=', reproductionDate)
-            // FIXME @shogo-mitomo : cannot have inequality filters on multiple properties
-            // .where('validTo', '<=', testDate)
-            .get()
-            .then((query) => {
-              return query.docs.map((doc) => {
-                return { uuid: doc.id }
-              })
+        return (await this.firestoreDB)
+          .collection('userStatuses')
+          .doc(id)
+          .collection('tempIDs')
+          .where('validFrom', '>=', reproductionDate)
+          .where('validFrom', '<=', testDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
+          .get()
+          .then((query) => {
+            return query.docs.map((doc) => {
+              return { uuid: doc.id }
             })
-        )
+          })
       })
     )
 
