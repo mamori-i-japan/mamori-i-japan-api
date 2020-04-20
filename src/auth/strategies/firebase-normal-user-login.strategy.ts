@@ -25,8 +25,6 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
-    console.log('userDecodedToken : ', userDecodedToken)
-
     // Expect all normal access tokens to have phone and phone_verified data.
     validateNormalTokenPhonePayload(userDecodedToken)
 

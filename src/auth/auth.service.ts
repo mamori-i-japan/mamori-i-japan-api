@@ -23,7 +23,9 @@ export class AuthService {
 
     await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
 
-    return userDecodedToken
+    const updateUser = await firebaseAdmin.auth().getUser(userDecodedToken.uid)
+
+    return updateUser
   }
 
   async adminUserlogin(userDecodedToken: any) {
