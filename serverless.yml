@@ -1,5 +1,5 @@
 ---
-service: contact-tracing-swagger-api
+service: contact-tracing-main-api
 
 provider:
   name: aws
@@ -7,7 +7,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-1'}
   deploymentBucket:
-    name: contact-tracing-swagger-api-serverless
+    name: contact-tracing-main-api-serverless
     blockPublicAccess: true
     serverSideEncryption: AES256
   environment:
@@ -30,8 +30,9 @@ package:
     - '**'
 
 functions:
-  lambda-swagger:
-    handler: dist/lambda-swagger.handler
+  lambda-main:
+    handler: dist/lambda-main.handler
+    provisionedConcurrency: 1
     events:
       - http:
           path: /
@@ -39,6 +40,17 @@ functions:
           cors: true
       - http:
           path: /{proxy+}
+          method: any
+          cors: true
+  lambda-swagger:
+    handler: dist/lambda-swagger.handler
+    events:
+      - http:
+          path: /swagger
+          method: any
+          cors: true
+      - http:
+          path: /swagger/{proxy+}
           method: any
           cors: true
 
