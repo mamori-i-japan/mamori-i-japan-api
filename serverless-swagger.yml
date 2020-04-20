@@ -1,5 +1,5 @@
 ---
-service: contact-tracing-api
+service: contact-tracing-swagger-api
 
 provider:
   name: aws
@@ -7,7 +7,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-1'}
   deploymentBucket:
-    name: contact-tracing-api-serverless
+    name: contact-tracing-swagger-api-serverless
     blockPublicAccess: true
     serverSideEncryption: AES256
   environment:
@@ -31,8 +31,7 @@ package:
 
 functions:
   lambda-main:
-    handler: dist/lambda-main.handler
-    provisionedConcurrency: 1
+    handler: dist/lambda-swagger.handler
     events:
       - http:
           path: /
@@ -52,12 +51,11 @@ plugins:
 
 # TODO : Needs Route 53 domain first I guess?
 custom:
-#   customDomain:
-#     domainName: contact-tracing-api.example.com
+  #   customDomain:
+  #     domainName: contact-tracing-api.example.com
   prune:
     automatic: true
     includeLayers: true
     number: 5
-
 # resources:
 #   Resources:
