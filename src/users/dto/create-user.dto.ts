@@ -28,5 +28,5 @@ export class CreateUserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  secretRandomToken: string
+  phoneNumber: string
 }
