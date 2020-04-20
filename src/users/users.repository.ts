@@ -85,8 +85,8 @@ export class UsersRepository {
   async uploadPositiveList(): Promise<null> {
     const recoveredDate = moment
       .tz('Asia/Tokyo')
-      .subtract(POSITIVE_RECOVERY_PERIOD, 'days')
       .startOf('day')
+      .subtract(POSITIVE_RECOVERY_PERIOD, 'days')
 
     // NOTE : need to create a composite index on Cloud Firestore
     const userIDs = await (await this.firestoreDB)
@@ -106,7 +106,10 @@ export class UsersRepository {
         const testDate = moment(doc.testDate.toDate())
           .tz('Asia/Tokyo')
           .startOf('day')
-        const reproductionDate = testDate.clone().subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
+        const reproductionDate = moment
+          .tz('Asia/Tokyo')
+          .startOf('day')
+          .subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
 
         return (await this.firestoreDB)
           .collection('userStatuses')
