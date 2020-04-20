@@ -25,4 +25,8 @@ export class UsersService {
 
     return tempIDs
   }
+
+  async uploadPositiveList(): Promise<null> {
+    return this.usersRepository.uploadPositiveList()
+  }
 }
