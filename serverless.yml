@@ -43,8 +43,8 @@ functions:
           path: /{proxy+}
           method: any
           cors: true
-  schedule-main:
-    handler: dist/schedule-main.handler
+  lambda-schedule:
+    handler: dist/lambda-schedule.handler
     reservedConcurrency: 1
     events:
       - schedule:
