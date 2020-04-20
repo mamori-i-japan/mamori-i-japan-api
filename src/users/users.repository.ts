@@ -10,6 +10,7 @@ import {
 } from './constants'
 import * as moment from 'moment-timezone'
 import { TempID } from './interfaces/temp-id.interface'
+import * as zlib from 'zlib'
 
 @Injectable()
 export class UsersRepository {
@@ -122,12 +123,13 @@ export class UsersRepository {
       })
     )
 
-    const file = (await this.firestoreStorage).bucket().file('positives.json')
+    const file = (await this.firestoreStorage).bucket().file('positives.json.gz')
     const json = JSON.stringify({ data: [].concat(...tempIDs) })
 
-    // FIXME @shogo-mitomo : gzip compression
-    await file.save(json)
-    await file.setMetadata({ contentType: 'application/json' })
+    zlib.gzip(json, async (error, buffer) => {
+      await file.save(buffer)
+      await file.setMetadata({ contentType: 'application/gzip' })
+    })
 
     return
   }
