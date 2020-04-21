@@ -69,22 +69,21 @@ export class AdminsRepository {
   }
 
   async setPositiveFlag(phoneNumber: string): Promise<void> {
-    const userId = await (await this.firestoreDB)
+    await (await this.firestoreDB)
       .collection('users')
       .where('phoneNumber', '==', phoneNumber)
-      .limit(1)
       .get()
-      .then((query) => {
-        return query.docs.length === 0 ? undefined : query.docs[0].id
+      .then(async (query) => {
+        if (query.empty) {
+          throw new NotFoundException()
+        }
+
+        query.forEach(async (doc) => {
+          (await this.firestoreDB)
+            .collection('userStatuses')
+            .doc(doc.id)
+            .set({ positive: true, testDate: moment.tz('Asia/Tokyo') })
+        })
       })
-
-    if (!userId) {
-      throw new NotFoundException()
-    }
-
-    await (await this.firestoreDB)
-      .collection('userStatuses')
-      .doc(userId)
-      .set({ positive: true, testDate: moment.tz('Asia/Tokyo') })
   }
 }
