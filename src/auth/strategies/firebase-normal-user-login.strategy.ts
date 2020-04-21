@@ -4,7 +4,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
-import { X_MOBILE_SECRET_RANDOM_TOKEN_HEADER } from '../constants'
 import { validateNormalTokenPhonePayload } from '../util'
 
 @Injectable()
@@ -17,10 +16,6 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
     const token = extractorFunction(req)
     if (!token) {
       throw new UnauthorizedException('No bearer token found in the header')
-    }
-
-    if (!req.headers[X_MOBILE_SECRET_RANDOM_TOKEN_HEADER]) {
-      throw new UnauthorizedException('No x-mobile-secret-random-token found in the header')
     }
 
     let userDecodedToken: firebaseAdmin.auth.DecodedIdToken

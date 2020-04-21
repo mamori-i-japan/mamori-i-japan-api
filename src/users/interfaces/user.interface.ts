@@ -1,6 +1,6 @@
 export interface User {
   userId: string
-  secretRandomToken: string
+  phoneNumber: string
 }
 
 export interface UserProfile {
