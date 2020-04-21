@@ -78,7 +78,9 @@ export class AdminsRepository {
         return query.docs.length === 0 ? undefined : query.docs[0].id
       })
 
-    if (!userId) { throw new NotFoundException() }
+    if (!userId) {
+      throw new NotFoundException()
+    }
 
     await (await this.firestoreDB)
       .collection('userStatuses')
