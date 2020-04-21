@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common'
 import { AdminsRepository } from './admins.repository'
-import { CreateAdminDto, CreateAdminRequestDto } from './dto/create-admin.dto'
+import { CreateAdminDto, CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
 import { Admin } from './interfaces/admin.interface'
 import * as firebaseAdmin from 'firebase-admin'
 
@@ -35,5 +35,10 @@ export class AdminsService {
 
   async findAllAdminUsers(): Promise<Admin[] | undefined> {
     return this.adminsRepository.findAll()
+  }
+
+  async setPositiveFlag(setPositiveFlag: SetPositiveFlagDto): Promise<void> {
+    const phoneNumber = setPositiveFlag.phoneNumber
+    return this.adminsRepository.setPositiveFlag(phoneNumber)
   }
 }

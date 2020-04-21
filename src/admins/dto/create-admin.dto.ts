@@ -40,3 +40,10 @@ export class CreateAdminRequestDto {
   addedByAdminUserId: string
   addedByAdminEmail: string
 }
+
+export class SetPositiveFlagDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  phoneNumber: string
+}
