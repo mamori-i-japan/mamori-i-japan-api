@@ -23,12 +23,14 @@ export class UsersRepository {
   }
 
   async createOne(user: User, userProfile?: UserProfile): Promise<void> {
+    user.created = firebaseAdmin.firestore.Timestamp.fromDate(new Date()).seconds
     await (await this.firestoreDB)
       .collection('users')
       .doc(user.userId)
       .set(JSON.parse(JSON.stringify(user)))
 
     if (userProfile) {
+      userProfile.created = firebaseAdmin.firestore.Timestamp.fromDate(new Date()).seconds
       await (await this.firestoreDB)
         .collection('users')
         .doc(user.userId)
