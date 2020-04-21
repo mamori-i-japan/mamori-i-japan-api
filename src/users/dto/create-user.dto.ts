@@ -45,6 +45,8 @@ export class CreateUserDto {
 }
 
 export class CreateCloseContactDto {
+  // TODO @yashmurty : Verify payload type with frontend team.
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
