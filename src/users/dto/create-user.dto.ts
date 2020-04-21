@@ -3,9 +3,8 @@ import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator'
 
 export class CreateUserProfileDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  prefecture: string
+  @IsNumber()
+  prefecture: number
 
   @ApiPropertyOptional()
   @IsNumber()
@@ -17,6 +16,12 @@ export class CreateUserProfileDto {
   @IsOptional()
   @IsNotEmpty()
   gender: string
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  job: string
 }
 
 export class CreateUserDto {
