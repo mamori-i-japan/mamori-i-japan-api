@@ -4,6 +4,7 @@ import { AdminsService } from '../admins/admins.service'
 import { CreateUserDto } from '../users/dto/create-user.dto'
 import { validateOrReject } from 'class-validator'
 import * as firebaseAdmin from 'firebase-admin'
+import { validateNormalTokenPhonePayload } from './util'
 
 @Injectable()
 export class AuthService {
@@ -23,9 +24,9 @@ export class AuthService {
 
     await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
 
-    const updateUser = await firebaseAdmin.auth().getUser(userDecodedToken.uid)
+    const updatedUser = await firebaseAdmin.auth().getUser(userDecodedToken.uid)
 
-    return updateUser
+    return updatedUser
   }
 
   async adminUserlogin(userDecodedToken: any) {
@@ -48,6 +49,9 @@ export class AuthService {
    * @param userDecodedToken: any
    */
   private async createFirstTimeLoginUser(userDecodedToken: any) {
+    // Expect all normal access tokens (FDT) to have phone_number data.
+    validateNormalTokenPhonePayload(userDecodedToken)
+
     const createUserDto: CreateUserDto = new CreateUserDto()
     createUserDto.userId = userDecodedToken.uid
     createUserDto.phoneNumber = userDecodedToken.phone_number
