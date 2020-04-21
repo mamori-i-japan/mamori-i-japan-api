@@ -2,4 +2,4 @@
 
 ### Auth
 
-![](./auth.png)
+![](./auth.svg)
