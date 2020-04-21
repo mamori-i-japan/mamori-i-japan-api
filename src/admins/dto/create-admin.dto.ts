@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsPhoneNumber, IsString, IsNotEmpty } from 'class-validator'
 
 export class CreateAdminProfileDto {
   @ApiProperty()
@@ -43,7 +43,7 @@ export class CreateAdminRequestDto {
 
 export class SetPositiveFlagDto {
   @ApiProperty()
-  @IsString()
+  @IsPhoneNumber(null)
   @IsNotEmpty()
   phoneNumber: string
 }
