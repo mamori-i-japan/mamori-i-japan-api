@@ -1,6 +1,6 @@
 @startuml
 
-== SignUp ==
+== Login ==
 
 autonumber 1
 
@@ -9,7 +9,7 @@ FirebaseAuth -> Mobile: OTP code
 Mobile  -> FirebaseAuth: send OTP
 FirebaseAuth -> FirebaseAuth: verify OTP code
 FirebaseAuth -> Mobile: Firebase Default Token(FDT)
-Mobile -> Backend: POST /auth/sign_up with FDT, prefecture, job
+Mobile -> Backend: POST /auth/login with FDT, prefecture, job
 Backend -> Backend: verify FDT
 Backend -> Backend: extract phoneno from FDT
 Backend ->  FirebaseAuth: firebaseAdmin.auth().updateUser(uid, {phoneNumber: null,disabled: false})
