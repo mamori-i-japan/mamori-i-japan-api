@@ -4,7 +4,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
-import { validateNormalTokenPhonePayload } from '../util'
 
 @Injectable()
 export class FirebaseNormalUserValidateStrategy extends PassportStrategy(
@@ -25,11 +24,10 @@ export class FirebaseNormalUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
-    // Expect all normal access tokens to have phone and phone_verified data.
-    validateNormalTokenPhonePayload(userDecodedToken)
-
-    // TODO @yashmurty : Check isNormalUser custom claim.
-    console.log(userDecodedToken)
+    // Check isNormalUser custom claim.
+    if (!userDecodedToken.isNormalUser) {
+      throw new UnauthorizedException('Access token does not contain custom claim isNormalUser')
+    }
 
     done(null, userDecodedToken)
   }
