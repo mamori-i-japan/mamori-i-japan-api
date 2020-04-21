@@ -7,8 +7,9 @@ export interface User {
 }
 
 export interface UserProfile {
-  prefecture: string
+  prefecture: number
   age: number
   gender: string
+  job: string
   created?: Moment
 }

@@ -1,19 +1,23 @@
 import { Injectable, BadRequestException, ForbiddenException } from '@nestjs/common'
 import { UsersService } from '../users/users.service'
 import { AdminsService } from '../admins/admins.service'
-import { CreateUserDto } from '../users/dto/create-user.dto'
+import { CreateUserDto, CreateUserProfileDto } from '../users/dto/create-user.dto'
 import { validateOrReject } from 'class-validator'
 import * as firebaseAdmin from 'firebase-admin'
 import { validateNormalTokenPhonePayload } from './util'
+import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService, private adminsService: AdminsService) {}
 
-  async normalUserLogin(userDecodedToken: any) {
+  async normalUserLogin(
+    userDecodedToken: any,
+    loginNormalUserRequestDto: LoginNormalUserRequestDto
+  ) {
     const userObj = await this.usersService.findOneUserById(userDecodedToken.uid)
     if (!userObj) {
-      await this.createFirstTimeLoginUser(userDecodedToken)
+      await this.createFirstTimeLoginUser(userDecodedToken, loginNormalUserRequestDto)
     }
 
     // Remove the phone number from the linked firebase auth user.
@@ -48,7 +52,10 @@ export class AuthService {
    * Create a user document in firestore for first time user.
    * @param userDecodedToken: any
    */
-  private async createFirstTimeLoginUser(userDecodedToken: any) {
+  private async createFirstTimeLoginUser(
+    userDecodedToken: any,
+    loginNormalUserRequestDto: LoginNormalUserRequestDto
+  ) {
     // Expect all normal access tokens (FDT) to have phone_number data.
     validateNormalTokenPhonePayload(userDecodedToken)
 
@@ -62,6 +69,10 @@ export class AuthService {
       throw new BadRequestException(errors, 'Request validation failed')
     }
 
-    await this.usersService.createOneUser(createUserDto)
+    const createUserProfileDto: CreateUserProfileDto = new CreateUserProfileDto()
+    createUserProfileDto.prefecture = loginNormalUserRequestDto.prefecture
+    createUserProfileDto.job = loginNormalUserRequestDto.job
+
+    await this.usersService.createOneUser(createUserDto, createUserProfileDto)
   }
 }
