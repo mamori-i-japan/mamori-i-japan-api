@@ -154,18 +154,10 @@ paths:
             schema:
               type: object
               properties:
-                phone:
+                phoneNumber:
                   type: string
-                testDate:
-                  type: string
-                  format: date
-                  description: 'MEMO: unnecessary?'
-                onsetDate:
-                  type: string
-                  format: date
-                  description: 'MEMO: unnecessary?'
               required:
-                - phone
+                - phoneNumber
     parameters: []
 components:
   schemas: {}
