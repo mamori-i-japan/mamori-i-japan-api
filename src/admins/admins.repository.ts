@@ -82,7 +82,7 @@ export class AdminsRepository {
           (await this.firestoreDB)
             .collection('userStatuses')
             .doc(doc.id)
-            .set({ positive: true, testDate: moment.tz('Asia/Tokyo') })
+            .update({ positive: true, testDate: moment.tz('Asia/Tokyo') })
         })
       })
   }
