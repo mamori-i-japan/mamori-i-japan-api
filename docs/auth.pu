@@ -1,0 +1,35 @@
+@startuml
+
+== SignUp ==
+
+autonumber 1
+
+Mobile  -> FirebaseAuth: SMS request
+FirebaseAuth -> Mobile: OTP code
+Mobile  -> FirebaseAuth: send OTP
+FirebaseAuth -> FirebaseAuth: verify OTP code
+FirebaseAuth -> Mobile: Firebase Default Token(FDT)
+Mobile -> Backend: POST /auth/sign_up with FDT, prefecture, job
+Backend -> Backend: verify FDT
+Backend -> Backend: extract phoneno from FDT
+Backend ->  FirebaseAuth: firebaseAdmin.auth().updateUser(uid, {phoneNumber: null,disabled: false})
+FirebaseAuth -> Backend: uid
+Backend -> Firestore: create user core data(hashed or encrypted phoneno)
+Firestore -> Backend: ok
+Backend -> Firestore: create user profile(prefecture, job)
+Firestore -> Backend: ok
+Backend -> Mobile: ok
+Mobile -> FirebaseAuth: getIDTokenForcingRefresh
+FirebaseAuth -> Mobile: ok
+
+== Reqeust API example ==
+
+autonumber 1
+Mobile -> Backend: GET /users/me/temp_ids with custom claimed token
+Backend -> Backend: verify custom claimed token
+Backend -> Backend: extract uid from custom claimed token
+Backend -> Firestore: save temp_ids with uid
+Firestore -> Backend: okay
+Backend -> Mobile: temp_ids
+
+@enduml
