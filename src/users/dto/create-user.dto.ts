@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator'
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsNotEmpty,
+  IsArray,
+  ValidateNested,
+} from 'class-validator'
+import { Type } from 'class-transformer'
 
 export class CreateUserProfileDto {
   @ApiProperty()
@@ -34,4 +42,33 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   phoneNumber: string
+}
+
+export class CreateCloseContactDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  externalTempId: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  contactStartTime: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  contactEndTime: string
+
+  @ApiProperty()
+  @IsNumber()
+  averageDistance: number
+}
+
+export class CreateCloseContactsRequestDto {
+  @ApiProperty({ type: CreateCloseContactDto, isArray: true })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateCloseContactDto)
+  closeContacts: CreateCloseContactDto[]
 }
