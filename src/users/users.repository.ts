@@ -120,7 +120,7 @@ export class UsersRepository {
           .get()
           .then((query) => {
             return query.docs.map((doc) => {
-              return { uuid: doc.id }
+              return { tempID: doc.id }
             })
           })
       })
