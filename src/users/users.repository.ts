@@ -23,12 +23,14 @@ export class UsersRepository {
   }
 
   async createOne(user: User, userProfile?: UserProfile): Promise<void> {
+    user.created = moment.utc()
     await (await this.firestoreDB)
       .collection('users')
       .doc(user.userId)
       .set(JSON.parse(JSON.stringify(user)))
 
     if (userProfile) {
+      userProfile.created = moment.utc()
       await (await this.firestoreDB)
         .collection('users')
         .doc(user.userId)
