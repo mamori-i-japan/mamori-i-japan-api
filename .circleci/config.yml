@@ -58,9 +58,9 @@ commands:
       - run:
           name: coverage
           command: npm run test:cov
-      # - run:
-      #     name: e2e test
-      #     command: npm run test:e2e
+      - run:
+          name: e2e test
+          command: npm run test:e2e
 
   npm_deploy:
     parameters:
