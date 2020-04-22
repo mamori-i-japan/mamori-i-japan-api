@@ -20,7 +20,7 @@ import { UsersService } from './users.service'
 import { TempID } from './classes/temp-id.class'
 import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
-import { CreateCloseContactsRequestDto } from './dto/create-user.dto'
+import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 
 @ApiTags('app')
 @ApiBearerAuth()

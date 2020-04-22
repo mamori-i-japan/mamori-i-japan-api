@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
-import {
-  CreateUserDto,
-  CreateUserProfileDto,
-  CreateCloseContactsRequestDto,
-} from './dto/create-user.dto'
+import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
 import { User } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
+import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 
 @Injectable()
 export class UsersService {
