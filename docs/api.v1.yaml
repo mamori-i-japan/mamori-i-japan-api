@@ -10,8 +10,12 @@ servers:
     description: Mock
   - url: 'http://localhost:3000'
     description: Local
-  - url: 'https://35111ugog3.execute-api.ap-northeast-1.amazonaws.com/dev'
+  - url: 'https://api-dev.mamori-i.jp'
     description: DEV
+  - url: 'https://api-stg.mamori-i.jp'
+    description: STG
+  - url: 'https://api.mamori-i.jp'
+    description: PRD
 paths:
   /users/me/close_contacts:
     post:

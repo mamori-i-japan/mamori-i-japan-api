@@ -62,19 +62,24 @@ functions:
           rate: rate(10 minutes)
 
 plugins:
-  # - serverless-domain-manager
   - serverless-deployment-bucket
+  - serverless-domain-manager
   - serverless-layers
   - serverless-offline
   - serverless-prune-plugin
 
-# TODO : Needs Route 53 domain first I guess?
 custom:
-  #   customDomain:
-  #     domainName: contact-tracing-api.example.com
+  customDomain:
+    domainName: ${self:custom.SUBDOMAIN.${self:provider.stage}}.${self:custom.DOMAIN}
   prune:
     automatic: true
     includeLayers: true
     number: 5
+  DOMAIN: ${ssm:/singleton/domain_name}
+  SUBDOMAIN:
+    dev: api-dev
+    stg: api-stg
+    prd: api
+
 # resources:
 #   Resources:

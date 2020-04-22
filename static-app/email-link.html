@@ -178,24 +178,35 @@ limitations under the License.
         // [START authstatelistener]
         firebase.auth().onAuthStateChanged(function(user) {
           if (user) {
-            // User is signed in.
-            var displayName = user.displayName
-            var email = user.email
-            var emailVerified = user.emailVerified
-            var photoURL = user.photoURL
-            var isAnonymous = user.isAnonymous
-            var uid = user.uid
-            var providerData = user.providerData
-            // Update UI.
-            // [START_EXCLUDE]
-            document.getElementById('quickstart-sign-in-status').textContent = 'Signed in'
-            document.getElementById('quickstart-sign-in').textContent = 'Sign out'
-            document.getElementById('quickstart-account-details').textContent = JSON.stringify(
-              user,
-              null,
-              '  '
-            )
-            // [END_EXCLUDE]
+            // Force token refresh. The token claims will contain the additional claims.
+            var updatedAccessToken = firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then((idTokenResult) => {
+                console.log('idTokenResult : ', idTokenResult)
+                userUpdated = firebase.auth().currentUser
+
+                // User is signed in.
+                var displayName = userUpdated.displayName
+                var email = userUpdated.email
+                var emailVerified = userUpdated.emailVerified
+                var photoURL = userUpdated.photoURL
+                var isAnonymous = userUpdated.isAnonymous
+                var uid = userUpdated.uid
+                var providerData = userUpdated.providerData
+                // Update UI.
+                // [START_EXCLUDE]
+                document.getElementById('quickstart-sign-in-status').textContent = 'Signed in'
+                document.getElementById('quickstart-sign-in').textContent = 'Sign out'
+                document.getElementById('quickstart-account-details').textContent = JSON.stringify(
+                  userUpdated,
+                  null,
+                  '  '
+                )
+                // [END_EXCLUDE]
+
+                return idTokenResult
+              })
           } else {
             // User is signed out.
             // Update UI.
