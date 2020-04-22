@@ -61,10 +61,6 @@ export class CreateCloseContactDto {
   @IsString()
   @IsNotEmpty()
   contactEndTime: string
-
-  @ApiProperty()
-  @IsNumber()
-  averageDistance: number
 }
 
 export class CreateCloseContactsRequestDto {
