@@ -30,7 +30,6 @@ export class UsersRepository {
       .set({ ...user })
 
     if (userProfile) {
-      userProfile.created = moment.utc()
       await (await this.firestoreDB)
         .collection('users')
         .doc(user.userId)
