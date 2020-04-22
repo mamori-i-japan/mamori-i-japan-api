@@ -3,6 +3,7 @@ import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
 import { User } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
+import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 
 @Injectable()
 export class UsersService {
@@ -26,7 +27,16 @@ export class UsersService {
     return tempIDs
   }
 
-  async uploadPositiveList(): Promise<null> {
+  async uploadPositiveList(): Promise<void> {
     return this.usersRepository.uploadPositiveList()
+  }
+
+  async createCloseContacts(
+    userId: string,
+    createCloseContactsRequestDto: CreateCloseContactsRequestDto
+  ): Promise<void> {
+    console.log('----')
+    console.log('createCloseContactsRequestDto : ', createCloseContactsRequestDto)
+    return
   }
 }

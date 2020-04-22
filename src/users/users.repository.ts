@@ -83,7 +83,7 @@ export class UsersRepository {
     }
   }
 
-  async uploadPositiveList(): Promise<null> {
+  async uploadPositiveList(): Promise<void> {
     const recoveredDate = moment
       .tz('Asia/Tokyo')
       .startOf('day')
