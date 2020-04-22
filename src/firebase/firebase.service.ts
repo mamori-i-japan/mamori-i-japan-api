@@ -8,11 +8,13 @@ export class FirebaseService {
     const firebaseDatabaseURL = this.configService.get('FIREBASE_DATABASE_URL')
     const firebaseStorageBucket = this.configService.get('FIREBASE_STORAGE_BUCKET')
 
-    firebaseAdmin.initializeApp({
-      credential: firebaseAdmin.credential.cert(this.configService.get('firebase')),
-      databaseURL: firebaseDatabaseURL,
-      storageBucket: firebaseStorageBucket,
-    })
+    if (!firebaseAdmin.apps.length) {
+      firebaseAdmin.initializeApp({
+        credential: firebaseAdmin.credential.cert(this.configService.get('firebase')),
+        databaseURL: firebaseDatabaseURL,
+        storageBucket: firebaseStorageBucket,
+      })
+    }
   }
 
   async Firestore(): Promise<firebaseAdmin.firestore.Firestore> {
