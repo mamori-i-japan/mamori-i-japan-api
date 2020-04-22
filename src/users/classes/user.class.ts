@@ -1,12 +1,12 @@
 import { Moment } from 'moment-timezone'
 
-export interface User {
+export class User {
   userId: string
   phoneNumber: string
   created?: Moment
 }
 
-export interface UserProfile {
+export class UserProfile {
   prefecture: number
   age: number
   gender: string

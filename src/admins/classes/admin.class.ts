@@ -17,6 +17,6 @@ export class Admin {
   created?: number
 }
 
-export interface AdminProfile {
+export class AdminProfile {
   name: string
 }

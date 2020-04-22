@@ -7,7 +7,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { UsersService } from './users.service'
-import { TempID } from './interfaces/temp-id.interface'
+import { TempID } from './classes/temp-id.class'
 import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-user-validate.guard'
 
 @ApiTags('app')

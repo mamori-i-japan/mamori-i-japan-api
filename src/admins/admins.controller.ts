@@ -21,7 +21,7 @@ import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 import { CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
-import { Admin } from './interfaces/admin.interface'
+import { Admin } from './classes/admin.class'
 
 @ApiTags('admin')
 @ApiBearerAuth()

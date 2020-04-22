@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common'
 import { AdminsRepository } from './admins.repository'
 import { CreateAdminDto, CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
-import { Admin } from './interfaces/admin.interface'
+import { Admin } from './classes/admin.class'
 import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
