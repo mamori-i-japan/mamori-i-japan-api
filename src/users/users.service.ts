@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
-import { User } from './interfaces/user.interface'
+import { User } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
 
 @Injectable()
