@@ -40,10 +40,7 @@ export class UsersController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Receive close contacts payload from user' })
-  @ApiBearerAuth()
   @ApiCreatedResponse()
-  @ApiUnauthorizedResponse()
-  @UseGuards(FirebaseNormalUserValidateGuard)
   @Post('/me/close_contacts')
   async postMeCloseContacts(
     @Request() req,
