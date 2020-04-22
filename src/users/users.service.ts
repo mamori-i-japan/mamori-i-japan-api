@@ -5,7 +5,7 @@ import {
   CreateUserProfileDto,
   CreateCloseContactsRequestDto,
 } from './dto/create-user.dto'
-import { User } from './interfaces/user.interface'
+import { User } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
 
 @Injectable()

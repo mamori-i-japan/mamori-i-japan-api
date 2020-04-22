@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { User, UserProfile } from './interfaces/user.interface'
+import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import {
@@ -9,7 +9,7 @@ import {
   POSITIVE_REPRODUCTION_PERIOD,
 } from './constants'
 import * as moment from 'moment-timezone'
-import { TempID } from './interfaces/temp-id.interface'
+import { TempID } from './classes/temp-id.class'
 import * as zlib from 'zlib'
 
 @Injectable()
