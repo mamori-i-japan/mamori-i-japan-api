@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   IsArray,
   ValidateNested,
+  IsPhoneNumber,
 } from 'class-validator'
 import { Type } from 'class-transformer'
 
@@ -39,7 +40,7 @@ export class CreateUserDto {
   userId: string
 
   @ApiProperty()
-  @IsString()
+  @IsPhoneNumber(null)
   @IsNotEmpty()
   phoneNumber: string
 }
@@ -53,14 +54,12 @@ export class CreateCloseContactDto {
   externalTempId: string
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  contactStartTime: string
+  @IsNumber()
+  contactStartTime: number
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  contactEndTime: string
+  @IsNumber()
+  contactEndTime: number
 }
 
 export class CreateCloseContactsRequestDto {
