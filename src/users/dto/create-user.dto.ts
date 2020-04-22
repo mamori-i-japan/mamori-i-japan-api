@@ -49,6 +49,11 @@ export class CreateCloseContactDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  uniqueInsertKey: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   externalTempId: string
 
   @ApiProperty()
