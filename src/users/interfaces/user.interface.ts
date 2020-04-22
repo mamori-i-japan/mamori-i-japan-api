@@ -11,5 +11,4 @@ export interface UserProfile {
   age: number
   gender: string
   job: string
-  created?: Moment
 }
