@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common'
 import {
   ApiOperation,
+  ApiTags,
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
@@ -20,28 +21,27 @@ import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 import { CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
+import { Admin } from './interfaces/admin.interface'
 
+@ApiTags('admin')
+@ApiBearerAuth()
+@ApiUnauthorizedResponse()
+@UseGuards(FirebaseAdminUserValidateGuard)
 @Controller('admins')
 export class AdminsController {
   constructor(private adminsService: AdminsService) {}
 
   // TODO @yashmurty : Investigate pagination for this later.
   @ApiOperation({ summary: 'Get all admin users' })
-  @ApiBearerAuth()
-  @ApiOkResponse()
-  @ApiUnauthorizedResponse()
-  @UseGuards(FirebaseAdminUserValidateGuard)
+  @ApiOkResponse({ type: [Admin] })
   @Get('/users')
-  async getAdminUsers() {
+  async getAdminUsers(): Promise<Admin[]> {
     return this.adminsService.findAllAdminUsers()
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
-  @ApiBearerAuth()
   @ApiCreatedResponse()
-  @ApiUnauthorizedResponse()
-  @UseGuards(FirebaseAdminUserValidateGuard)
   @Post('/users')
   async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
     createAdminRequest.addedByAdminUserId = req.user.uid
@@ -51,11 +51,8 @@ export class AdminsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag' })
-  @ApiBearerAuth()
   @ApiCreatedResponse()
-  @ApiUnauthorizedResponse()
   @ApiNotFoundResponse()
-  @UseGuards(FirebaseAdminUserValidateGuard)
   @Post('/positives')
   async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto) {
     return this.adminsService.setPositiveFlag(setPositiveFlag)

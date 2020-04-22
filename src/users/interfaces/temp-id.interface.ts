@@ -1,5 +1,12 @@
-export interface TempID {
-  readonly tempID: string
-  readonly validFrom: Date
-  readonly validTo: Date
+import { ApiProperty } from '@nestjs/swagger'
+
+export class TempID {
+  @ApiProperty()
+  tempID: string
+
+  @ApiProperty()
+  validFrom: Date
+
+  @ApiProperty()
+  validTo: Date
 }
