@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
-import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
+import {
+  CreateUserDto,
+  CreateUserProfileDto,
+  CreateCloseContactsRequestDto,
+} from './dto/create-user.dto'
 import { User } from './interfaces/user.interface'
 import { TEMPID_BATCH_SIZE } from './constants'
 
@@ -26,7 +30,16 @@ export class UsersService {
     return tempIDs
   }
 
-  async uploadPositiveList(): Promise<null> {
+  async uploadPositiveList(): Promise<void> {
     return this.usersRepository.uploadPositiveList()
+  }
+
+  async createCloseContacts(
+    userId: string,
+    createCloseContactsRequestDto: CreateCloseContactsRequestDto
+  ): Promise<void> {
+    console.log('----')
+    console.log('createCloseContactsRequestDto : ', createCloseContactsRequestDto)
+    return
   }
 }

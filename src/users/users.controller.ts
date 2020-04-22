@@ -43,12 +43,10 @@ export class UsersController {
   @ApiUnauthorizedResponse()
   @UseGuards(FirebaseNormalUserValidateGuard)
   @Post('/me/close_contacts')
-  async postAdminUser(
+  async postMeCloseContacts(
     @Request() req,
     @Body() createCloseContactsRequestDto: CreateCloseContactsRequestDto
   ) {
-    console.log('----')
-    console.log('createCloseContactsRequestDto : ', createCloseContactsRequestDto)
-    return 'WIP'
+    return this.usersService.createCloseContacts(req.user.uid, createCloseContactsRequestDto)
   }
 }
