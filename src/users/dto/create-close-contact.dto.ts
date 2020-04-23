@@ -20,6 +20,9 @@ export class CreateCloseContactDto {
   @ApiProperty()
   @IsNumber()
   contactEndTime: number
+
+  // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
+  selfUserId: string
 }
 
 export class CreateCloseContactsRequestDto {
