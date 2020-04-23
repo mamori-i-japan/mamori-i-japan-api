@@ -41,5 +41,8 @@ export class UsersService {
         return this.usersRepository.createOneCloseContact(userId, closeContact)
       })
     )
+
+    // TODO @yashmurty : Investigate later on how to ingest this data to BigQuert.
+    // Also, if we need to save this data as a `JSON` file or not.
   }
 }
