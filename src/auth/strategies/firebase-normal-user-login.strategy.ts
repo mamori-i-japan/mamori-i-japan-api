@@ -13,6 +13,7 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
   async validate(req: Request, done: VerifiedCallback): Promise<any> {
     const extractorFunction = ExtractJwt.fromAuthHeaderAsBearerToken()
     const token = extractorFunction(req)
+
     if (!token) {
       throw new UnauthorizedException('No bearer token found in the header')
     }
