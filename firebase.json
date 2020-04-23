@@ -1,7 +1,7 @@
 {
   "hosting": {
     "target": "fdt-generator",
-    "public": "static-app",
+    "public": "fdt-generator",
     "ignore": [
       "firebase.json",
       "**/.*",
