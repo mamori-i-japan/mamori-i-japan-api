@@ -35,8 +35,11 @@ export class UsersService {
     userId: string,
     createCloseContactsRequestDto: CreateCloseContactsRequestDto
   ): Promise<void> {
-    console.log('----')
-    console.log('createCloseContactsRequestDto : ', createCloseContactsRequestDto)
-    return
+    await Promise.all(
+      createCloseContactsRequestDto.closeContacts.map(async (closeContact) => {
+        closeContact.selfUserId = userId
+        return this.usersRepository.createOneCloseContact(userId, closeContact)
+      })
+    )
   }
 }
