@@ -69,9 +69,7 @@ export class AuthService {
       throw new BadRequestException(errors, 'Request validation failed')
     }
 
-    const createUserProfileDto: CreateUserProfileDto = new CreateUserProfileDto()
-    createUserProfileDto.prefecture = loginNormalUserRequestDto.prefecture
-    createUserProfileDto.job = loginNormalUserRequestDto.job
+    const createUserProfileDto: CreateUserProfileDto = { ...loginNormalUserRequestDto }
 
     await this.usersService.createOneUser(createUserDto, createUserProfileDto)
   }

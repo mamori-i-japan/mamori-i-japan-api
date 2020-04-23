@@ -7,17 +7,6 @@ export class CreateUserProfileDto {
   prefecture: number
 
   @ApiPropertyOptional()
-  @IsNumber()
-  @IsOptional()
-  age: number
-
-  @ApiPropertyOptional()
-  @IsString()
-  @IsOptional()
-  @IsNotEmpty()
-  gender: string
-
-  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   @IsNotEmpty()
