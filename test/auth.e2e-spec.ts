@@ -18,12 +18,12 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
+    // TODO @yashmurty : Add API Key to env file.
     const configService = app.get(ConfigService)
     const firebasePrivateKey = configService.get('FIREBASE_private_key')
-    console.log('firebasePrivateKey : ', firebasePrivateKey)
+    const firebaseWebAPIKey = ''
 
     customToken = await firebaseAdmin.auth().createCustomToken('uid')
-    const firebaseWebAPIKey = 'AIzaSyBbg2NNhLmY8YRSFmjibDoDM7O1EgheNEI'
 
     await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
   })
