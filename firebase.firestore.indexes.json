@@ -1,0 +1,19 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "userStatuses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "positive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "testDate",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

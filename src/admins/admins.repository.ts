@@ -79,7 +79,7 @@ export class AdminsRepository {
         }
 
         query.forEach(async (doc) => {
-          (await this.firestoreDB)
+          ;(await this.firestoreDB)
             .collection('userStatuses')
             .doc(doc.id)
             .update({ positive: true, testDate: moment.tz('Asia/Tokyo') })

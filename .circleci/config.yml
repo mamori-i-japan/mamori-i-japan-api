@@ -4,11 +4,10 @@ version: 2.1
 anchors:
   filters_dev: &filters_dev
     branches:
-  # TODO: comment in when we start using develop branch
-  #     only: develop
-  #
-  # filters_stg: &filters_stg
-  #   branches:
+      only: master  # TODO: separate from stg
+
+  filters_stg: &filters_stg
+    branches:
       only: master
 
   filters_prd: &filters_prd
@@ -123,10 +122,9 @@ workflows:
       - deploy_dev:
           requires: [test]
           filters: *filters_dev
-      # TODO: comment in when we start using develop branch
-      # - deploy_stg:
-      #     requires: [test]
-      #     filters: *filters_stg
+      - deploy_stg:
+          requires: [test]
+          filters: *filters_stg
       - slack/approval-notification:
           filters: *filters_prd
       - approve_deploy:

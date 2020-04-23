@@ -1,5 +1,22 @@
 {
   "projects": {
-    "default": "contact-tracing-26716"
+    "dev": "contact-tracing-26716",
+    "stg": "contact-tracing-37126"
+  },
+  "targets": {
+    "contact-tracing-26716": {
+      "hosting": {
+        "fdt-generator-webapp": [
+          "contact-tracing-fdt-gen-dev"
+        ]
+      }
+    },
+    "contact-tracing-37126": {
+      "hosting": {
+        "fdt-generator-webapp": [
+          "contact-tracing-fdt-gen-stg"
+        ]
+      }
+    }
   }
 }
