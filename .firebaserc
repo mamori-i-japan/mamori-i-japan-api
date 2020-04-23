@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "contact-tracing-26716",
-    "dev": "contact-tracing-26716"
+    "dev": "contact-tracing-26716",
+    "stg": "contact-tracing-37126"
   }
 }
