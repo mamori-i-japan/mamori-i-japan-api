@@ -11,6 +11,7 @@ import {
 import * as moment from 'moment-timezone'
 import { TempID } from './classes/temp-id.class'
 import * as zlib from 'zlib'
+import { CloseContact } from './classes/close-contact.class'
 
 @Injectable()
 export class UsersRepository {
@@ -135,5 +136,14 @@ export class UsersRepository {
     await file.setMetadata({ contentType: 'application/gzip' })
 
     return
+  }
+
+  async createOneCloseContact(userId: string, closeContact: CloseContact): Promise<void> {
+    await (await this.firestoreDB)
+      .collection('userCloseContacts')
+      .doc(userId)
+      .collection('closeContacts')
+      .doc(closeContact.uniqueInsertKey)
+      .set({ ...closeContact })
   }
 }
