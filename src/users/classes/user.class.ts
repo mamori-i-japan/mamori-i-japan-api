@@ -8,7 +8,5 @@ export class User {
 
 export class UserProfile {
   prefecture: number
-  age: number
-  gender: string
-  job: string
+  job?: string
 }
