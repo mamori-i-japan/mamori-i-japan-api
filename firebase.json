@@ -2,12 +2,23 @@
   "hosting": {
     "site": "contact-tracing-dev",
     "public": "static-app",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
       }
     ]
+  },
+  "firestore": {
+    "rules": "firebase.firestore.rules",
+    "indexes": "firebase.firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "firebase.storage.rules"
   }
 }
