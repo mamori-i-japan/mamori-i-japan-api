@@ -18,9 +18,11 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication()
     await app.init()
 
+    const configService = app.get(ConfigService)
+    const firebasePrivateKey = configService.get('FIREBASE_private_key')
+    console.log('firebasePrivateKey : ', firebasePrivateKey)
+
     customToken = await firebaseAdmin.auth().createCustomToken('uid')
-    // const configService = app.get(ConfigService)
-    // const backendAppPort = configService.get('BACKEND_APP_PORT')
     const firebaseWebAPIKey = 'AIzaSyBbg2NNhLmY8YRSFmjibDoDM7O1EgheNEI'
 
     await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
