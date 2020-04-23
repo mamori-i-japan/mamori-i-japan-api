@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { User, UserProfile } from './classes/user.class'
-import { FirebaseService } from '../firebase/firebase.service'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import {
   TEMPID_VALIDITY_PERIOD,

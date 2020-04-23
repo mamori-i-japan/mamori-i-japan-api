@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Admin, AdminProfile } from './classes/admin.class'
-import { FirebaseService } from '../firebase/firebase.service'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
 

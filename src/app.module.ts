@@ -3,19 +3,11 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { UsersModule } from './users/users.module'
-import { ConfigModule } from '@nestjs/config'
-import { configModuleOptions } from './config/module-options'
-import { FirebaseModule } from './firebase/firebase.module'
+import { SharedModule } from './shared/shared.module'
 import { AdminsModule } from './admins/admins.module'
 
 @Module({
-  imports: [
-    AdminsModule,
-    AuthModule,
-    UsersModule,
-    FirebaseModule,
-    ConfigModule.forRoot(configModuleOptions),
-  ],
+  imports: [AdminsModule, AuthModule, UsersModule, SharedModule],
   controllers: [AppController],
   providers: [AppService],
 })
