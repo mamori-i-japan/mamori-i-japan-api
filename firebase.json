@@ -1,6 +1,5 @@
 {
   "hosting": {
-    "site": "contact-tracing-dev",
     "public": "static-app",
     "ignore": [
       "firebase.json",
