@@ -10,6 +10,13 @@
           "contact-tracing-dev"
         ]
       }
+    },
+    "contact-tracing-37126": {
+      "hosting": {
+        "dev": [
+          "contact-tracing-stg"
+        ]
+      }
     }
   }
 }
