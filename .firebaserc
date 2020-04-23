@@ -6,14 +6,14 @@
   "targets": {
     "contact-tracing-26716": {
       "hosting": {
-        "fdt-generator": [
+        "fdt-generator-webapp": [
           "contact-tracing-fdt-gen-dev"
         ]
       }
     },
     "contact-tracing-37126": {
       "hosting": {
-        "fdt-generator": [
+        "fdt-generator-webapp": [
           "contact-tracing-fdt-gen-stg"
         ]
       }
