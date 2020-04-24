@@ -23,6 +23,7 @@ import { FirebaseAdminUserLoginGuard } from './guards/firebase-admin-user-login.
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
+import { CreatedResponse } from '../shared/classes/created-response.class'
 
 @ApiTags('auth')
 @ApiBearerAuth()
@@ -34,7 +35,7 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Login endpoint for normal user' })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @UseGuards(FirebaseNormalUserLoginGuard)
   @Post('login')
@@ -42,17 +43,19 @@ export class AuthController {
   async loginFirebase(
     @Request() req,
     @Body() loginNormalUserRequestDto: LoginNormalUserRequestDto
-  ): Promise<void> {
-    return this.authService.normalUserLogin(req.user, loginNormalUserRequestDto)
+  ): Promise<CreatedResponse> {
+    this.authService.normalUserLogin(req.user, loginNormalUserRequestDto)
+    return {}
   }
 
   @ApiOperation({ summary: 'Login endpoint for admin user' })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @UseGuards(FirebaseAdminUserLoginGuard)
   @Post('admin/login')
   @HttpCode(200)
-  async adminUserLoginFirebase(@Request() req): Promise<void> {
-    return this.authService.adminUserlogin(req.user)
+  async adminUserLoginFirebase(@Request() req): Promise<CreatedResponse> {
+    this.authService.adminUserlogin(req.user)
+    return {}
   }
 }

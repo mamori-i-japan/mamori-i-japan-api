@@ -25,6 +25,7 @@ import { CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dt
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { Admin } from './classes/admin.class'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
+import { CreatedResponse } from '../shared/classes/created-response.class'
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -45,24 +46,29 @@ export class AdminsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @Post('/users')
   @HttpCode(200)
-  async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
+  async postAdminUser(
+    @Request() req,
+    @Body() createAdminRequest: CreateAdminRequestDto
+  ): Promise<CreatedResponse> {
     createAdminRequest.addedByAdminUserId = req.user.uid
     createAdminRequest.addedByAdminEmail = req.user.email
-    return this.adminsService.createOneAdminUser(createAdminRequest)
+    this.adminsService.createOneAdminUser(createAdminRequest)
+    return {}
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag' })
-  @ApiOkResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Post('/positives')
   @HttpCode(200)
-  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto) {
-    return this.adminsService.setPositiveFlag(setPositiveFlag)
+  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
+    this.adminsService.setPositiveFlag(setPositiveFlag)
+    return {}
   }
 }

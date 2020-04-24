@@ -1,7 +1,7 @@
-import { CreatedResponseClass } from './created-response.class';
+import { CreatedResponse } from './created-response.class'
 
-describe('CreatedResponseClass', () => {
+describe('CreatedResponse', () => {
   it('should be defined', () => {
-    expect(new CreatedResponseClass()).toBeDefined();
-  });
-});
+    expect(new CreatedResponse()).toBeDefined()
+  })
+})

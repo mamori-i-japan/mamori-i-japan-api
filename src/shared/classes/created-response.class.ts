@@ -1,1 +1,1 @@
-export class CreatedResponseClass {}
+export class CreatedResponse {}
