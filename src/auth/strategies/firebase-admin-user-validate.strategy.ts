@@ -28,8 +28,10 @@ export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
     // Expect all admin access tokens to have email and email_verified data.
     validateAdminTokenEmailPayload(userDecodedToken)
 
-    // TODO @yashmurty : Check isAdminUser custom claim.
-    console.log(userDecodedToken)
+    // Check isAdminUser custom claim.
+    if (!userDecodedToken.isAdminUser) {
+      throw new UnauthorizedException('Access token does not contain custom claim isAdminUser')
+    }
 
     done(null, userDecodedToken)
   }

@@ -20,6 +20,7 @@ export class AuthService {
       await this.createFirstTimeLoginUser(userDecodedToken, loginNormalUserRequestDto)
     }
 
+    // TODO @yashmurty : This can be further optimized by checking if phone_number exists.
     // Remove the phone number from the linked firebase auth user.
     await firebaseAdmin.auth().updateUser(userDecodedToken.uid, {
       phoneNumber: null,
@@ -33,7 +34,6 @@ export class AuthService {
   }
 
   async adminUserlogin(userDecodedToken: any): Promise<void> {
-    console.log('userDecodedToken : ', userDecodedToken)
     const adminObj = await this.adminsService.findOneAdminById(userDecodedToken.uid)
     if (!adminObj) {
       throw new ForbiddenException('User Id does not belong to an admin')
@@ -42,9 +42,10 @@ export class AuthService {
       throw new ForbiddenException('Email in access token does not match with admin in firestore')
     }
 
-    await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
-
-    return userDecodedToken
+    // If custom claim does not exist, then add it because above validation has passed.
+    if (!userDecodedToken.isAdminUser) {
+      await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
+    }
   }
 
   /**
