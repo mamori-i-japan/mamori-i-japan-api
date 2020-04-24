@@ -6,7 +6,7 @@ import { AppLogger } from './shared/logger/logger.service'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: true,
+    logger: false,
   })
 
   app.useLogger(new AppLogger())
