@@ -14,7 +14,7 @@ export class AuthService {
   async normalUserLogin(
     userDecodedToken: any,
     loginNormalUserRequestDto: LoginNormalUserRequestDto
-  ) {
+  ): Promise<void> {
     const userObj = await this.usersService.findOneUserById(userDecodedToken.uid)
     if (!userObj) {
       await this.createFirstTimeLoginUser(userDecodedToken, loginNormalUserRequestDto)
@@ -32,7 +32,7 @@ export class AuthService {
     }
   }
 
-  async adminUserlogin(userDecodedToken: any) {
+  async adminUserlogin(userDecodedToken: any): Promise<void> {
     console.log('userDecodedToken : ', userDecodedToken)
     const adminObj = await this.adminsService.findOneAdminById(userDecodedToken.uid)
     if (!adminObj) {
@@ -54,7 +54,7 @@ export class AuthService {
   private async createFirstTimeLoginUser(
     userDecodedToken: any,
     loginNormalUserRequestDto: LoginNormalUserRequestDto
-  ) {
+  ): Promise<void> {
     // Expect all normal access tokens (FDT) to have phone_number data.
     validateNormalTokenPhonePayload(userDecodedToken)
 
