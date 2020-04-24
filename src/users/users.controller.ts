@@ -51,7 +51,7 @@ export class UsersController {
     @Request() req,
     @Body() createCloseContactsRequestDto: CreateCloseContactsRequestDto
   ): Promise<CreatedResponse> {
-    this.usersService.createCloseContacts(req.user.uid, createCloseContactsRequestDto)
+    await this.usersService.createCloseContacts(req.user.uid, createCloseContactsRequestDto)
     return {}
   }
 }
