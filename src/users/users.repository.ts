@@ -107,7 +107,7 @@ export class UsersRepository {
         const id = doc.id
         const testDate = moment(doc.testDate.toDate())
           .tz('Asia/Tokyo')
-          .startOf('day')
+          .endOf('day')
         const reproductionDate = moment
           .tz('Asia/Tokyo')
           .startOf('day')
