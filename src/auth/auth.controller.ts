@@ -37,7 +37,7 @@ export class AuthController {
   async loginFirebase(
     @Request() req,
     @Body() loginNormalUserRequestDto: LoginNormalUserRequestDto
-  ) {
+  ): Promise<void> {
     return this.authService.normalUserLogin(req.user, loginNormalUserRequestDto)
   }
 
@@ -46,7 +46,7 @@ export class AuthController {
   @ApiBadRequestResponse()
   @UseGuards(FirebaseAdminUserLoginGuard)
   @Post('admin/login')
-  async adminUserLoginFirebase(@Request() req) {
+  async adminUserLoginFirebase(@Request() req): Promise<void> {
     return this.authService.adminUserlogin(req.user)
   }
 }

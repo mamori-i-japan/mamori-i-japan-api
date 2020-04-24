@@ -14,27 +14,26 @@ export class AuthService {
   async normalUserLogin(
     userDecodedToken: any,
     loginNormalUserRequestDto: LoginNormalUserRequestDto
-  ) {
+  ): Promise<void> {
     const userObj = await this.usersService.findOneUserById(userDecodedToken.uid)
     if (!userObj) {
       await this.createFirstTimeLoginUser(userDecodedToken, loginNormalUserRequestDto)
     }
 
+    // TODO @yashmurty : This can be further optimized by checking if phone_number exists.
     // Remove the phone number from the linked firebase auth user.
     await firebaseAdmin.auth().updateUser(userDecodedToken.uid, {
       phoneNumber: null,
       disabled: false,
     })
 
-    await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
-
-    const updatedUser = await firebaseAdmin.auth().getUser(userDecodedToken.uid)
-
-    return updatedUser
+    // If custom claim does not exist, then add it because above validation has passed.
+    if (!userDecodedToken.isNormalUser) {
+      await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
+    }
   }
 
-  async adminUserlogin(userDecodedToken: any) {
-    console.log('userDecodedToken : ', userDecodedToken)
+  async adminUserlogin(userDecodedToken: any): Promise<void> {
     const adminObj = await this.adminsService.findOneAdminById(userDecodedToken.uid)
     if (!adminObj) {
       throw new ForbiddenException('User Id does not belong to an admin')
@@ -43,9 +42,10 @@ export class AuthService {
       throw new ForbiddenException('Email in access token does not match with admin in firestore')
     }
 
-    await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
-
-    return userDecodedToken
+    // If custom claim does not exist, then add it because above validation has passed.
+    if (!userDecodedToken.isAdminUser) {
+      await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
+    }
   }
 
   /**
@@ -55,7 +55,7 @@ export class AuthService {
   private async createFirstTimeLoginUser(
     userDecodedToken: any,
     loginNormalUserRequestDto: LoginNormalUserRequestDto
-  ) {
+  ): Promise<void> {
     // Expect all normal access tokens (FDT) to have phone_number data.
     validateNormalTokenPhonePayload(userDecodedToken)
 
