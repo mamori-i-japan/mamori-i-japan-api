@@ -4,9 +4,9 @@ export class TempID {
   @ApiProperty()
   tempID: string
 
-  @ApiProperty()
-  validFrom: Date
+  @ApiProperty({ example: 1588297800 })
+  validFrom: number
 
-  @ApiProperty()
-  validTo: Date
+  @ApiProperty({ example: 1588297800 })
+  validTo: number
 }

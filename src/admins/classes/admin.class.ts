@@ -13,7 +13,7 @@ export class Admin {
   @ApiProperty()
   addedByAdminEmail: string
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: 1588297800 })
   created?: number
 }
 

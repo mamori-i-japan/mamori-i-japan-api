@@ -13,11 +13,11 @@ export class CreateCloseContactDto {
   @IsNotEmpty()
   externalTempId: string
 
-  @ApiProperty()
+  @ApiProperty({ example: 1588297800 })
   @IsNumber()
   contactStartTime: number
 
-  @ApiProperty()
+  @ApiProperty({ example: 1588297800 })
   @IsNumber()
   contactEndTime: number
 
