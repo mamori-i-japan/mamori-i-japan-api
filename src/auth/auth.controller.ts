@@ -22,7 +22,7 @@ import { AuthService } from './auth.service'
 import { FirebaseAdminUserLoginGuard } from './guards/firebase-admin-user-login.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
-import { CreatedResponseInterceptor } from '../shared/created-response.interceptor'
+import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 
 @ApiTags('auth')
 @ApiBearerAuth()
