@@ -26,11 +26,10 @@ export class AuthService {
       disabled: false,
     })
 
-    await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
-
-    const updatedUser = await firebaseAdmin.auth().getUser(userDecodedToken.uid)
-
-    return updatedUser
+    // If custom claim does not exist, then add it because above validation has passed.
+    if (!userDecodedToken.isNormalUser) {
+      await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
+    }
   }
 
   async adminUserlogin(userDecodedToken: any) {
