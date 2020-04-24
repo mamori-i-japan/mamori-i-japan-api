@@ -16,6 +16,7 @@ import {
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
   ApiCreatedResponse,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
@@ -42,6 +43,7 @@ export class AdminsController {
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
   @ApiCreatedResponse()
+  @ApiBadRequestResponse()
   @Post('/users')
   async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
     createAdminRequest.addedByAdminUserId = req.user.uid
@@ -52,6 +54,7 @@ export class AdminsController {
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag' })
   @ApiCreatedResponse()
+  @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Post('/positives')
   async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto) {
