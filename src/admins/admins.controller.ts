@@ -8,6 +8,7 @@ import {
   UsePipes,
   ValidationPipe,
   Request,
+  HttpCode,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -47,6 +48,7 @@ export class AdminsController {
   @ApiOkResponse()
   @ApiBadRequestResponse()
   @Post('/users')
+  @HttpCode(200)
   async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
     createAdminRequest.addedByAdminUserId = req.user.uid
     createAdminRequest.addedByAdminEmail = req.user.email
@@ -59,6 +61,7 @@ export class AdminsController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Post('/positives')
+  @HttpCode(200)
   async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto) {
     return this.adminsService.setPositiveFlag(setPositiveFlag)
   }

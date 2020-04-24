@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   ValidationPipe,
   Body,
+  HttpCode,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -37,6 +38,7 @@ export class AuthController {
   @ApiBadRequestResponse()
   @UseGuards(FirebaseNormalUserLoginGuard)
   @Post('login')
+  @HttpCode(200)
   async loginFirebase(
     @Request() req,
     @Body() loginNormalUserRequestDto: LoginNormalUserRequestDto
@@ -49,6 +51,7 @@ export class AuthController {
   @ApiBadRequestResponse()
   @UseGuards(FirebaseAdminUserLoginGuard)
   @Post('admin/login')
+  @HttpCode(200)
   async adminUserLoginFirebase(@Request() req): Promise<void> {
     return this.authService.adminUserlogin(req.user)
   }

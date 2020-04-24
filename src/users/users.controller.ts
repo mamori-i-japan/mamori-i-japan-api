@@ -8,6 +8,7 @@ import {
   ValidationPipe,
   Post,
   Body,
+  HttpCode,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -44,6 +45,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Receive close contacts payload from user' })
   @ApiOkResponse()
   @Post('/me/close_contacts')
+  @HttpCode(200)
   async postMeCloseContacts(
     @Request() req,
     @Body() createCloseContactsRequestDto: CreateCloseContactsRequestDto
