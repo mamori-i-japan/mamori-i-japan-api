@@ -44,7 +44,7 @@ export class AuthController {
     @Request() req,
     @Body() loginNormalUserRequestDto: LoginNormalUserRequestDto
   ): Promise<CreatedResponse> {
-    this.authService.normalUserLogin(req.user, loginNormalUserRequestDto)
+    await this.authService.normalUserLogin(req.user, loginNormalUserRequestDto)
     return {}
   }
 
@@ -55,7 +55,7 @@ export class AuthController {
   @Post('admin/login')
   @HttpCode(200)
   async adminUserLoginFirebase(@Request() req): Promise<CreatedResponse> {
-    this.authService.adminUserlogin(req.user)
+    await this.authService.adminUserlogin(req.user)
     return {}
   }
 }

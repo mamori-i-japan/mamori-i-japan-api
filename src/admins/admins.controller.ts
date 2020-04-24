@@ -56,7 +56,7 @@ export class AdminsController {
   ): Promise<CreatedResponse> {
     createAdminRequest.addedByAdminUserId = req.user.uid
     createAdminRequest.addedByAdminEmail = req.user.email
-    this.adminsService.createOneAdminUser(createAdminRequest)
+    await this.adminsService.createOneAdminUser(createAdminRequest)
     return {}
   }
 
@@ -68,7 +68,7 @@ export class AdminsController {
   @Post('/positives')
   @HttpCode(200)
   async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
-    this.adminsService.setPositiveFlag(setPositiveFlag)
+    await this.adminsService.setPositiveFlag(setPositiveFlag)
     return {}
   }
 }
