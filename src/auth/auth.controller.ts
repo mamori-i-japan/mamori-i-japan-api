@@ -4,6 +4,7 @@ import {
   Request,
   UseGuards,
   UsePipes,
+  UseInterceptors,
   ValidationPipe,
   Body,
 } from '@nestjs/common'
@@ -20,10 +21,12 @@ import { AuthService } from './auth.service'
 import { FirebaseAdminUserLoginGuard } from './guards/firebase-admin-user-login.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
+import { CreatedResponseInterceptor } from '../shared/created-response.interceptor'
 
 @ApiTags('auth')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
+@UseInterceptors(CreatedResponseInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

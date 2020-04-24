@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   UseGuards,
+  UseInterceptors,
   Post,
   Body,
   UsePipes,
@@ -23,11 +24,13 @@ import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-us
 import { CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { Admin } from './classes/admin.class'
+import { CreatedResponseInterceptor } from '../shared/created-response.interceptor'
 
 @ApiTags('admin')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @UseGuards(FirebaseAdminUserValidateGuard)
+@UseInterceptors(CreatedResponseInterceptor)
 @Controller('admins')
 export class AdminsController {
   constructor(private adminsService: AdminsService) {}
