@@ -16,7 +16,6 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
-  ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
@@ -45,7 +44,7 @@ export class AdminsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @ApiBadRequestResponse()
   @Post('/users')
   async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
@@ -56,7 +55,7 @@ export class AdminsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag' })
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Post('/positives')

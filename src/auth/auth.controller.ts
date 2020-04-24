@@ -12,7 +12,7 @@ import {
   ApiOperation,
   ApiTags,
   ApiBearerAuth,
-  ApiCreatedResponse,
+  ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
@@ -33,7 +33,7 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Login endpoint for normal user' })
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @ApiBadRequestResponse()
   @UseGuards(FirebaseNormalUserLoginGuard)
   @Post('login')
@@ -45,7 +45,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Login endpoint for admin user' })
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @ApiBadRequestResponse()
   @UseGuards(FirebaseAdminUserLoginGuard)
   @Post('admin/login')

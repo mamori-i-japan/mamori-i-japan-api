@@ -15,7 +15,6 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
-  ApiCreatedResponse,
 } from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { TempID } from './classes/temp-id.class'
@@ -43,7 +42,7 @@ export class UsersController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Receive close contacts payload from user' })
-  @ApiCreatedResponse()
+  @ApiOkResponse()
   @Post('/me/close_contacts')
   async postMeCloseContacts(
     @Request() req,
