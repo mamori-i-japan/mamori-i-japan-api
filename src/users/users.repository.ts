@@ -79,8 +79,8 @@ export class UsersRepository {
 
     return {
       tempID,
-      validFrom,
-      validTo,
+      validFrom: moment(validFrom).unix(),
+      validTo: moment(validTo).unix(),
     }
   }
 
