@@ -2,11 +2,13 @@ import {
   Controller,
   Get,
   UseGuards,
+  UseInterceptors,
   Post,
   Body,
   UsePipes,
   ValidationPipe,
   Request,
+  HttpCode,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -15,7 +17,6 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiNotFoundResponse,
-  ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
@@ -23,11 +24,14 @@ import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-us
 import { CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { Admin } from './classes/admin.class'
+import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
+import { CreatedResponse } from '../shared/classes/created-response.class'
 
 @ApiTags('admin')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @UseGuards(FirebaseAdminUserValidateGuard)
+@UseInterceptors(CreatedResponseInterceptor)
 @Controller('admins')
 export class AdminsController {
   constructor(private adminsService: AdminsService) {}
@@ -42,22 +46,29 @@ export class AdminsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @Post('/users')
-  async postAdminUser(@Request() req, @Body() createAdminRequest: CreateAdminRequestDto) {
+  @HttpCode(200)
+  async postAdminUser(
+    @Request() req,
+    @Body() createAdminRequest: CreateAdminRequestDto
+  ): Promise<CreatedResponse> {
     createAdminRequest.addedByAdminUserId = req.user.uid
     createAdminRequest.addedByAdminEmail = req.user.email
-    return this.adminsService.createOneAdminUser(createAdminRequest)
+    this.adminsService.createOneAdminUser(createAdminRequest)
+    return {}
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag' })
-  @ApiCreatedResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Post('/positives')
-  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto) {
-    return this.adminsService.setPositiveFlag(setPositiveFlag)
+  @HttpCode(200)
+  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
+    this.adminsService.setPositiveFlag(setPositiveFlag)
+    return {}
   }
 }
