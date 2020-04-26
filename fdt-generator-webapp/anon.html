@@ -80,20 +80,21 @@ limitations under the License.
               .auth()
               .currentUser.getIdToken(true)
               .then((idTokenResult) => {
-                console.log(idTokenResult)
+                console.log('idTokenResult : ', idTokenResult)
+
+                // User is signed in.
+                var isAnonymous = user.isAnonymous
+                var uid = user.uid
+                // [START_EXCLUDE]
+                document.getElementById('quickstart-sign-in-status').textContent = 'Signed in'
+                document.getElementById('quickstart-sign-in').textContent = 'Sign out'
+                document.getElementById('quickstart-account-details').textContent = JSON.stringify(
+                  user,
+                  null,
+                  '  '
+                )
+                // [END_EXCLUDE]
               })
-            // User is signed in.
-            var isAnonymous = user.isAnonymous
-            var uid = user.uid
-            // [START_EXCLUDE]
-            document.getElementById('quickstart-sign-in-status').textContent = 'Signed in'
-            document.getElementById('quickstart-sign-in').textContent = 'Sign out'
-            document.getElementById('quickstart-account-details').textContent = JSON.stringify(
-              user,
-              null,
-              '  '
-            )
-            // [END_EXCLUDE]
           } else {
             // User is signed out.
             // [START_EXCLUDE]
