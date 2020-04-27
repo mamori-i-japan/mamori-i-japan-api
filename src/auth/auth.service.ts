@@ -4,7 +4,6 @@ import { AdminsService } from '../admins/admins.service'
 import { CreateUserDto, CreateUserProfileDto } from '../users/dto/create-user.dto'
 import { validateOrReject } from 'class-validator'
 import * as firebaseAdmin from 'firebase-admin'
-import { validateNormalTokenPhonePayload } from './util'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
 
 @Injectable()
@@ -19,13 +18,6 @@ export class AuthService {
     if (!userObj) {
       await this.createFirstTimeLoginUser(userDecodedToken, loginNormalUserRequestDto)
     }
-
-    // TODO @yashmurty : This can be further optimized by checking if phone_number exists.
-    // Remove the phone number from the linked firebase auth user.
-    await firebaseAdmin.auth().updateUser(userDecodedToken.uid, {
-      phoneNumber: null,
-      disabled: false,
-    })
 
     // If custom claim does not exist, then add it because above validation has passed.
     if (!userDecodedToken.isNormalUser) {
@@ -56,12 +48,8 @@ export class AuthService {
     userDecodedToken: any,
     loginNormalUserRequestDto: LoginNormalUserRequestDto
   ): Promise<void> {
-    // Expect all normal access tokens (FDT) to have phone_number data.
-    validateNormalTokenPhonePayload(userDecodedToken)
-
     const createUserDto: CreateUserDto = new CreateUserDto()
     createUserDto.userId = userDecodedToken.uid
-    createUserDto.phoneNumber = userDecodedToken.phone_number
     // Validate the create User data object which will be saved to firestore.
     try {
       await validateOrReject(createUserDto)
@@ -69,7 +57,8 @@ export class AuthService {
       throw new BadRequestException(errors, 'Request validation failed')
     }
 
-    const createUserProfileDto: CreateUserProfileDto = { ...loginNormalUserRequestDto }
+    const createUserProfileDto: CreateUserProfileDto = new CreateUserProfileDto()
+    createUserProfileDto.prefecture = loginNormalUserRequestDto.prefecture
 
     await this.usersService.createOneUser(createUserDto, createUserProfileDto)
   }
