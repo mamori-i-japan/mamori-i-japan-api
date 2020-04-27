@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
-import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
+import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
@@ -48,5 +48,15 @@ export class UsersService {
 
     // TODO @yashmurty : Investigate later on how to ingest this data to BigQuert.
     // Also, if we need to save this data as a `JSON` file or not.
+  }
+
+  async updateUserProfile(
+    userId: string,
+    updateUserProfileDto: UpdateUserProfileDto
+  ): Promise<void> {
+    console.log('-----')
+    console.log('userId : ', userId)
+    console.log('updateUserProfileDto : ', updateUserProfileDto)
+    return
   }
 }
