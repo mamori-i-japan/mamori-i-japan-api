@@ -72,6 +72,12 @@ commands:
         type: enum
         enum: *environments
     steps:
+      - run:
+          name: decode firebase key file
+          command: echo $FIREBASE_KEY_<< parameters.environment >> | base64 -d > ${HOME}/service-account.json
+      - run:
+          name: set environment variable
+          command: echo "export GOOGLE_APPLICATION_CREDENTIALS=${HOME}/service-account.json" >> $BASH_ENV
       - deploy:
           name: deploy
           command: npm run deploy:firebase:<< parameters.environment >>
