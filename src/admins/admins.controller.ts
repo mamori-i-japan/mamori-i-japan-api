@@ -16,12 +16,11 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
-  ApiNotFoundResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
-import { CreateAdminRequestDto, SetPositiveFlagDto } from './dto/create-admin.dto'
+import { CreateAdminRequestDto } from './dto/create-admin.dto'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { Admin } from './classes/admin.class'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
@@ -57,18 +56,6 @@ export class AdminsController {
     createAdminRequest.addedByAdminUserId = req.user.uid
     createAdminRequest.addedByAdminEmail = req.user.email
     await this.adminsService.createOneAdminUser(createAdminRequest)
-    return {}
-  }
-
-  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
-  @ApiOperation({ summary: 'Give the user a positive flag' })
-  @ApiOkResponse({ type: CreatedResponse })
-  @ApiBadRequestResponse()
-  @ApiNotFoundResponse()
-  @Post('/positives')
-  @HttpCode(200)
-  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
-    await this.adminsService.setPositiveFlag(setPositiveFlag)
     return {}
   }
 }

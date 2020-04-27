@@ -1,8 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Admin, AdminProfile } from './classes/admin.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
-import * as moment from 'moment-timezone'
 
 @Injectable()
 export class AdminsRepository {
@@ -66,24 +65,5 @@ export class AdminsRepository {
       })
 
     return adminsArray
-  }
-
-  async setPositiveFlag(phoneNumber: string): Promise<void> {
-    await (await this.firestoreDB)
-      .collection('users')
-      .where('phoneNumber', '==', phoneNumber)
-      .get()
-      .then(async (query) => {
-        if (query.empty) {
-          throw new NotFoundException()
-        }
-
-        query.forEach(async (doc) => {
-          ;(await this.firestoreDB)
-            .collection('userStatuses')
-            .doc(doc.id)
-            .update({ positive: true, testDate: moment.tz('Asia/Tokyo') })
-        })
-      })
   }
 }

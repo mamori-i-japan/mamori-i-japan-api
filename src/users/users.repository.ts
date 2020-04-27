@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
@@ -155,5 +155,24 @@ export class UsersRepository {
       .collection('closeContacts')
       .doc(closeContact.uniqueInsertKey)
       .set({ ...closeContact })
+  }
+
+  async setPositiveFlag(phoneNumber: string): Promise<void> {
+    await (await this.firestoreDB)
+      .collection('users')
+      .where('phoneNumber', '==', phoneNumber)
+      .get()
+      .then(async (query) => {
+        if (query.empty) {
+          throw new NotFoundException()
+        }
+
+        query.forEach(async (doc) => {
+          ;(await this.firestoreDB)
+            .collection('userStatuses')
+            .doc(doc.id)
+            .update({ positive: true, testDate: moment.tz('Asia/Tokyo') })
+        })
+      })
   }
 }

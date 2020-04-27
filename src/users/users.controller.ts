@@ -17,6 +17,8 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { TempID } from './classes/temp-id.class'
@@ -24,6 +26,7 @@ import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
+import { SetPositiveFlagDto } from './dto/set-positive-flag.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { UserProfile } from './classes/user.class'
@@ -75,5 +78,17 @@ export class UsersController {
   ): Promise<void> {
     const userId = req.user.uid
     return this.usersService.updateUserProfile(userId, updateUserProfileDto)
+  }
+
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
+  @ApiOperation({ summary: 'Give the user a positive flag' })
+  @ApiOkResponse({ type: CreatedResponse })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @Post('/me/positives')
+  @HttpCode(200)
+  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
+    await this.usersService.setPositiveFlag(setPositiveFlag)
+    return {}
   }
 }
