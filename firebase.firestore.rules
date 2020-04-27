@@ -9,7 +9,7 @@ service cloud.firestore {
       // Allow authenticated users to read, write their profile
       match /profile/{userId} {
         allow read: if request.auth.uid == userId;
-        allow write: if false;
+        allow write: if request.auth.uid == userId;
       }
     }
 
