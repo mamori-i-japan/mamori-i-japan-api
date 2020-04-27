@@ -4,20 +4,17 @@
 
 autonumber 1
 
-Mobile  -> FirebaseAuth: SMS request
-FirebaseAuth -> Mobile: OTP code
-Mobile  -> FirebaseAuth: send OTP
-FirebaseAuth -> FirebaseAuth: verify OTP code
+Mobile  -> FirebaseAuth: Anonymous Auth
 FirebaseAuth -> Mobile: Firebase Default Token(FDT)
-Mobile -> Backend: POST /auth/login with FDT, prefecture, job
+Mobile -> Backend: POST /auth/login with FDT, prefecture
 Backend -> Backend: verify FDT
-Backend -> Backend: extract phoneno from FDT
-Backend ->  FirebaseAuth: firebaseAdmin.auth().updateUser(uid, {phoneNumber: null,disabled: false})
-FirebaseAuth -> Backend: uid
+Backend -> Backend: Validate FDT provider is anonymous
 Backend -> Firestore: create user core data(hashed or encrypted phoneno)
 Firestore -> Backend: ok
 Backend -> Firestore: create user profile(prefecture, job)
 Firestore -> Backend: ok
+Backend ->  FirebaseAuth: firebaseAdmin.auth().setCustomUserClaims(isNormalUser)
+FirebaseAuth -> Backend: ok
 Backend -> Mobile: ok
 Mobile -> FirebaseAuth: getIDTokenForcingRefresh
 FirebaseAuth -> Mobile: ok
