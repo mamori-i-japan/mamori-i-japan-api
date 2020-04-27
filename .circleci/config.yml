@@ -18,6 +18,11 @@ anchors:
       ignore:
         - /.*/
 
+  environments: &environments
+    - dev
+    - stg
+    - prd
+
 orbs:
   slack: circleci/slack@3.4.2
 
@@ -61,14 +66,21 @@ commands:
           name: e2e test
           command: npm run test:e2e
 
+  firebase_deploy:
+    parameters:
+      environment:
+        type: enum
+        enum: *environments
+    steps:
+      - deploy:
+          name: deploy
+          command: npm run deploy:firebase:<< parameters.environment >>
+
   npm_deploy:
     parameters:
       environment:
         type: enum
-        enum:
-          - dev
-          - stg
-          - prd
+        enum: *environments
     steps:
       - deploy:
           name: deploy
@@ -92,6 +104,7 @@ jobs:
     steps:
       - checkout
       - npm_install
+      - firebase_deploy: { environment: dev }
       - npm_deploy: { environment: dev }
       - slack/status
   deploy_stg:
@@ -99,6 +112,7 @@ jobs:
     steps:
       - checkout
       - npm_install
+      - firebase_deploy: { environment: stg }
       - npm_deploy: { environment: stg }
       - slack/status
   deploy_prd_notification:
@@ -110,6 +124,7 @@ jobs:
     steps:
       - checkout
       - npm_install
+      - firebase_deploy: { environment: prd }
       - npm_deploy: { environment: prd }
       - slack/status
 
