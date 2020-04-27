@@ -9,9 +9,9 @@ FirebaseAuth -> Mobile: Firebase Default Token(FDT)
 Mobile -> Backend: POST /auth/login with FDT, prefecture
 Backend -> Backend: verify FDT
 Backend -> Backend: Validate FDT provider is anonymous
-Backend -> Firestore: create user core data(hashed or encrypted phoneno)
+Backend -> Firestore: create user core data
 Firestore -> Backend: ok
-Backend -> Firestore: create user profile(prefecture, job)
+Backend -> Firestore: create user profile(prefecture)
 Firestore -> Backend: ok
 Backend ->  FirebaseAuth: firebaseAdmin.auth().setCustomUserClaims(isNormalUser)
 FirebaseAuth -> Backend: ok
