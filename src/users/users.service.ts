@@ -57,6 +57,13 @@ export class UsersService {
     console.log('-----')
     console.log('userId : ', userId)
     console.log('updateUserProfileDto : ', updateUserProfileDto)
+
+    // TODO @yashmurty :
+    // 1. If `prefecture` exists in payload, no action is needed, proceed with passing
+    // the update object to repo function.
+    // 2. If `orgCode` exists in payload, verify if org exists for that code, then proceed
+    // to pass the update object to repo function.
+
     return
   }
 }
