@@ -24,6 +24,7 @@ import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
+import { UserProfile } from './classes/user.class'
 
 @ApiTags('app')
 @ApiBearerAuth()
@@ -53,5 +54,13 @@ export class UsersController {
   ): Promise<CreatedResponse> {
     await this.usersService.createCloseContacts(req.user.uid, createCloseContactsRequestDto)
     return {}
+  }
+
+  @ApiOperation({ summary: 'Get user profile' })
+  @ApiOkResponse({ type: [UserProfile] })
+  @Get('/me/profile')
+  async getMeProfile(@Request() req): Promise<UserProfile> {
+    const userId = req.user.uid
+    return this.usersService.findOneUserProfileById(userId)
   }
 }

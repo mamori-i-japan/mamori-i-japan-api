@@ -1,4 +1,5 @@
 import { Moment } from 'moment-timezone'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class User {
   userId: string
@@ -6,6 +7,9 @@ export class User {
 }
 
 export class UserProfile {
+  @ApiProperty({ example: 14 })
   prefecture: number
-  organization?: string
+
+  @ApiProperty({ example: 'A12B34' })
+  organizationCode?: string
 }

@@ -40,12 +40,22 @@ export class UsersRepository {
     }
   }
 
-  async findOneById(userId: string): Promise<User | undefined> {
+  async findOneUserById(userId: string): Promise<User | undefined> {
     const getDoc = await (await this.firestoreDB)
       .collection('users')
       .doc(userId)
       .get()
     return getDoc.data() as User
+  }
+
+  async findOneUserProfileById(userId: string): Promise<UserProfile | undefined> {
+    const getDoc = await (await this.firestoreDB)
+      .collection('users')
+      .doc(userId)
+      .collection('profile')
+      .doc(userId)
+      .get()
+    return getDoc.data() as UserProfile
   }
 
   async generateTempId(userId: string, i: number): Promise<TempID> {

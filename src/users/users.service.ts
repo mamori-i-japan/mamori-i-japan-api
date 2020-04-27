@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto } from './dto/create-user.dto'
-import { User } from './classes/user.class'
+import { User, UserProfile } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 
@@ -14,7 +14,11 @@ export class UsersService {
   }
 
   async findOneUserById(userId: string): Promise<User | undefined> {
-    return this.usersRepository.findOneById(userId)
+    return this.usersRepository.findOneUserById(userId)
+  }
+
+  async findOneUserProfileById(userId: string): Promise<UserProfile | undefined> {
+    return this.usersRepository.findOneUserProfileById(userId)
   }
 
   async getTempIDs(userId: string): Promise<any[]> {

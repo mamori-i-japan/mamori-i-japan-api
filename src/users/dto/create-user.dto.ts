@@ -10,7 +10,7 @@ export class CreateUserProfileDto {
   @IsString()
   @IsOptional()
   @IsNotEmpty()
-  organization: string
+  organizationCode: string
 }
 
 export class CreateUserDto {
