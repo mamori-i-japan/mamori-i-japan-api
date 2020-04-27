@@ -17,7 +17,7 @@ export function validateAdminTokenEmailPayload(
 }
 
 /**
- * Validate anonymous access tokens to have provider_id data as anonymous.
+ * Validate normal access tokens to have provider_id data as anonymous.
  * @param userDecodedToken: firebaseAdmin.auth.DecodedIdToken
  */
 export function validateNormalTokenAnonymousPayload(
