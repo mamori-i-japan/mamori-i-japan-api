@@ -17,13 +17,13 @@ export function validateAdminTokenEmailPayload(
 }
 
 /**
- * Validate normal access tokens to have phone and phone_verified data
+ * Validate anonymous access tokens to have provider_id data as anonymous.
  * @param userDecodedToken: firebaseAdmin.auth.DecodedIdToken
  */
-export function validateNormalTokenPhonePayload(
+export function validateNormalTokenAnonymousPayload(
   userDecodedToken: firebaseAdmin.auth.DecodedIdToken
 ) {
-  if (!userDecodedToken.phone_number) {
-    throw new UnauthorizedException('Access token does not have phone number payload')
+  if (userDecodedToken.provider_id !== 'anonymous') {
+    throw new UnauthorizedException('Access token does not have provider_id anonymous payload')
   }
 }

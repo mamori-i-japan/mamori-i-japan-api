@@ -4,6 +4,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
+import { validateNormalTokenAnonymousPayload } from '../util'
 
 @Injectable()
 export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
@@ -24,6 +25,9 @@ export class FirebaseNormalUserLoginStrategy extends PassportStrategy(
     } catch (error) {
       throw new UnauthorizedException(error.message)
     }
+
+    // Expect all normal access tokens (FDT) to have provider id anonymous data.
+    validateNormalTokenAnonymousPayload(userDecodedToken)
 
     // NOTE : Passport automatically creates a user object, based on the value we return here.
     done(null, userDecodedToken)
