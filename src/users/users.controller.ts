@@ -26,7 +26,7 @@ import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
-import { SetPositiveFlagDto } from './dto/set-positive-flag.dto'
+import { SetPositiveReportFlagDto } from './dto/set-positive-flag.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { UserProfile } from './classes/user.class'
@@ -80,15 +80,18 @@ export class UsersController {
     return this.usersService.updateUserProfile(userId, updateUserProfileDto)
   }
 
+  // TODO : is validation of orgCode necessary? if it's necessary, when will it be done?
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
-  @ApiOperation({ summary: 'Give the user a positive flag' })
+  @ApiOperation({ summary: 'Give the user a positive flag by user-self' })
   @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  @Post('/me/positives')
+  @Post('/me/positive_reports')
   @HttpCode(200)
-  async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
-    await this.usersService.setPositiveFlag(setPositiveFlag)
+  async setPositiveReportFlag(@Request() req, @Body() setPositiveReportFlag: SetPositiveReportFlagDto): Promise<CreatedResponse> {
+    setPositiveReportFlag.userId = req.user.uid
+    setPositiveReportFlag.orgCode = req.user.orgCode
+    await this.usersService.setPositiveReportFlag(setPositiveReportFlag)
     return {}
   }
 }
