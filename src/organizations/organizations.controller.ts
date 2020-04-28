@@ -16,7 +16,6 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
-  ApiNotFoundResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
