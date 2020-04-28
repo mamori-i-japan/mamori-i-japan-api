@@ -162,7 +162,7 @@ export class UsersRepository {
     const userId = await (await this.firestoreDB)
       .collection('users')
       .where('userId', '==', setPositiveReportFlag.userId)
-      .where('orgCode', '==', setPositiveReportFlag.orgCode)
+      .where('organizationCode', '==', setPositiveReportFlag.organizationCode)
       .limit(1)
       .get()
       .then((query) => {

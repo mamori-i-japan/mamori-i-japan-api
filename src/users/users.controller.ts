@@ -80,7 +80,7 @@ export class UsersController {
     return this.usersService.updateUserProfile(userId, updateUserProfileDto)
   }
 
-  // TODO : is validation of orgCode necessary? if it's necessary, when will it be done?
+  // TODO : is validation of organizationCode necessary? if it's necessary, when will it be done?
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag by user-self' })
   @ApiOkResponse({ type: CreatedResponse })
@@ -90,7 +90,7 @@ export class UsersController {
   @HttpCode(200)
   async setPositiveReportFlag(@Request() req, @Body() setPositiveReportFlag: SetPositiveReportFlagDto): Promise<CreatedResponse> {
     setPositiveReportFlag.userId = req.user.uid
-    setPositiveReportFlag.orgCode = req.user.orgCode
+    setPositiveReportFlag.organizationCode = req.user.organizationCode
     await this.usersService.setPositiveReportFlag(setPositiveReportFlag)
     return {}
   }
