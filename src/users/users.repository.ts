@@ -158,15 +158,23 @@ export class UsersRepository {
       .set({ ...closeContact })
   }
 
-  async setSelfReportedPositiveFlag(setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<void> {
+  async setSelfReportedPositiveFlag(
+    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+  ): Promise<void> {
     const userId = setSelfReportedPositiveFlag.userId
     const userProfile = await this.findOneUserProfileById(userId)
 
-    if (!userProfile) { throw new NotFoundException() }
+    if (!userProfile) {
+      throw new NotFoundException()
+    }
 
     await (await this.firestoreDB)
       .collection('userStatuses')
       .doc(userId)
-      .update({ selfReportedPositive: true, reportDate: moment.tz('Asia/Tokyo'), organizationCode: setSelfReportedPositiveFlag.organizationCode })
+      .update({
+        selfReportedPositive: true,
+        reportDate: moment.tz('Asia/Tokyo'),
+        organizationCode: setSelfReportedPositiveFlag.organizationCode,
+      })
   }
 }

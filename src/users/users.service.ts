@@ -68,7 +68,9 @@ export class UsersService {
     return
   }
 
-  async setSelfReportedPositiveFlag(setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<void> {
+  async setSelfReportedPositiveFlag(
+    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+  ): Promise<void> {
     return this.usersRepository.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
   }
 }
