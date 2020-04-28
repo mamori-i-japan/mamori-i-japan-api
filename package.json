@@ -29,11 +29,11 @@
     "deploy:stg": "npm run build && serverless create_domain --stage stg && serverless deploy --stage stg",
     "deploy:prd": "npm run build && serverless create_domain --stage prd && serverless deploy --stage prd",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --ci --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json --ci --runInBand"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
