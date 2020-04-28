@@ -26,7 +26,7 @@ import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
-import { SetPositiveReportFlagDto } from './dto/set-positive-flag.dto'
+import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { UserProfile } from './classes/user.class'
@@ -86,12 +86,12 @@ export class UsersController {
   @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  @Post('/me/positive_reports')
+  @Post('/me/self_reported_positives')
   @HttpCode(200)
-  async setPositiveReportFlag(@Request() req, @Body() setPositiveReportFlag: SetPositiveReportFlagDto): Promise<CreatedResponse> {
-    setPositiveReportFlag.userId = req.user.uid
-    setPositiveReportFlag.organizationCode = req.user.organizationCode
-    await this.usersService.setPositiveReportFlag(setPositiveReportFlag)
+  async SetSelfReportedPositiveFlagDtoFlag(@Request() req, @Body() setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<CreatedResponse> {
+    setSelfReportedPositiveFlag.userId = req.user.uid
+    setSelfReportedPositiveFlag.organizationCode = req.user.organizationCode
+    await this.usersService.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
     return {}
   }
 }

@@ -12,7 +12,7 @@ import * as moment from 'moment-timezone'
 import { TempID } from './classes/temp-id.class'
 import * as zlib from 'zlib'
 import { CloseContact } from './classes/close-contact.class'
-import { SetPositiveReportFlagDto } from './dto/set-positive-flag.dto'
+import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 
 @Injectable()
 export class UsersRepository {
@@ -158,11 +158,11 @@ export class UsersRepository {
       .set({ ...closeContact })
   }
 
-  async setPositiveReportFlag(setPositiveReportFlag: SetPositiveReportFlagDto): Promise<void> {
+  async setSelfReportedPositiveFlag(setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<void> {
     const userId = await (await this.firestoreDB)
       .collection('users')
-      .where('userId', '==', setPositiveReportFlag.userId)
-      .where('organizationCode', '==', setPositiveReportFlag.organizationCode)
+      .where('userId', '==', setSelfReportedPositiveFlag.userId)
+      .where('organizationCode', '==', setSelfReportedPositiveFlag.organizationCode)
       .limit(1)
       .get()
       .then((query) => {
@@ -174,6 +174,6 @@ export class UsersRepository {
     await (await this.firestoreDB)
       .collection('userStatuses')
       .doc(userId)
-      .update({ positiveReport: true, reportDate: moment.tz('Asia/Tokyo') })
+      .update({ selfReportedPositive: true, reportDate: moment.tz('Asia/Tokyo') })
   }
 }
