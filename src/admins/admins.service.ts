@@ -8,7 +8,7 @@ import * as firebaseAdmin from 'firebase-admin'
 export class AdminsService {
   constructor(private adminsRepository: AdminsRepository) {}
 
-  async createOneAdminUser(createAdminRequest: CreateAdminRequestDto) {
+  async createOneAdminUser(createAdminRequest: CreateAdminRequestDto): Promise<void> {
     let firebaseUserRecord: firebaseAdmin.auth.UserRecord
     try {
       firebaseUserRecord = await firebaseAdmin.auth().createUser({

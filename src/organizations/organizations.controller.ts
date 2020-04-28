@@ -52,12 +52,11 @@ export class OrganizationsController {
   @HttpCode(200)
   async postOrganization(
     @Request() req,
-    @Body() createAdminRequest: CreateOrganizationRequestDto
+    @Body() createOrganizationRequest: CreateOrganizationRequestDto
   ): Promise<CreatedResponse> {
-    createAdminRequest.addedByAdminUserId = req.user.uid
-    createAdminRequest.addedByAdminEmail = req.user.email
-    console.log('createAdminRequest : ', createAdminRequest)
-
+    createOrganizationRequest.addedByAdminUserId = req.user.uid
+    createOrganizationRequest.addedByAdminEmail = req.user.email
+    await this.organizationsService.createOneOrganization(createOrganizationRequest)
     return {}
   }
 }
