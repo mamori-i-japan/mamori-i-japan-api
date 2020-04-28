@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
@@ -12,6 +12,7 @@ import * as moment from 'moment-timezone'
 import { TempID } from './classes/temp-id.class'
 import * as zlib from 'zlib'
 import { CloseContact } from './classes/close-contact.class'
+import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 
 @Injectable()
 export class UsersRepository {
@@ -155,5 +156,25 @@ export class UsersRepository {
       .collection('closeContacts')
       .doc(closeContact.uniqueInsertKey)
       .set({ ...closeContact })
+  }
+
+  async setSelfReportedPositiveFlag(
+    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+  ): Promise<void> {
+    const userId = setSelfReportedPositiveFlag.userId
+    const userProfile = await this.findOneUserProfileById(userId)
+
+    if (!userProfile) {
+      throw new NotFoundException()
+    }
+
+    await (await this.firestoreDB)
+      .collection('userStatuses')
+      .doc(userId)
+      .update({
+        selfReportedPositive: true,
+        reportDate: moment.tz('Asia/Tokyo'),
+        organizationCode: setSelfReportedPositiveFlag.organizationCode,
+      })
   }
 }
