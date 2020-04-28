@@ -33,7 +33,7 @@ export class AdminsService {
     return this.adminsRepository.findOneById(adminId)
   }
 
-  async findAllAdminUsers(): Promise<Admin[] | undefined> {
+  async findAllAdminUsers(): Promise<Admin[]> {
     return this.adminsRepository.findAll()
   }
 }

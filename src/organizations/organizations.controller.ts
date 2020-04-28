@@ -40,8 +40,7 @@ export class OrganizationsController {
   @ApiOkResponse({ type: [Organization] })
   @Get('/organizations')
   async getOrganizations(): Promise<Organization[]> {
-    console.log('WIP')
-    return []
+    return this.organizationsService.findAllOrganizations()
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
