@@ -26,6 +26,7 @@ import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { Admin } from './classes/admin.class'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
+import { Organization } from './classes/organization.class'
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -70,5 +71,13 @@ export class AdminsController {
   async setPositiveFlag(@Body() setPositiveFlag: SetPositiveFlagDto): Promise<CreatedResponse> {
     await this.adminsService.setPositiveFlag(setPositiveFlag)
     return {}
+  }
+
+  @ApiOperation({ summary: 'Get all organizations' })
+  @ApiOkResponse({ type: [Organization] })
+  @Get('/organizations')
+  async getOrganizations(): Promise<Organization[]> {
+    console.log('WIP')
+    return []
   }
 }
