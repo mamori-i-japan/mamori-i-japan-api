@@ -12,8 +12,6 @@ export class OrganizationsService {
   async createOneOrganization(
     createOrganizationRequest: CreateOrganizationRequestDto
   ): Promise<void> {
-    console.log('createOrganizationRequest : ', createOrganizationRequest)
-
     const randomCode = await this.generateUniqueOrganizationCode()
 
     const createOrganizationDto: CreateOrganizationDto = new CreateOrganizationDto()
@@ -21,7 +19,6 @@ export class OrganizationsService {
     createOrganizationDto.name = createOrganizationRequest.name
     createOrganizationDto.addedByAdminUserId = createOrganizationRequest.addedByAdminUserId
     createOrganizationDto.addedByAdminEmail = createOrganizationRequest.addedByAdminEmail
-    console.log('createOrganizationDto : ', createOrganizationDto)
 
     return this.organizationsRepository.createOne(createOrganizationDto)
   }
