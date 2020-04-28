@@ -42,8 +42,9 @@ export class OrganizationsRepository {
 
         snapshot.forEach((doc) => {
           const organizationEach: Organization = {
-            organizationCode: doc.id,
+            id: doc.id,
             name: doc.data().name,
+            organizationCode: doc.data().organizationCode,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             created: doc.data().created,

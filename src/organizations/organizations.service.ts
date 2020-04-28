@@ -15,8 +15,9 @@ export class OrganizationsService {
     const randomCode = await this.generateUniqueOrganizationCode()
 
     const createOrganizationDto: CreateOrganizationDto = new CreateOrganizationDto()
-    createOrganizationDto.organizationCode = randomCode
+    createOrganizationDto.id = randomCode
     createOrganizationDto.name = createOrganizationRequest.name
+    createOrganizationDto.organizationCode = randomCode
     createOrganizationDto.addedByAdminUserId = createOrganizationRequest.addedByAdminUserId
     createOrganizationDto.addedByAdminEmail = createOrganizationRequest.addedByAdminEmail
 

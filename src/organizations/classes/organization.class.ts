@@ -3,6 +3,9 @@ import { Moment } from 'moment-timezone'
 
 export class Organization {
   @ApiProperty()
+  id: string
+
+  @ApiProperty()
   name: string
 
   @ApiProperty()

@@ -5,6 +5,11 @@ export class CreateOrganizationDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  id: string
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   name: string
 
   @ApiProperty()
