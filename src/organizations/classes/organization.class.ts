@@ -2,6 +2,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class Organization {
   @ApiProperty()
+  id: string
+
+  @ApiProperty()
   name: string
 
   @ApiProperty()

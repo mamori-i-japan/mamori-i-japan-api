@@ -12,9 +12,19 @@ export class OrganizationsService {
     createOrganizationRequest: CreateOrganizationRequestDto
   ): Promise<void> {
     console.log('createOrganizationRequest : ', createOrganizationRequest)
+
+    require('crypto').randomBytes(4, function(err, buffer) {
+      const token = buffer.toString('hex')
+      console.log('token : ', token.toUpperCase())
+    })
+
+    require('crypto').randomBytes(4, function(err, buffer) {
+      const token = buffer.toString('hex')
+      console.log('token : ', token.toUpperCase())
+    })
   }
 
   async findAllOrganizations(): Promise<Organization[]> {
-    return []
+    return this.organizationsRepository.findAll()
   }
 }
