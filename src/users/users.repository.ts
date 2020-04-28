@@ -104,19 +104,19 @@ export class UsersRepository {
     // NOTE : need to create a composite index on Cloud Firestore
     const userIDs = await (await this.firestoreDB)
       .collection('userStatuses')
-      .where('positive', '==', true)
-      .where('testDate', '>=', recoveredDate)
+      .where('selfReportedPositive', '==', true)
+      .where('reportDate', '>=', recoveredDate)
       .get()
       .then((query) => {
         return query.docs.map((doc) => {
-          return { id: doc.id, testDate: doc.data().testDate }
+          return { id: doc.id, reportDate: doc.data().reportDate }
         })
       })
 
     const tempIDs = await Promise.all(
       userIDs.map(async (doc) => {
         const id = doc.id
-        const testDate = moment(doc.testDate.toDate())
+        const reportDate = moment(doc.reportDate.toDate())
           .tz('Asia/Tokyo')
           .endOf('day')
         const reproductionDate = moment
@@ -129,7 +129,7 @@ export class UsersRepository {
           .doc(id)
           .collection('tempIDs')
           .where('validFrom', '>=', reproductionDate)
-          .where('validFrom', '<=', testDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
+          .where('validFrom', '<=', reportDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
           .get()
           .then((query) => {
             return query.docs.map((doc) => {
