@@ -4,6 +4,7 @@ import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto
 import { User, UserProfile } from './classes/user.class'
 import { TEMPID_BATCH_SIZE } from './constants'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
+import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 
 @Injectable()
 export class UsersService {
@@ -65,5 +66,11 @@ export class UsersService {
     // to pass the update object to repo function.
 
     return
+  }
+
+  async setSelfReportedPositiveFlag(
+    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+  ): Promise<void> {
+    return this.usersRepository.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
   }
 }
