@@ -28,7 +28,7 @@ export class OrganizationsService {
     return this.organizationsRepository.findAll()
   }
 
-  async generateUniqueOrganizationCode(): Promise<string> {
+  private async generateUniqueOrganizationCode(): Promise<string> {
     const randomCode = randomBytes(4) // Creates a 8 (4*2) string code.
       .toString('hex') // Use hex to avoid special characters.
       .toUpperCase()
