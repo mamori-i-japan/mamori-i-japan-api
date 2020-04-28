@@ -167,6 +167,6 @@ export class UsersRepository {
     await (await this.firestoreDB)
       .collection('userStatuses')
       .doc(userId)
-      .update({ selfReportedPositive: true, reportDate: moment.tz('Asia/Tokyo') })
+      .update({ selfReportedPositive: true, reportDate: moment.tz('Asia/Tokyo'), organizationCode: setSelfReportedPositiveFlag.organizationCode })
   }
 }

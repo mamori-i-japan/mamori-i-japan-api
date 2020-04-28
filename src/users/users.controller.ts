@@ -89,6 +89,7 @@ export class UsersController {
   @HttpCode(200)
   async SetSelfReportedPositiveFlagDtoFlag(@Request() req, @Body() setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<CreatedResponse> {
     setSelfReportedPositiveFlag.userId = req.user.uid
+    setSelfReportedPositiveFlag.organizationCode = req.user.organizationCode
     await this.usersService.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
     return {}
   }
