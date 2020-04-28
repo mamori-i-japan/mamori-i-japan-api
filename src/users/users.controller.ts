@@ -80,7 +80,6 @@ export class UsersController {
     return this.usersService.updateUserProfile(userId, updateUserProfileDto)
   }
 
-  // TODO : is validation of organizationCode necessary? if it's necessary, when will it be done?
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag by user-self' })
   @ApiOkResponse({ type: CreatedResponse })
@@ -90,7 +89,6 @@ export class UsersController {
   @HttpCode(200)
   async SetSelfReportedPositiveFlagDtoFlag(@Request() req, @Body() setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<CreatedResponse> {
     setSelfReportedPositiveFlag.userId = req.user.uid
-    setSelfReportedPositiveFlag.organizationCode = req.user.organizationCode
     await this.usersService.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
     return {}
   }

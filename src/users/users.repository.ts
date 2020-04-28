@@ -159,17 +159,10 @@ export class UsersRepository {
   }
 
   async setSelfReportedPositiveFlag(setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto): Promise<void> {
-    const userId = await (await this.firestoreDB)
-      .collection('users')
-      .where('userId', '==', setSelfReportedPositiveFlag.userId)
-      .where('organizationCode', '==', setSelfReportedPositiveFlag.organizationCode)
-      .limit(1)
-      .get()
-      .then((query) => {
-        return query.docs.length === 0 ? undefined : query.docs[0].id
-      })
+    const userId = setSelfReportedPositiveFlag.userId
+    const userProfile = await this.findOneUserProfileById(userId)
 
-    if (!userId) { throw new NotFoundException() }
+    if (!userProfile) { throw new NotFoundException() }
 
     await (await this.firestoreDB)
       .collection('userStatuses')
