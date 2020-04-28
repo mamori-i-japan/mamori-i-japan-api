@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { Admin, AdminProfile } from './classes/admin.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
+import * as moment from 'moment-timezone'
 
 @Injectable()
 export class AdminsRepository {
@@ -12,11 +13,11 @@ export class AdminsRepository {
   }
 
   async createOne(admin: Admin, adminProfile?: AdminProfile): Promise<void> {
-    admin.created = firebaseAdmin.firestore.Timestamp.fromDate(new Date()).seconds
+    admin.created = moment.utc()
     await (await this.firestoreDB)
       .collection('admins')
       .doc(admin.adminUserId)
-      .set(JSON.parse(JSON.stringify(admin)))
+      .set({ ...admin })
 
     if (adminProfile) {
       await (await this.firestoreDB)
@@ -24,7 +25,7 @@ export class AdminsRepository {
         .doc(admin.adminUserId)
         .collection('profile')
         .doc(admin.adminUserId)
-        .set(JSON.parse(JSON.stringify(adminProfile)))
+        .set({ ...adminProfile })
     }
   }
 

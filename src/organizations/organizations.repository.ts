@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
@@ -10,6 +10,22 @@ export class OrganizationsRepository {
 
   constructor(private firebaseService: FirebaseService) {
     this.firestoreDB = this.firebaseService.Firestore()
+  }
+
+  async createOne(organization: Organization): Promise<void> {
+    organization.created = moment.utc()
+    await (await this.firestoreDB)
+      .collection('organizations')
+      .doc(organization.organizationCode)
+      .set({ ...organization })
+  }
+
+  async findOneById(organizationCode: string): Promise<Organization | undefined> {
+    const getDoc = await (await this.firestoreDB)
+      .collection('organizations')
+      .doc(organizationCode)
+      .get()
+    return getDoc.data() as Organization
   }
 
   async findAll(): Promise<Organization[]> {
@@ -26,9 +42,8 @@ export class OrganizationsRepository {
 
         snapshot.forEach((doc) => {
           const organizationEach: Organization = {
-            id: doc.id,
+            organizationCode: doc.id,
             name: doc.data().name,
-            organizationCode: doc.data().organizationCode,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             created: doc.data().created,

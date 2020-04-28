@@ -1,9 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { Moment } from 'moment-timezone'
 
 export class Organization {
-  @ApiProperty()
-  id: string
-
   @ApiProperty()
   name: string
 
@@ -17,5 +15,5 @@ export class Organization {
   addedByAdminEmail: string
 
   @ApiPropertyOptional({ example: 1588297800 })
-  created?: number
+  created?: Moment
 }
