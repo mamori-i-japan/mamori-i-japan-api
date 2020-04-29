@@ -101,9 +101,21 @@ export class UsersRepository {
       .startOf('day')
       .subtract(POSITIVE_RECOVERY_PERIOD, 'days')
 
+    const organizationCodes = await (await this.firestoreDB)
+      .collection('organizations')
+      .get()
+      .then((query) => {
+        return query.docs.map((doc) => {
+          return doc.data().organizationCode
+        })
+      })
+
+await Promise.all(
+  organizationCodes.map(async (organizationCode) => {
     // NOTE : need to create a composite index on Cloud Firestore
     const userIDs = await (await this.firestoreDB)
       .collection('userStatuses')
+      .where('organizationCode', '==', organizationCode)
       .where('selfReportedPositive', '==', true)
       .where('reportDate', '>=', recoveredDate)
       .get()
@@ -139,12 +151,16 @@ export class UsersRepository {
       })
     )
 
-    const file = (await this.firestoreStorage).bucket().file('positives.json.gz')
+    const file = (await this.firestoreStorage)
+      .bucket()
+      .file(`${organizationCode}/positives.json.gz`)
     const json = JSON.stringify({ data: [].concat(...tempIDs) })
     const gzip = zlib.gzipSync(json)
 
     await file.save(gzip)
     await file.setMetadata({ contentType: 'application/gzip' })
+  })
+)
 
     return
   }
