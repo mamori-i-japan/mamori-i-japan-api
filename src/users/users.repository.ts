@@ -110,57 +110,57 @@ export class UsersRepository {
         })
       })
 
-await Promise.all(
-  organizationCodes.map(async (organizationCode) => {
-    // NOTE : need to create a composite index on Cloud Firestore
-    const userIDs = await (await this.firestoreDB)
-      .collection('userStatuses')
-      .where('organizationCode', '==', organizationCode)
-      .where('selfReportedPositive', '==', true)
-      .where('reportDate', '>=', recoveredDate)
-      .get()
-      .then((query) => {
-        return query.docs.map((doc) => {
-          return { id: doc.id, reportDate: doc.data().reportDate }
-        })
-      })
-
-    const tempIDs = await Promise.all(
-      userIDs.map(async (doc) => {
-        const id = doc.id
-        const reportDate = moment(doc.reportDate.toDate())
-          .tz('Asia/Tokyo')
-          .endOf('day')
-        const reproductionDate = moment
-          .tz('Asia/Tokyo')
-          .startOf('day')
-          .subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
-
-        return (await this.firestoreDB)
+    await Promise.all(
+      organizationCodes.map(async (organizationCode) => {
+        // NOTE : need to create a composite index on Cloud Firestore
+        const userIDs = await (await this.firestoreDB)
           .collection('userStatuses')
-          .doc(id)
-          .collection('tempIDs')
-          .where('validFrom', '>=', reproductionDate)
-          .where('validFrom', '<=', reportDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
+          .where('organizationCode', '==', organizationCode)
+          .where('selfReportedPositive', '==', true)
+          .where('reportDate', '>=', recoveredDate)
           .get()
           .then((query) => {
             return query.docs.map((doc) => {
-              return { tempID: doc.id }
+              return { id: doc.id, reportDate: doc.data().reportDate }
             })
           })
+
+        const tempIDs = await Promise.all(
+          userIDs.map(async (doc) => {
+            const id = doc.id
+            const reportDate = moment(doc.reportDate.toDate())
+              .tz('Asia/Tokyo')
+              .endOf('day')
+            const reproductionDate = moment
+              .tz('Asia/Tokyo')
+              .startOf('day')
+              .subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
+
+            return (await this.firestoreDB)
+              .collection('userStatuses')
+              .doc(id)
+              .collection('tempIDs')
+              .where('validFrom', '>=', reproductionDate)
+              .where('validFrom', '<=', reportDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
+              .get()
+              .then((query) => {
+                return query.docs.map((doc) => {
+                  return { tempID: doc.id }
+                })
+              })
+          })
+        )
+
+        const file = (await this.firestoreStorage)
+          .bucket()
+          .file(`${organizationCode}/positives.json.gz`)
+        const json = JSON.stringify({ data: [].concat(...tempIDs) })
+        const gzip = zlib.gzipSync(json)
+
+        await file.save(gzip)
+        await file.setMetadata({ contentType: 'application/gzip' })
       })
     )
-
-    const file = (await this.firestoreStorage)
-      .bucket()
-      .file(`${organizationCode}/positives.json.gz`)
-    const json = JSON.stringify({ data: [].concat(...tempIDs) })
-    const gzip = zlib.gzipSync(json)
-
-    await file.save(gzip)
-    await file.setMetadata({ contentType: 'application/gzip' })
-  })
-)
 
     return
   }
