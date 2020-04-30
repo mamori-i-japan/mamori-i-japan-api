@@ -64,10 +64,13 @@ export class UsersService {
     // the prefecture value to repo update function.
     // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
     //    A - If existing value is same as payload, do nothing.
+
     //    B - If payload value is empty string, and there is an existing value,
     //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
+
     //    C - If existing value is empty, check if payload `orgCode` matches any org,
     //        then add it to DB and also add custom claim.
+
     //    D - If existing value is different from payload:
     //        - Perform step B.
     //        - Then, Perform step C.
