@@ -47,34 +47,32 @@ export class UsersService {
       })
     )
 
-    // TODO @yashmurty : Investigate later on how to ingest this data to BigQuert.
+    // TODO @yashmurty : Investigate later on how to ingest this data to BigQuery.
     // Also, if we need to save this data as a `JSON` file or not.
   }
 
   async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
-    console.log('-----')
-    console.log('userId : ', updateUserProfileDto.userId)
-    console.log('updateUserProfileDto : ', updateUserProfileDto)
-
-    // TODO @yashmurty :
-    // 1. If `prefecture` exists in payload, no action is needed, proceed with passing
-    // the prefecture value to repo update function.
     if (updateUserProfileDto.prefecture) {
       await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
     }
 
-    // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
-    //    A - If existing value is same as payload, do nothing.
+    console.log('updateUserProfileDto : ', updateUserProfileDto)
+    if (updateUserProfileDto.organizationCode) {
+      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
+      // TODO @yashmurty :
+      // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
+      //    A - If existing value is same as payload, do nothing.
 
-    //    B - If payload value is empty string, and there is an existing value,
-    //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
+      //    B - If payload value is empty string, and there is an existing value,
+      //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
 
-    //    C - If existing value is empty, check if payload `orgCode` matches any org,
-    //        then add it to DB and also add custom claim.
+      //    C - If existing value is empty, check if payload `orgCode` matches any org,
+      //        then add it to DB and also add custom claim.
 
-    //    D - If existing value is different from payload:
-    //        - Perform step B.
-    //        - Then, Perform step C.
+      //    D - If existing value is different from payload:
+      //        - Perform step B.
+      //        - Then, Perform step C.
+    }
 
     return
   }
