@@ -51,12 +51,9 @@ export class UsersService {
     // Also, if we need to save this data as a `JSON` file or not.
   }
 
-  async updateUserProfile(
-    userId: string,
-    updateUserProfileDto: UpdateUserProfileDto
-  ): Promise<void> {
+  async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
     console.log('-----')
-    console.log('userId : ', userId)
+    console.log('userId : ', updateUserProfileDto.userId)
     console.log('updateUserProfileDto : ', updateUserProfileDto)
 
     // TODO @yashmurty :
@@ -74,6 +71,10 @@ export class UsersService {
     //    D - If existing value is different from payload:
     //        - Perform step B.
     //        - Then, Perform step C.
+
+    if (updateUserProfileDto.prefecture) {
+      await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
+    }
 
     return
   }

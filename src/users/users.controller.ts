@@ -69,6 +69,7 @@ export class UsersController {
     return this.usersService.findOneUserProfileById(userId)
   }
 
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update user profile' })
   @ApiOkResponse({ type: CreatedResponse })
   @Patch('/me/profile')
@@ -76,8 +77,8 @@ export class UsersController {
     @Request() req,
     @Body() updateUserProfileDto: UpdateUserProfileDto
   ): Promise<void> {
-    const userId = req.user.uid
-    return this.usersService.updateUserProfile(userId, updateUserProfileDto)
+    updateUserProfileDto.userId = req.user.uid
+    return this.usersService.updateUserProfile(updateUserProfileDto)
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))

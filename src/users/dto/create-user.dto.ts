@@ -31,4 +31,7 @@ export class UpdateUserProfileDto {
   @IsOptional()
   @IsNotEmpty()
   organizationCode: string
+
+  // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
+  userId: string
 }
