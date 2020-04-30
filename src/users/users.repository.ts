@@ -140,11 +140,11 @@ export class UsersRepository {
               .collection('userStatuses')
               .doc(id)
               .collection('tempIDs')
-              .where('validFrom', '>=', reproductionDate)
-              .where('validFrom', '<=', reportDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
-              // .where('vaildTo', '<=', reportDate)
-              // NOTE : it should have been written as above, but due to Firestore's limitations, we are forced to write it this way
-              //          refs. https://firebase.google.com/docs/firestore/query-data/queries#compound_queries
+              .where('validFrom', '>=', reproductionDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
+              // NOTE : .where('validTo', '>=', reproductionDate)
+              //        it should have been written as above, but due to Firestore's limitations, we are forced to write it this way
+              //        refs. https://firebase.google.com/docs/firestore/query-data/queries#compound_queries
+              .where('validFrom', '<=', reportDate)
               .get()
               .then((query) => {
                 return query.docs.map((doc) => {
