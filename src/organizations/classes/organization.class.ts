@@ -8,6 +8,9 @@ export class Organization {
   @ApiProperty()
   name: string
 
+  @ApiPropertyOptional({ example: 'This is optional message' })
+  message?: string
+
   @ApiProperty()
   organizationCode: string
 

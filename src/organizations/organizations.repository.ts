@@ -44,6 +44,7 @@ export class OrganizationsRepository {
           const organizationEach: Organization = {
             id: doc.id,
             name: doc.data().name,
+            message: doc.data().message,
             organizationCode: doc.data().organizationCode,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
