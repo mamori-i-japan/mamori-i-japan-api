@@ -214,4 +214,26 @@ export class UsersRepository {
       .doc(userId)
       .update({ prefecture: updateUserProfileDto.prefecture })
   }
+
+  async updateUserProfileOrganizationCode(
+    updateUserProfileDto: UpdateUserProfileDto
+  ): Promise<void> {
+    const userId = updateUserProfileDto.userId
+
+    await (await this.firestoreDB)
+      .collection('users')
+      .doc(userId)
+      .collection('profile')
+      .doc(userId)
+      .update({ organizationCode: updateUserProfileDto.organizationCode })
+  }
+
+  async deleteUserProfileOrganizationCode(userId: string): Promise<void> {
+    await (await this.firestoreDB)
+      .collection('users')
+      .doc(userId)
+      .collection('profile')
+      .doc(userId)
+      .update({ organizationCode: firebaseAdmin.firestore.FieldValue.delete() })
+  }
 }
