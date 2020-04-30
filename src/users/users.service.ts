@@ -61,9 +61,13 @@ export class UsersService {
 
     // TODO @yashmurty :
     // 1. If `prefecture` exists in payload, no action is needed, proceed with passing
-    // the update object to repo function.
-    // 2. If `orgCode` exists in payload, verify if org exists for that code, then proceed
-    // to pass the update object to repo function.
+    // the update object to repo update function.
+    // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
+    //    A - If existing is same do nothing.
+    //    B - If existing is empty, check if `orgCode` matches any org, then add it and also add custom claim.
+    //    C - If existing is different:
+    //        - Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
+    //        - Perform step B.
 
     return
   }
