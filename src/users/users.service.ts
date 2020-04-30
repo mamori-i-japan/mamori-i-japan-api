@@ -59,6 +59,10 @@ export class UsersService {
     // TODO @yashmurty :
     // 1. If `prefecture` exists in payload, no action is needed, proceed with passing
     // the prefecture value to repo update function.
+    if (updateUserProfileDto.prefecture) {
+      await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
+    }
+
     // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
     //    A - If existing value is same as payload, do nothing.
 
@@ -71,10 +75,6 @@ export class UsersService {
     //    D - If existing value is different from payload:
     //        - Perform step B.
     //        - Then, Perform step C.
-
-    if (updateUserProfileDto.prefecture) {
-      await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
-    }
 
     return
   }
