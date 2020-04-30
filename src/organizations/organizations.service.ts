@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common'
 import * as firebaseAdmin from 'firebase-admin'
 import { OrganizationsRepository } from './organizations.repository'
-import { CreateOrganizationRequestDto, CreateOrganizationDto } from './dto/create-organization.dto'
+import { CreateOrganizationRequestDto } from './dto/create-organization.dto'
 import { Organization } from './classes/organization.class'
 import { randomBytes } from 'crypto'
 
@@ -10,18 +10,14 @@ export class OrganizationsService {
   constructor(private organizationsRepository: OrganizationsRepository) {}
 
   async createOneOrganization(
-    createOrganizationRequest: CreateOrganizationRequestDto
+    createOrganizationRequestDto: CreateOrganizationRequestDto
   ): Promise<void> {
     const randomCode = await this.generateUniqueOrganizationCode()
 
-    const createOrganizationDto: CreateOrganizationDto = new CreateOrganizationDto()
-    createOrganizationDto.id = randomCode
-    createOrganizationDto.name = createOrganizationRequest.name
-    createOrganizationDto.organizationCode = randomCode
-    createOrganizationDto.addedByAdminUserId = createOrganizationRequest.addedByAdminUserId
-    createOrganizationDto.addedByAdminEmail = createOrganizationRequest.addedByAdminEmail
+    createOrganizationRequestDto.id = randomCode
+    createOrganizationRequestDto.organizationCode = randomCode
 
-    return this.organizationsRepository.createOne(createOrganizationDto)
+    return this.organizationsRepository.createOne(createOrganizationRequestDto)
   }
 
   async findAllOrganizations(): Promise<Organization[]> {

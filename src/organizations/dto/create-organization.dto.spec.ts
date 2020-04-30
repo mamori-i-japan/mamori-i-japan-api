@@ -1,10 +1,4 @@
-import { CreateOrganizationDto, CreateOrganizationRequestDto } from './create-organization.dto'
-
-describe('CreateOrganizationDto', () => {
-  it('should be defined', () => {
-    expect(new CreateOrganizationDto()).toBeDefined()
-  })
-})
+import { CreateOrganizationRequestDto } from './create-organization.dto'
 
 describe('CreateOrganizationRequestDto', () => {
   it('should be defined', () => {
