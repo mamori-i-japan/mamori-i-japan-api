@@ -62,6 +62,8 @@ commands:
       - run:
           name: e2e test
           command: npm run test:e2e
+      - store_artifacts:
+          path: coverage
 
   firebase_deploy:
     parameters:
