@@ -57,21 +57,27 @@ export class UsersService {
     }
 
     console.log('updateUserProfileDto : ', updateUserProfileDto)
+
     if (updateUserProfileDto.organizationCode) {
       console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
       // TODO @yashmurty :
       // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
-      //    A - If existing value is same as payload, do nothing.
 
-      //    B - If payload value is empty string, and there is an existing value,
-      //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
-
-      //    C - If existing value is empty, check if payload `orgCode` matches any org,
+      //    A - If existing DB value is empty, check if payload `orgCode` matches any org,
       //        then add it to DB and also add custom claim.
 
-      //    D - If existing value is different from payload:
-      //        - Perform step B.
-      //        - Then, Perform step C.
+      //    B - If existing DB value is same as payload, do nothing.
+
+      //    C - If existing DB value is different from payload:
+      //        - Perform step D defined below (delete org code).
+      //        - Then, Perform step A.
+    }
+
+    if (updateUserProfileDto.organizationCode === '') {
+      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
+      // TODO @yashmurty :
+      //    D - If payload value is empty string:
+      //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
     }
 
     return
