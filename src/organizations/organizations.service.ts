@@ -26,6 +26,10 @@ export class OrganizationsService {
     return this.organizationsRepository.findAll()
   }
 
+  async findOneOrganizationById(organizationId: string): Promise<Organization> {
+    return this.organizationsRepository.findOneById(organizationId)
+  }
+
   async updateOneOrganization(
     updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<void> {
