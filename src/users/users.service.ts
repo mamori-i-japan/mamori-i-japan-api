@@ -3,11 +3,11 @@ import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
-import * as firebaseAdmin from 'firebase-admin'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(private usersRepository: UsersRepository, private firebaseService: FirebaseService) {}
 
   createOneUser(user: CreateUserDto, userProfile?: CreateUserProfileDto) {
     return this.usersRepository.createOne(user, userProfile)
@@ -46,6 +46,7 @@ export class UsersService {
       //    B - If existing DB value is same as payload, do nothing.
 
       //    C - If existing DB value is different from payload:
+      //        - Check if org code matches any org.
       //        - Perform step D defined below (delete org code).
       //        - Then, Perform step A.
     }
@@ -65,7 +66,7 @@ export class UsersService {
     await this.usersRepository.deleteUserProfileOrganizationCode(userId)
 
     // Removes the custom claim organization code from user JWT.
-    await firebaseAdmin.auth().setCustomUserClaims(userId, { organizationCode: null })
+    await this.firebaseService.DeleteCustomClaims(userId, ['organizationCode'])
   }
 
   async setSelfReportedPositiveFlag(
