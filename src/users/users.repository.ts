@@ -136,11 +136,11 @@ export class UsersRepository {
     return
   }
 
-  async createDiagnosisKeysForOrg({
-    organizationCode,
-    randomID,
-    tempIDs,
-  }: CreateDiagnosisKeysForOrgDto): Promise<void> {
+  async createDiagnosisKeysForOrg(
+    createDiagnosisKeysForOrg: CreateDiagnosisKeysForOrgDto
+  ): Promise<void> {
+    const { organizationCode, randomID, tempIDs } = createDiagnosisKeysForOrg
+
     await Promise.all(
       tempIDs.map(async ({ tempID, validFrom, validTo }) => {
         await (await this.firestoreDB)
