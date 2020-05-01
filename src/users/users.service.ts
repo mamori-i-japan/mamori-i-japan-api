@@ -3,6 +3,7 @@ import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
 export class UsersService {
@@ -36,6 +37,9 @@ export class UsersService {
       // TODO @yashmurty :
       // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
 
+      const userProfile = await this.findOneUserProfileById(updateUserProfileDto.userId)
+      console.log('userProfile : ', userProfile)
+
       //    A - If existing DB value is empty, check if payload `orgCode` matches any org,
       //        then add it to DB and also add custom claim.
 
@@ -47,13 +51,21 @@ export class UsersService {
     }
 
     if (updateUserProfileDto.organizationCode === '') {
-      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
-      // TODO @yashmurty :
-      //    D - If payload value is empty string:
-      //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
+      await this.removeUserOrganizationCode(updateUserProfileDto.userId)
     }
 
     return
+  }
+
+  /**
+   * Removes the organization code from user profile DB and user JWT custom claim.
+   * @param userId: string
+   */
+  private async removeUserOrganizationCode(userId: string): Promise<void> {
+    await this.usersRepository.deleteUserProfileOrganizationCode(userId)
+
+    // Removes the custom claim organization code from user JWT.
+    await firebaseAdmin.auth().setCustomUserClaims(userId, { organizationCode: null })
   }
 
   async setSelfReportedPositiveFlag(
