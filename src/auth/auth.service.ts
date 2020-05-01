@@ -3,7 +3,6 @@ import { UsersService } from '../users/users.service'
 import { AdminsService } from '../admins/admins.service'
 import { CreateUserDto, CreateUserProfileDto } from '../users/dto/create-user.dto'
 import { validateOrReject } from 'class-validator'
-import * as firebaseAdmin from 'firebase-admin'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 
