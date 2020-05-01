@@ -26,7 +26,7 @@ export class AuthService {
 
     // If custom claim does not exist, then add it because above validation has passed.
     if (!userDecodedToken.isNormalUser) {
-      await this.firebaseService.UpsertCustomClaim(userDecodedToken.uid, { isNormalUser: true })
+      await this.firebaseService.UpsertCustomClaims(userDecodedToken.uid, { isNormalUser: true })
     }
   }
 
