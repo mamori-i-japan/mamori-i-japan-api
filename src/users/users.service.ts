@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
-import { TEMPID_BATCH_SIZE } from './constants'
 import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 
@@ -20,16 +19,6 @@ export class UsersService {
 
   async findOneUserProfileById(userId: string): Promise<UserProfile | undefined> {
     return this.usersRepository.findOneUserProfileById(userId)
-  }
-
-  async getTempIDs(userId: string): Promise<any[]> {
-    const tempIDs = await Promise.all(
-      [...Array(TEMPID_BATCH_SIZE).keys()].map(async (i) =>
-        this.usersRepository.generateTempId(userId, i)
-      )
-    )
-
-    return tempIDs
   }
 
   async uploadPositiveList(): Promise<void> {

@@ -4,12 +4,10 @@ import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import {
   TEMPID_VALIDITY_PERIOD,
-  TEMPID_SWITCHOVER_TIME,
   POSITIVE_RECOVERY_PERIOD,
   POSITIVE_REPRODUCTION_PERIOD,
 } from './constants'
 import * as moment from 'moment-timezone'
-import { TempID } from './classes/temp-id.class'
 import * as zlib from 'zlib'
 import { CloseContact } from './classes/close-contact.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
@@ -58,42 +56,6 @@ export class UsersRepository {
       .doc(userId)
       .get()
     return getDoc.data() as UserProfile
-  }
-
-  async generateTempId(userId: string, i: number): Promise<TempID> {
-    const yesterday = moment.tz('Asia/Tokyo').subtract(1, 'day')
-    const startTime = yesterday
-      .startOf('day')
-      .hour(TEMPID_SWITCHOVER_TIME)
-      .add(TEMPID_VALIDITY_PERIOD * i, 'hours')
-    const validFrom = startTime.clone().toDate()
-    const validTo = startTime.add(TEMPID_VALIDITY_PERIOD, 'hours').toDate()
-
-    const collection = (await this.firestoreDB)
-      .collection('userStatuses')
-      .doc(userId)
-      .collection('tempIDs')
-
-    let tempID = await collection
-      .where('validFrom', '==', validFrom)
-      .where('validTo', '==', validTo)
-      .limit(1)
-      .get()
-      .then((query) => {
-        return query.docs.length === 0 ? undefined : query.docs[0].id
-      })
-
-    tempID =
-      tempID ||
-      (await collection.add({ validFrom, validTo }).then((doc) => {
-        return doc.id
-      }))
-
-    return {
-      tempID,
-      validFrom: moment(validFrom).unix(),
-      validTo: moment(validTo).unix(),
-    }
   }
 
   async uploadPositiveList(): Promise<void> {
