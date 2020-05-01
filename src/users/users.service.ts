@@ -3,8 +3,7 @@ import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
-import * as firebaseAdmin from 'firebase-admin'
-import { FirebaseService } from 'src/shared/firebase/firebase.service'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 
 @Injectable()
 export class UsersService {
