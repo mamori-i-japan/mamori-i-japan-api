@@ -37,6 +37,9 @@ export class UsersService {
       // TODO @yashmurty :
       // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
 
+      const userProfile = await this.findOneUserProfileById(updateUserProfileDto.userId)
+      console.log('userProfile : ', userProfile)
+
       //    A - If existing DB value is empty, check if payload `orgCode` matches any org,
       //        then add it to DB and also add custom claim.
 
