@@ -41,7 +41,7 @@ export class AuthService {
 
     // If custom claim does not exist, then add it because above validation has passed.
     if (!userDecodedToken.isAdminUser) {
-      await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isAdminUser: true })
+      await this.firebaseService.UpsertCustomClaims(userDecodedToken.uid, { isAdminUser: true })
     }
   }
 
