@@ -47,24 +47,21 @@ export class UsersService {
     }
 
     if (updateUserProfileDto.organizationCode === '') {
-      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
-      // TODO @yashmurty :
-      //    D - If payload value is empty string:
-      //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
+      await this.removeUserOrganizationCode(updateUserProfileDto.userId)
     }
-
-    await this.removeUserOrganizationCode(updateUserProfileDto.userId)
 
     return
   }
 
   /**
-   * Removes the organization code from user profile.
+   * Removes the organization code from user profile DB and user JWT custom claim.
    * @param userId: string
    */
   private async removeUserOrganizationCode(userId: string): Promise<void> {
-    console.log('removeOrganizationCodeFromUser')
     await this.usersRepository.deleteUserProfileOrganizationCode(userId)
+
+    // TODO @yashmurty:
+    // Removes the custom claim organization code from user JWT.
   }
 
   async setSelfReportedPositiveFlag(
