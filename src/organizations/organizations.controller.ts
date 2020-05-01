@@ -11,6 +11,7 @@ import {
   HttpCode,
   Patch,
   Param,
+  NotFoundException,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -63,13 +64,23 @@ export class OrganizationsController {
     return {}
   }
 
+  @ApiOperation({ summary: 'Get organization by id' })
+  @ApiOkResponse({ type: Organization })
+  @Get('/organizations/:id')
+  async getOrganizationById(@Param('id') id: string): Promise<Organization> {
+    const organization = await this.organizationsService.findOneOrganizationById(id)
+    if (!organization) {
+      throw new NotFoundException('Could not find organization with this id')
+    }
+    return organization
+  }
+
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update organization' })
   @ApiOkResponse({ type: CreatedResponse })
   @Patch('/organizations/:id')
   async patchMeProfile(
-    @Request() req,
-    @Param('id') id,
+    @Param('id') id: string,
     @Body() updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<CreatedResponse> {
     updateOrganizationRequest.id = id
