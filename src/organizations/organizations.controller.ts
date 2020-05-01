@@ -63,6 +63,7 @@ export class OrganizationsController {
     return {}
   }
 
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update organization' })
   @ApiOkResponse({ type: CreatedResponse })
   @Patch('/organizations/:id')
