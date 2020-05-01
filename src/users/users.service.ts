@@ -47,23 +47,38 @@ export class UsersService {
       })
     )
 
-    // TODO @yashmurty : Investigate later on how to ingest this data to BigQuert.
+    // TODO @yashmurty : Investigate later on how to ingest this data to BigQuery.
     // Also, if we need to save this data as a `JSON` file or not.
   }
 
-  async updateUserProfile(
-    userId: string,
-    updateUserProfileDto: UpdateUserProfileDto
-  ): Promise<void> {
-    console.log('-----')
-    console.log('userId : ', userId)
+  async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
+    if (updateUserProfileDto.prefecture) {
+      await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
+    }
+
     console.log('updateUserProfileDto : ', updateUserProfileDto)
 
-    // TODO @yashmurty :
-    // 1. If `prefecture` exists in payload, no action is needed, proceed with passing
-    // the update object to repo function.
-    // 2. If `orgCode` exists in payload, verify if org exists for that code, then proceed
-    // to pass the update object to repo function.
+    if (updateUserProfileDto.organizationCode) {
+      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
+      // TODO @yashmurty :
+      // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
+
+      //    A - If existing DB value is empty, check if payload `orgCode` matches any org,
+      //        then add it to DB and also add custom claim.
+
+      //    B - If existing DB value is same as payload, do nothing.
+
+      //    C - If existing DB value is different from payload:
+      //        - Perform step D defined below (delete org code).
+      //        - Then, Perform step A.
+    }
+
+    if (updateUserProfileDto.organizationCode === '') {
+      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
+      // TODO @yashmurty :
+      //    D - If payload value is empty string:
+      //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
+    }
 
     return
   }

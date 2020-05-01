@@ -13,6 +13,7 @@ import { TempID } from './classes/temp-id.class'
 import * as zlib from 'zlib'
 import { CloseContact } from './classes/close-contact.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import { UpdateUserProfileDto } from './dto/create-user.dto'
 
 @Injectable()
 export class UsersRepository {
@@ -136,21 +137,27 @@ export class UsersRepository {
               .startOf('day')
               .subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
 
-            return (await this.firestoreDB)
-              .collection('userStatuses')
-              .doc(id)
-              .collection('tempIDs')
-              .where('validFrom', '>=', reproductionDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours'))
-              // NOTE : .where('validTo', '>=', reproductionDate)
-              //        it should have been written as above, but due to Firestore's limitations, we are forced to write it this way
-              //        refs. https://firebase.google.com/docs/firestore/query-data/queries#compound_queries
-              .where('validFrom', '<=', reportDate)
-              .get()
-              .then((query) => {
-                return query.docs.map((doc) => {
-                  return { tempID: doc.id }
+            return (
+              (await this.firestoreDB)
+                .collection('userStatuses')
+                .doc(id)
+                .collection('tempIDs')
+                .where(
+                  'validFrom',
+                  '>=',
+                  reproductionDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours')
+                )
+                // NOTE : .where('validTo', '>=', reproductionDate)
+                //        it should have been written as above, but due to Firestore's limitations, we are forced to write it this way
+                //        refs. https://firebase.google.com/docs/firestore/query-data/queries#compound_queries
+                .where('validFrom', '<=', reportDate)
+                .get()
+                .then((query) => {
+                  return query.docs.map((doc) => {
+                    return { tempID: doc.id }
+                  })
                 })
-              })
+            )
           })
         )
 
@@ -195,5 +202,38 @@ export class UsersRepository {
         reportDate: moment.tz('Asia/Tokyo'),
         organizationCode: setSelfReportedPositiveFlag.organizationCode,
       })
+  }
+
+  async updateUserProfilePrefecture(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
+    const userId = updateUserProfileDto.userId
+
+    await (await this.firestoreDB)
+      .collection('users')
+      .doc(userId)
+      .collection('profile')
+      .doc(userId)
+      .update({ prefecture: updateUserProfileDto.prefecture })
+  }
+
+  async updateUserProfileOrganizationCode(
+    updateUserProfileDto: UpdateUserProfileDto
+  ): Promise<void> {
+    const userId = updateUserProfileDto.userId
+
+    await (await this.firestoreDB)
+      .collection('users')
+      .doc(userId)
+      .collection('profile')
+      .doc(userId)
+      .update({ organizationCode: updateUserProfileDto.organizationCode })
+  }
+
+  async deleteUserProfileOrganizationCode(userId: string): Promise<void> {
+    await (await this.firestoreDB)
+      .collection('users')
+      .doc(userId)
+      .collection('profile')
+      .doc(userId)
+      .update({ organizationCode: firebaseAdmin.firestore.FieldValue.delete() })
   }
 }
