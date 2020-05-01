@@ -80,7 +80,18 @@ export class UsersService {
       //        Perform delete operation of `orgCode` for existing user (profile, userStatus, customClaim)
     }
 
+    await this.removeUserOrganizationCode(updateUserProfileDto.userId)
+
     return
+  }
+
+  /**
+   * Removes the organization code from user profile.
+   * @param userId: string
+   */
+  private async removeUserOrganizationCode(userId: string): Promise<void> {
+    console.log('removeOrganizationCodeFromUser')
+    await this.usersRepository.deleteUserProfileOrganizationCode(userId)
   }
 
   async setSelfReportedPositiveFlag(
