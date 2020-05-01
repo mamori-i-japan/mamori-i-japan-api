@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
-import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 
 @Injectable()
@@ -23,21 +22,6 @@ export class UsersService {
 
   async uploadPositiveList(): Promise<void> {
     return this.usersRepository.uploadPositiveList()
-  }
-
-  async createCloseContacts(
-    userId: string,
-    createCloseContactsRequestDto: CreateCloseContactsRequestDto
-  ): Promise<void> {
-    await Promise.all(
-      createCloseContactsRequestDto.closeContacts.map(async (closeContact) => {
-        closeContact.selfUserId = userId
-        return this.usersRepository.createOneCloseContact(userId, closeContact)
-      })
-    )
-
-    // TODO @yashmurty : Investigate later on how to ingest this data to BigQuery.
-    // Also, if we need to save this data as a `JSON` file or not.
   }
 
   async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {

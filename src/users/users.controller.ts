@@ -24,7 +24,6 @@ import { UsersService } from './users.service'
 import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
-import { CreateCloseContactsRequestDto } from './dto/create-close-contact.dto'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
@@ -38,19 +37,6 @@ import { UserProfile } from './classes/user.class'
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
-
-  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
-  @ApiOperation({ summary: 'Receive close contacts payload from user' })
-  @ApiOkResponse({ type: CreatedResponse })
-  @Post('/me/close_contacts')
-  @HttpCode(200)
-  async postMeCloseContacts(
-    @Request() req,
-    @Body() createCloseContactsRequestDto: CreateCloseContactsRequestDto
-  ): Promise<CreatedResponse> {
-    await this.usersService.createCloseContacts(req.user.uid, createCloseContactsRequestDto)
-    return {}
-  }
 
   @ApiOperation({ summary: 'Get user profile' })
   @ApiOkResponse({ type: UserProfile })

@@ -9,7 +9,6 @@ import {
 } from './constants'
 import * as moment from 'moment-timezone'
 import * as zlib from 'zlib'
-import { CloseContact } from './classes/close-contact.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 
@@ -135,15 +134,6 @@ export class UsersRepository {
     )
 
     return
-  }
-
-  async createOneCloseContact(userId: string, closeContact: CloseContact): Promise<void> {
-    await (await this.firestoreDB)
-      .collection('userCloseContacts')
-      .doc(userId)
-      .collection('closeContacts')
-      .doc(closeContact.uniqueInsertKey)
-      .set({ ...closeContact })
   }
 
   async setSelfReportedPositiveFlag(
