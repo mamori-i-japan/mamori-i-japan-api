@@ -16,11 +16,6 @@ service cloud.firestore {
     match /userStatuses/{userId} {
       // Allow authenticated users to read their status
       allow read: if request.auth.uid == userId;
-
-      // Allow authenticated users to read their tempIDs
-      match /tempIDs/{tempID} {
-        allow read: if request.auth.uid == userId;
-      }
     }
 
     match /prefectureMessages/{prefectureMessage} {
