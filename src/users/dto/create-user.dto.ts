@@ -29,6 +29,8 @@ export class UpdateUserProfileDto {
   @ApiPropertyOptional({ example: 'A12B34' })
   @IsString()
   @IsOptional()
-  @IsNotEmpty()
   organizationCode: string
+
+  // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
+  userId: string
 }
