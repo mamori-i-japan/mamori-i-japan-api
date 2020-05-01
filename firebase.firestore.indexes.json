@@ -1,37 +1,4 @@
 {
-  "indexes": [
-    {
-      "collectionGroup": "userStatuses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "positive",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "testDate",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "userStatuses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "organizationCode",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "selfReportedPositive",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "reportDate",
-          "order": "ASCENDING"
-        }
-      ]
-    }
-  ],
+  "indexes": [],
   "fieldOverrides": []
 }

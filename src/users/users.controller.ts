@@ -24,7 +24,7 @@ import { UsersService } from './users.service'
 import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
-import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { UserProfile } from './classes/user.class'
@@ -63,14 +63,14 @@ export class UsersController {
   @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
-  @Post('/me/self_reported_positives')
+  @Post('/me/diagnosis_keys_for_org')
   @HttpCode(200)
-  async SetSelfReportedPositiveFlag(
+  async createDiagnosisKeysForOrg(
     @Request() req,
-    @Body() setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+    @Body() createDiagnosisKeysForOrg: CreateDiagnosisKeysForOrgDto
   ): Promise<CreatedResponse> {
-    setSelfReportedPositiveFlag.organizationCode = req.user.organizationCode
-    await this.usersService.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
+    createDiagnosisKeysForOrg.organizationCode = req.user.organizationCode
+    await this.usersService.createDiagnosisKeysForOrg(createDiagnosisKeysForOrg)
     return {}
   }
 }

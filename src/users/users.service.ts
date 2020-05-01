@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
-import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 
 @Injectable()
@@ -69,9 +69,9 @@ export class UsersService {
     await this.firebaseService.DeleteCustomClaims(userId, ['organizationCode'])
   }
 
-  async setSelfReportedPositiveFlag(
-    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+  async createDiagnosisKeysForOrg(
+    createDiagnosisKeysForOrg: CreateDiagnosisKeysForOrgDto
   ): Promise<void> {
-    return this.usersRepository.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
+    return this.usersRepository.createDiagnosisKeysForOrg(createDiagnosisKeysForOrg)
   }
 }

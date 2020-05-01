@@ -9,7 +9,7 @@ import {
 } from './constants'
 import * as moment from 'moment-timezone'
 import * as zlib from 'zlib'
-import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 
 @Injectable()
@@ -136,15 +136,15 @@ export class UsersRepository {
     return
   }
 
-  async setSelfReportedPositiveFlag({
+  async createDiagnosisKeysForOrg({
     organizationCode,
     randomID,
     tempIDs,
-  }: SetSelfReportedPositiveFlagDto): Promise<void> {
+  }: CreateDiagnosisKeysForOrgDto): Promise<void> {
     await Promise.all(
       tempIDs.map(async ({ tempID, validFrom, validTo }) => {
         await (await this.firestoreDB)
-          .collection('selfReportedPositiveTempIDs')
+          .collection('diagnosisKeysForOrg')
           .doc(organizationCode)
           .collection('tempIDs')
           .doc(tempID)

@@ -31,7 +31,7 @@ export class SetPositiveFlagDto {
   // centerGeneratedCode: string // FIXME : give me a nice name
 }
 
-export class SetSelfReportedPositiveFlagDto {
+export class CreateDiagnosisKeysForOrgDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
