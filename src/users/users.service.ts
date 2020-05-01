@@ -21,8 +21,8 @@ export class UsersService {
     return this.usersRepository.findOneUserProfileById(userId)
   }
 
-  async uploadPositiveList(): Promise<void> {
-    return this.usersRepository.uploadPositiveList()
+  async uploadDiagnosisKeysForOrgList(): Promise<void> {
+    return this.usersRepository.uploadDiagnosisKeysForOrgList()
   }
 
   async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {

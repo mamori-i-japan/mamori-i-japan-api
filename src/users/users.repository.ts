@@ -53,7 +53,7 @@ export class UsersRepository {
     return getDoc.data() as UserProfile
   }
 
-  async uploadPositiveList(): Promise<void> {
+  async uploadDiagnosisKeysForOrgList(): Promise<void> {
     const recoveredDate = moment
       .tz('Asia/Tokyo')
       .startOf('day')
