@@ -136,24 +136,21 @@ export class UsersRepository {
     return
   }
 
-  async setSelfReportedPositiveFlag(
-    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
-  ): Promise<void> {
-    const userId = setSelfReportedPositiveFlag.userId
-    const userProfile = await this.findOneUserProfileById(userId)
-
-    if (!userProfile) {
-      throw new NotFoundException()
-    }
-
-    await (await this.firestoreDB)
-      .collection('userStatuses')
-      .doc(userId)
-      .update({
-        selfReportedPositive: true,
-        reportDate: moment.tz('Asia/Tokyo'),
-        organizationCode: setSelfReportedPositiveFlag.organizationCode,
+  async setSelfReportedPositiveFlag({
+    organizationCode,
+    randomID,
+    tempIDs,
+  }: SetSelfReportedPositiveFlagDto): Promise<void> {
+    await Promise.all(
+      tempIDs.map(async ({ tempID, validFrom, validTo }) => {
+        await (await this.firestoreDB)
+          .collection('selfReportedPositiveTempIDs')
+          .doc(organizationCode)
+          .collection('tempIDs')
+          .doc(tempID)
+          .set({ randomID, validFrom, validTo })
       })
+    )
   }
 
   async updateUserProfilePrefecture(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {

@@ -65,11 +65,10 @@ export class UsersController {
   @ApiNotFoundResponse()
   @Post('/me/self_reported_positives')
   @HttpCode(200)
-  async SetSelfReportedPositiveFlagDtoFlag(
+  async SetSelfReportedPositiveFlag(
     @Request() req,
     @Body() setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
   ): Promise<CreatedResponse> {
-    setSelfReportedPositiveFlag.userId = req.user.uid
     setSelfReportedPositiveFlag.organizationCode = req.user.organizationCode
     await this.usersService.setSelfReportedPositiveFlag(setSelfReportedPositiveFlag)
     return {}
