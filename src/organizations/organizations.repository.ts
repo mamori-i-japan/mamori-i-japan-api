@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
 import { Organization } from './classes/organization.class'
+import { UpdateOrganizationRequestDto } from './dto/create-organization.dto'
 
 @Injectable()
 export class OrganizationsRepository {
@@ -20,10 +21,10 @@ export class OrganizationsRepository {
       .set({ ...organization })
   }
 
-  async findOneById(organizationCode: string): Promise<Organization | undefined> {
+  async findOneById(organizationId: string): Promise<Organization | undefined> {
     const getDoc = await (await this.firestoreDB)
       .collection('organizations')
-      .doc(organizationCode)
+      .doc(organizationId)
       .get()
     return getDoc.data() as Organization
   }
@@ -59,5 +60,25 @@ export class OrganizationsRepository {
       })
 
     return organizationsArray
+  }
+
+  async updateOne(updateOrganizationRequest: UpdateOrganizationRequestDto): Promise<void> {
+    const organizationId = updateOrganizationRequest.id
+    const organization = await this.findOneById(organizationId)
+
+    if (!organization) {
+      throw new NotFoundException('Could not find organization with this id')
+    }
+
+    // We don't want to insert unneccessary id field in the document.
+    delete updateOrganizationRequest.id
+
+    await (await this.firestoreDB)
+      .collection('organizations')
+      .doc(organizationId)
+      .update({
+        ...updateOrganizationRequest,
+        updatedAt: moment.utc(),
+      })
   }
 }
