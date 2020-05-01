@@ -25,6 +25,8 @@ export class FirebaseNormalUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException(error.message)
     }
 
+    console.log('userDecodedToken : ', userDecodedToken)
+
     // Expect all normal access tokens (FDT) to have provider id anonymous data.
     validateNormalTokenAnonymousPayload(userDecodedToken)
 

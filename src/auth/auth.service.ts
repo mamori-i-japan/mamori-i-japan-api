@@ -5,10 +5,15 @@ import { CreateUserDto, CreateUserProfileDto } from '../users/dto/create-user.dt
 import { validateOrReject } from 'class-validator'
 import * as firebaseAdmin from 'firebase-admin'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService, private adminsService: AdminsService) {}
+  constructor(
+    private usersService: UsersService,
+    private adminsService: AdminsService,
+    private firebaseService: FirebaseService
+  ) {}
 
   async normalUserLogin(
     userDecodedToken: any,
@@ -21,7 +26,7 @@ export class AuthService {
 
     // If custom claim does not exist, then add it because above validation has passed.
     if (!userDecodedToken.isNormalUser) {
-      await firebaseAdmin.auth().setCustomUserClaims(userDecodedToken.uid, { isNormalUser: true })
+      await this.firebaseService.UpsertCustomClaim(userDecodedToken.uid, { isNormalUser: true })
     }
   }
 

@@ -46,6 +46,7 @@ export class UsersService {
       //    B - If existing DB value is same as payload, do nothing.
 
       //    C - If existing DB value is different from payload:
+      //        - Check if org code matches any org.
       //        - Perform step D defined below (delete org code).
       //        - Then, Perform step A.
     }

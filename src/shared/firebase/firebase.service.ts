@@ -24,4 +24,20 @@ export class FirebaseService {
   async Storage(): Promise<firebaseAdmin.storage.Storage> {
     return firebaseAdmin.storage()
   }
+
+  /**
+   * Update custom claims in firebase without overwriting all existing claims.
+   * @param userId: string
+   * @param upsertCustomClaims: Record<string, any>
+   */
+  async UpsertCustomClaim(userId: string, upsertCustomClaims: Record<string, any>): Promise<void> {
+    const firebaseUser = await firebaseAdmin.auth().getUser(userId)
+    const existingCustomClaims = firebaseUser.customClaims
+
+    // Merge upsertCustomClaims in to existingCustomClaims.
+    const newCustomClaims = Object.assign({}, existingCustomClaims, upsertCustomClaims)
+
+    // Overwrite firebase custom claims with newCustomClaims.
+    await firebaseAdmin.auth().setCustomUserClaims(userId, newCustomClaims)
+  }
 }
