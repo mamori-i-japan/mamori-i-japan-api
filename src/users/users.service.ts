@@ -3,6 +3,7 @@ import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import * as firebaseAdmin from 'firebase-admin'
 
 @Injectable()
 export class UsersService {
@@ -60,8 +61,8 @@ export class UsersService {
   private async removeUserOrganizationCode(userId: string): Promise<void> {
     await this.usersRepository.deleteUserProfileOrganizationCode(userId)
 
-    // TODO @yashmurty:
     // Removes the custom claim organization code from user JWT.
+    await firebaseAdmin.auth().setCustomUserClaims(userId, { organizationCode: null })
   }
 
   async setSelfReportedPositiveFlag(
