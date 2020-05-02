@@ -15,13 +15,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus()
       const errorMessage = exception.getResponse() as HttpException
+
       const responseObject = {
         statusCode: status,
         timestamp: new Date().toISOString(),
         url: request.url,
-        error: exception.message,
-        name: exception.name,
-        message: errorMessage.message,
+        ...errorMessage,
       }
 
       this.appLogger.debug(JSON.stringify({ status, responseObject }))
