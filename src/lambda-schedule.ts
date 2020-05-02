@@ -12,5 +12,5 @@ exports.handler = async () => {
   await app.init()
 
   const usersService = app.get(UsersService)
-  return usersService.uploadPositiveList()
+  return usersService.uploadDiagnosisKeysForOrgList()
 }

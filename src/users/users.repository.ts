@@ -2,11 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
-import {
-  TEMPID_VALIDITY_PERIOD,
-  POSITIVE_RECOVERY_PERIOD,
-  POSITIVE_REPRODUCTION_PERIOD,
-} from './constants'
+import { POSITIVE_RECOVERY_PERIOD } from './constants'
 import * as moment from 'moment-timezone'
 import * as zlib from 'zlib'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
@@ -57,7 +53,7 @@ export class UsersRepository {
     return getDoc.data() as UserProfile
   }
 
-  async uploadPositiveList(): Promise<void> {
+  async uploadDiagnosisKeysForOrgList(): Promise<void> {
     const recoveredDate = moment
       .tz('Asia/Tokyo')
       .startOf('day')
@@ -74,53 +70,17 @@ export class UsersRepository {
 
     await Promise.all(
       organizationCodes.map(async (organizationCode) => {
-        // NOTE : need to create a composite index on Cloud Firestore
-        const userIDs = await (await this.firestoreDB)
-          .collection('userStatuses')
-          .where('organizationCode', '==', organizationCode)
-          .where('selfReportedPositive', '==', true)
-          .where('reportDate', '>=', recoveredDate)
+        const tempIDs = await (await this.firestoreDB)
+          .collection('diagnosisKeysForOrg')
+          .doc(organizationCode)
+          .collection('tempIDs')
+          .where('validFrom', '>=', recoveredDate)
           .get()
           .then((query) => {
             return query.docs.map((doc) => {
-              return { id: doc.id, reportDate: doc.data().reportDate }
+              return doc.id
             })
           })
-
-        const tempIDs = await Promise.all(
-          userIDs.map(async (doc) => {
-            const id = doc.id
-            const reportDate = moment(doc.reportDate.toDate())
-              .tz('Asia/Tokyo')
-              .endOf('day')
-            const reproductionDate = moment
-              .tz('Asia/Tokyo')
-              .startOf('day')
-              .subtract(POSITIVE_REPRODUCTION_PERIOD, 'days')
-
-            return (
-              (await this.firestoreDB)
-                .collection('userStatuses')
-                .doc(id)
-                .collection('tempIDs')
-                .where(
-                  'validFrom',
-                  '>=',
-                  reproductionDate.subtract(TEMPID_VALIDITY_PERIOD, 'hours')
-                )
-                // NOTE : .where('validTo', '>=', reproductionDate)
-                //        it should have been written as above, but due to Firestore's limitations, we are forced to write it this way
-                //        refs. https://firebase.google.com/docs/firestore/query-data/queries#compound_queries
-                .where('validFrom', '<=', reportDate)
-                .get()
-                .then((query) => {
-                  return query.docs.map((doc) => {
-                    return { tempID: doc.id }
-                  })
-                })
-            )
-          })
-        )
 
         const file = (await this.firestoreStorage)
           .bucket()
@@ -132,8 +92,6 @@ export class UsersRepository {
         await file.setMetadata({ contentType: 'application/gzip' })
       })
     )
-
-    return
   }
 
   async createDiagnosisKeysForOrg(
