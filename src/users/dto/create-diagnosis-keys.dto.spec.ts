@@ -1,4 +1,4 @@
-import { SetPositiveFlagDto } from './set-positive-flag.dto'
+import { SetPositiveFlagDto } from './create-diagnosis-keys.dto'
 
 describe('SetPositiveFlagDto', () => {
   it('should be defined', () => {

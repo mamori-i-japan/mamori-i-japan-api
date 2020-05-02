@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
@@ -9,7 +9,7 @@ import {
 } from './constants'
 import * as moment from 'moment-timezone'
 import * as zlib from 'zlib'
-import { SetSelfReportedPositiveFlagDto } from './dto/set-positive-flag.dto'
+import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 
 @Injectable()
@@ -136,24 +136,21 @@ export class UsersRepository {
     return
   }
 
-  async setSelfReportedPositiveFlag(
-    setSelfReportedPositiveFlag: SetSelfReportedPositiveFlagDto
+  async createDiagnosisKeysForOrg(
+    createDiagnosisKeysForOrg: CreateDiagnosisKeysForOrgDto
   ): Promise<void> {
-    const userId = setSelfReportedPositiveFlag.userId
-    const userProfile = await this.findOneUserProfileById(userId)
+    const { organizationCode, randomID, tempIDs } = createDiagnosisKeysForOrg
 
-    if (!userProfile) {
-      throw new NotFoundException()
-    }
-
-    await (await this.firestoreDB)
-      .collection('userStatuses')
-      .doc(userId)
-      .update({
-        selfReportedPositive: true,
-        reportDate: moment.tz('Asia/Tokyo'),
-        organizationCode: setSelfReportedPositiveFlag.organizationCode,
+    await Promise.all(
+      tempIDs.map(async ({ tempID, validFrom, validTo }) => {
+        await (await this.firestoreDB)
+          .collection('diagnosisKeysForOrg')
+          .doc(organizationCode)
+          .collection('tempIDs')
+          .doc(tempID)
+          .set({ randomID, validFrom, validTo })
       })
+    )
   }
 
   async updateUserProfilePrefecture(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
