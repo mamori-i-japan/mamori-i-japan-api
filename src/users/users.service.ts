@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
+import { OrganizationsService } from '../organizations/organizations.service'
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository, private firebaseService: FirebaseService) {}
+  constructor(
+    private usersRepository: UsersRepository,
+    private firebaseService: FirebaseService,
+    private organizationsService: OrganizationsService
+  ) {}
 
   createOneUser(user: CreateUserDto, userProfile?: CreateUserProfileDto) {
     return this.usersRepository.createOne(user, userProfile)
@@ -25,37 +30,72 @@ export class UsersService {
     return this.usersRepository.uploadDiagnosisKeysForOrgList()
   }
 
+  /**
+   * Updates user profile. Takes care of multiple cases for organization code update.
+   * Organization code update case:
+   * - Check organization code validity.
+   * - Add organization code to user profile and add custom claims to JWT.
+   * - In case of empty string payload, remove organization code from user profile and add custom claims.
+   * @param updateUserProfileDto: UpdateUserProfileDto
+   */
   async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
     if (updateUserProfileDto.prefecture) {
       await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
     }
 
-    console.log('updateUserProfileDto : ', updateUserProfileDto)
-
     if (updateUserProfileDto.organizationCode) {
-      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
-      // TODO @yashmurty :
-      // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
+      const isOrganizationCodeValid = await this.organizationsService.isOrganizationCodeValid(
+        updateUserProfileDto.organizationCode
+      )
+      if (!isOrganizationCodeValid) {
+        throw new BadRequestException('Organization code does not match any existing organization')
+      }
 
       const userProfile = await this.findOneUserProfileById(updateUserProfileDto.userId)
-      console.log('userProfile : ', userProfile)
 
-      //    A - If existing DB value is empty, check if payload `orgCode` matches any org,
-      //        then add it to DB and also add custom claim.
+      switch (true) {
+        case !userProfile.organizationCode:
+          // Organization code does not exist in user profile,
+          // so add it to user profile and JWT custom claims.
+          await this.addUserOrganizationCode(updateUserProfileDto)
 
-      //    B - If existing DB value is same as payload, do nothing.
+          break
+        case userProfile.organizationCode &&
+          userProfile.organizationCode === updateUserProfileDto.organizationCode:
+          // Organization code in user profile exists and is same as update payload value,
+          // so do nothing.
+          break
+        case userProfile.organizationCode &&
+          userProfile.organizationCode !== updateUserProfileDto.organizationCode:
+          // Organization code in user profile exists and is different from update payload value,
+          // so first remove existing user profile value and add new one from payload.
+          await this.removeUserOrganizationCode(updateUserProfileDto.userId)
+          await this.addUserOrganizationCode(updateUserProfileDto)
 
-      //    C - If existing DB value is different from payload:
-      //        - Check if org code matches any org.
-      //        - Perform step D defined below (delete org code).
-      //        - Then, Perform step A.
+          break
+        default:
+          throw new BadRequestException(
+            'Organization code could not be added to user profile, please contact support'
+          )
+      }
     }
 
     if (updateUserProfileDto.organizationCode === '') {
       await this.removeUserOrganizationCode(updateUserProfileDto.userId)
     }
+  }
 
-    return
+  /**
+   * Adds the organization code to user profile DB and user JWT custom claim.
+   * @param updateUserProfileDto: UpdateUserProfileDto
+   */
+  private async addUserOrganizationCode(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
+    await this.usersRepository.updateUserProfileOrganizationCode(updateUserProfileDto)
+
+    // Adds the custom claim organization code to user JWT.
+    await this.firebaseService.UpsertCustomClaims(updateUserProfileDto.userId, {
+      organizationCode: updateUserProfileDto.organizationCode,
+    })
   }
 
   /**

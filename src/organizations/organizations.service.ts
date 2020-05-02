@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { OrganizationsRepository } from './organizations.repository'
 import {
   CreateOrganizationRequestDto,
@@ -36,6 +36,27 @@ export class OrganizationsService {
     return this.organizationsRepository.updateOne(updateOrganizationRequest)
   }
 
+  /**
+   * Checks if organization code/id provided is valid or not.
+   * @param organizationId: string
+   */
+  async isOrganizationCodeValid(organizationId: string): Promise<boolean> {
+    const organization = await this.organizationsRepository.findOneById(organizationId)
+    if (!organization) {
+      return false
+    }
+    // This is just a sanity check. Since organization id and code should always have same value.
+    if (organizationId !== organization.organizationCode) {
+      throw new BadRequestException('organization code does not match organization id')
+    }
+
+    return true
+  }
+
+  /**
+   * Generates a random unique organization code.
+   * Calls itself again in case the generated code is already being used.
+   */
   private async generateUniqueOrganizationCode(): Promise<string> {
     const randomCode = randomBytes(4) // Creates a 8 (4*2) string code.
       .toString('hex') // Use hex to avoid special characters.
