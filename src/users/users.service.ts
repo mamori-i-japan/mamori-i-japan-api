@@ -35,18 +35,18 @@ export class UsersService {
     if (updateUserProfileDto.organizationCode) {
       console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
       // TODO @yashmurty :
-      // 2. If `orgCode` exists in payload, check if user already has existing `orgCode`.
+      // 1. Check if org code matches any org. If does not match then return error.
+
+      // 2. Fetch user from DB and check for existing `orgCode`.
 
       const userProfile = await this.findOneUserProfileById(updateUserProfileDto.userId)
       console.log('userProfile : ', userProfile)
 
-      //    A - If existing DB value is empty, check if payload `orgCode` matches any org,
-      //        then add it to DB and also add custom claim.
+      //    A - If existing DB value is empty, then add it to DB and also add custom claim.
 
       //    B - If existing DB value is same as payload, do nothing.
 
       //    C - If existing DB value is different from payload:
-      //        - Check if org code matches any org.
       //        - Perform step D defined below (delete org code).
       //        - Then, Perform step A.
     }
