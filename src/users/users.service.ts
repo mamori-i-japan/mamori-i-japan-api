@@ -75,7 +75,7 @@ export class UsersService {
           break
         default:
           throw new BadRequestException(
-            'Organization code does not match any existing organization'
+            'Organization code could not be added to user profile, please contact support'
           )
       }
     }
