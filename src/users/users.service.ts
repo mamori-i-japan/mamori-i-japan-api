@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
@@ -30,6 +30,14 @@ export class UsersService {
     return this.usersRepository.uploadDiagnosisKeysForOrgList()
   }
 
+  /**
+   * Updates user profile. Takes care of multiple cases for organization code update.
+   * Organization code update case:
+   * - Check organization code validity.
+   * - Add organization code to user profile and add custom claims to JWT.
+   * - In case of empty string payload, remove organization code from user profile and add custom claims.
+   * @param updateUserProfileDto: UpdateUserProfileDto
+   */
   async updateUserProfile(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
     if (updateUserProfileDto.prefecture) {
       await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
@@ -38,15 +46,12 @@ export class UsersService {
     console.log('updateUserProfileDto : ', updateUserProfileDto)
 
     if (updateUserProfileDto.organizationCode) {
-      console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
-      // TODO @yashmurty :
-      // 1. Check if org code matches any org. If does not match then return error.
-      console.log(
-        'isOrganizationCodeValid : ',
-        await this.organizationsService.isOrganizationCodeValid(
-          updateUserProfileDto.organizationCode
-        )
+      const isOrganizationCodeValid = await this.organizationsService.isOrganizationCodeValid(
+        updateUserProfileDto.organizationCode
       )
+      if (!isOrganizationCodeValid) {
+        throw new BadRequestException('Organization code does not match any existing organization')
+      }
 
       // 2. Fetch user from DB and check for existing `orgCode`.
 
@@ -66,6 +71,7 @@ export class UsersService {
       await this.removeUserOrganizationCode(updateUserProfileDto.userId)
     }
 
+    console.log('---- FINISH UPDATE FUNCTION')
     return
   }
 
