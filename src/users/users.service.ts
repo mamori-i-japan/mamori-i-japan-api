@@ -43,8 +43,6 @@ export class UsersService {
       await this.usersRepository.updateUserProfilePrefecture(updateUserProfileDto)
     }
 
-    console.log('updateUserProfileDto : ', updateUserProfileDto)
-
     if (updateUserProfileDto.organizationCode) {
       const isOrganizationCodeValid = await this.organizationsService.isOrganizationCodeValid(
         updateUserProfileDto.organizationCode
@@ -53,10 +51,7 @@ export class UsersService {
         throw new BadRequestException('Organization code does not match any existing organization')
       }
 
-      // 2. Fetch user from DB and check for existing `orgCode`.
-
       const userProfile = await this.findOneUserProfileById(updateUserProfileDto.userId)
-      console.log('userProfile : ', userProfile)
 
       switch (true) {
         case !userProfile.organizationCode:
@@ -88,9 +83,6 @@ export class UsersService {
     if (updateUserProfileDto.organizationCode === '') {
       await this.removeUserOrganizationCode(updateUserProfileDto.userId)
     }
-
-    console.log('---- FINISH UPDATE FUNCTION')
-    return
   }
 
   /**
