@@ -51,7 +51,6 @@ export class FirebaseService {
     const existingCustomClaims = firebaseUser.customClaims
 
     for (const customClaimKey of deleteCustomClaimKeys) {
-      console.log(customClaimKey)
       delete existingCustomClaims[customClaimKey]
     }
 

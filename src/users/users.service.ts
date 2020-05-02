@@ -58,13 +58,31 @@ export class UsersService {
       const userProfile = await this.findOneUserProfileById(updateUserProfileDto.userId)
       console.log('userProfile : ', userProfile)
 
-      //    A - If existing DB value is empty, then add it to DB and also add custom claim.
+      switch (true) {
+        case !userProfile.organizationCode:
+          // Organization code does not exist in user profile,
+          // so add it to user profile and JWT custom claims.
+          await this.addUserOrganizationCode(updateUserProfileDto)
 
-      //    B - If existing DB value is same as payload, do nothing.
+          break
+        case userProfile.organizationCode &&
+          userProfile.organizationCode === updateUserProfileDto.organizationCode:
+          // Organization code in user profile exists and is same as update payload value,
+          // so do nothing.
+          break
+        case userProfile.organizationCode &&
+          userProfile.organizationCode !== updateUserProfileDto.organizationCode:
+          // Organization code in user profile exists and is different from update payload value,
+          // so first remove existing user profile value and add new one from payload.
+          await this.removeUserOrganizationCode(updateUserProfileDto.userId)
+          await this.addUserOrganizationCode(updateUserProfileDto)
 
-      //    C - If existing DB value is different from payload:
-      //        - Perform step D defined below (delete org code).
-      //        - Then, Perform step A.
+          break
+        default:
+          throw new BadRequestException(
+            'Organization code does not match any existing organization'
+          )
+      }
     }
 
     if (updateUserProfileDto.organizationCode === '') {
@@ -73,6 +91,19 @@ export class UsersService {
 
     console.log('---- FINISH UPDATE FUNCTION')
     return
+  }
+
+  /**
+   * Adds the organization code to user profile DB and user JWT custom claim.
+   * @param updateUserProfileDto: UpdateUserProfileDto
+   */
+  private async addUserOrganizationCode(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
+    await this.usersRepository.updateUserProfileOrganizationCode(updateUserProfileDto)
+
+    // Adds the custom claim organization code to user JWT.
+    await this.firebaseService.UpsertCustomClaims(updateUserProfileDto.userId, {
+      organizationCode: updateUserProfileDto.organizationCode,
+    })
   }
 
   /**
