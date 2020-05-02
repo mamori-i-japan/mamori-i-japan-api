@@ -4,10 +4,15 @@ import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto
 import { User, UserProfile } from './classes/user.class'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
+import { OrganizationsService } from '../organizations/organizations.service'
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository, private firebaseService: FirebaseService) {}
+  constructor(
+    private usersRepository: UsersRepository,
+    private firebaseService: FirebaseService,
+    private organizationsService: OrganizationsService
+  ) {}
 
   createOneUser(user: CreateUserDto, userProfile?: CreateUserProfileDto) {
     return this.usersRepository.createOne(user, userProfile)
@@ -36,6 +41,12 @@ export class UsersService {
       console.log('updateUserProfileDto.organizationCode : ', updateUserProfileDto.organizationCode)
       // TODO @yashmurty :
       // 1. Check if org code matches any org. If does not match then return error.
+      console.log(
+        'isOrganizationCodeValid : ',
+        await this.organizationsService.isOrganizationCodeValid(
+          updateUserProfileDto.organizationCode
+        )
+      )
 
       // 2. Fetch user from DB and check for existing `orgCode`.
 
