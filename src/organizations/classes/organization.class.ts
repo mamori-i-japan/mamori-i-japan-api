@@ -22,5 +22,8 @@ export class Organization extends ResourceWithACL {
   addedByAdminEmail: string
 
   @ApiPropertyOptional({ example: 1588297800 })
-  created?: Moment
+  createdAt?: Moment
+
+  @ApiPropertyOptional({ example: 1588297800 })
+  updatedAt?: Moment
 }

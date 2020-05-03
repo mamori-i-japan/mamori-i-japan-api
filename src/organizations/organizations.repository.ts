@@ -14,7 +14,7 @@ export class OrganizationsRepository {
   }
 
   async createOne(organization: Organization): Promise<void> {
-    organization.created = moment.utc()
+    organization.createdAt = moment.utc()
 
     await (await this.firestoreDB)
       .collection('organizations')
@@ -50,7 +50,8 @@ export class OrganizationsRepository {
             organizationCode: doc.data().organizationCode,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
-            created: doc.data().created,
+            createdAt: doc.data().createdAt,
+            updatedAt: doc.data().updatedAt,
             accessControlList: doc.data().accessControlList,
           }
           organizationsArray.push(organizationEach)
