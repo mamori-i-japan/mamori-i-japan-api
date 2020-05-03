@@ -6,6 +6,11 @@ import {
 } from './dto/create-organization.dto'
 import { Organization } from './classes/organization.class'
 import { randomBytes } from 'crypto'
+import {
+  getSuperAdminACLEntry,
+  getNationalAdminACLEntry,
+  getOrganizationAdminACLEntry,
+} from '../shared/acl'
 
 @Injectable()
 export class OrganizationsService {
@@ -16,8 +21,13 @@ export class OrganizationsService {
   ): Promise<void> {
     const randomCode = await this.generateUniqueOrganizationCode()
 
-    createOrganizationRequestDto.id = randomCode
+    createOrganizationRequestDto.organizationId = randomCode
     createOrganizationRequestDto.organizationCode = randomCode
+    createOrganizationRequestDto.accessControlList = [
+      getSuperAdminACLEntry(),
+      getNationalAdminACLEntry(),
+      getOrganizationAdminACLEntry(randomCode),
+    ]
 
     return this.organizationsRepository.createOne(createOrganizationRequestDto)
   }

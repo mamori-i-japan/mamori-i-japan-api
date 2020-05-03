@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Moment } from 'moment-timezone'
+import { ResourceWithACL } from '../../shared/acl'
 
 export class Admin {
   @ApiProperty()

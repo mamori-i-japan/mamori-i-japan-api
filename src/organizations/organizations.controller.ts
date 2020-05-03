@@ -66,9 +66,11 @@ export class OrganizationsController {
 
   @ApiOperation({ summary: 'Get organization by id' })
   @ApiOkResponse({ type: Organization })
-  @Get('/organizations/:id')
-  async getOrganizationById(@Param('id') id: string): Promise<Organization> {
-    const organization = await this.organizationsService.findOneOrganizationById(id)
+  @Get('/organizations/:organizationId')
+  async getOrganizationById(
+    @Param('organizationId') organizationId: string
+  ): Promise<Organization> {
+    const organization = await this.organizationsService.findOneOrganizationById(organizationId)
     if (!organization) {
       throw new NotFoundException('Could not find organization with this id')
     }
@@ -78,12 +80,12 @@ export class OrganizationsController {
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update organization' })
   @ApiOkResponse({ type: CreatedResponse })
-  @Patch('/organizations/:id')
+  @Patch('/organizations/:organizationId')
   async patchMeProfile(
-    @Param('id') id: string,
+    @Param('organizationId') organizationId: string,
     @Body() updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<CreatedResponse> {
-    updateOrganizationRequest.id = id
+    updateOrganizationRequest.organizationId = organizationId
     await this.organizationsService.updateOneOrganization(updateOrganizationRequest)
     return {}
   }

@@ -15,6 +15,7 @@ export class OrganizationsRepository {
 
   async createOne(organization: Organization): Promise<void> {
     organization.created = moment.utc()
+
     await (await this.firestoreDB)
       .collection('organizations')
       .doc(organization.organizationCode)
@@ -43,13 +44,14 @@ export class OrganizationsRepository {
 
         snapshot.forEach((doc) => {
           const organizationEach: Organization = {
-            id: doc.id,
+            organizationId: doc.id,
             name: doc.data().name,
             message: doc.data().message,
             organizationCode: doc.data().organizationCode,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             created: doc.data().created,
+            accessControlList: doc.data().accessControlList,
           }
           organizationsArray.push(organizationEach)
         })
@@ -63,15 +65,12 @@ export class OrganizationsRepository {
   }
 
   async updateOne(updateOrganizationRequest: UpdateOrganizationRequestDto): Promise<void> {
-    const organizationId = updateOrganizationRequest.id
+    const organizationId = updateOrganizationRequest.organizationId
     const organization = await this.findOneById(organizationId)
 
     if (!organization) {
       throw new NotFoundException('Could not find organization with this id')
     }
-
-    // We don't want to insert unneccessary id field in the document.
-    delete updateOrganizationRequest.id
 
     await (await this.firestoreDB)
       .collection('organizations')
