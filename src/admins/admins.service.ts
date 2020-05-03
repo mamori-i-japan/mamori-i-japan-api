@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common'
+import { Injectable, BadRequestException, ConflictException } from '@nestjs/common'
 import { AdminsRepository } from './admins.repository'
 import { CreateAdminDto, CreateAdminRequestDto } from './dto/create-admin.dto'
 import { Admin } from './classes/admin.class'
@@ -9,6 +9,12 @@ export class AdminsService {
   constructor(private adminsRepository: AdminsRepository) {}
 
   async createOneAdminUser(createAdminRequest: CreateAdminRequestDto): Promise<void> {
+    // Check if an admin already exists with this email.
+    const adminExists = await this.adminsRepository.findOneByEmail(createAdminRequest.email)
+    if (adminExists) {
+      throw new ConflictException('An admin with this email already exists')
+    }
+
     let firebaseUserRecord: firebaseAdmin.auth.UserRecord
     try {
       firebaseUserRecord = await firebaseAdmin.auth().createUser({

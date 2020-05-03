@@ -17,6 +17,7 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
+  ApiConflictResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
@@ -47,6 +48,7 @@ export class AdminsController {
   @ApiOperation({ summary: 'Create new admin user' })
   @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
+  @ApiConflictResponse()
   @Post('/users')
   @HttpCode(200)
   async postAdminUser(
