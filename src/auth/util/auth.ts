@@ -17,6 +17,24 @@ export function validateAdminTokenEmailPayload(
 }
 
 /**
+ * Validate admin access tokens to have isAdminUser, userAdminRole and userAccessKey data
+ * @param userDecodedToken: firebaseAdmin.auth.DecodedIdToken
+ */
+export function validateAdminTokenCustomClaims(
+  userDecodedToken: firebaseAdmin.auth.DecodedIdToken
+) {
+  if (!userDecodedToken.isAdminUser) {
+    throw new UnauthorizedException('Access token does not have isAdminUser payload')
+  }
+  if (!userDecodedToken.userAdminRole) {
+    throw new UnauthorizedException('Access token does not have userAdminRole payload')
+  }
+  if (!userDecodedToken.userAccessKey) {
+    throw new UnauthorizedException('Access token does not have userAccessKey payload')
+  }
+}
+
+/**
  * Validate normal access tokens to have provider_id data as anonymous.
  * @param userDecodedToken: firebaseAdmin.auth.DecodedIdToken
  */

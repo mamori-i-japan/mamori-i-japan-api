@@ -40,8 +40,16 @@ export class AuthService {
     }
 
     // If custom claim does not exist, then add it because above validation has passed.
-    if (!requestAdminUser.isAdminUser) {
-      await this.firebaseService.UpsertCustomClaims(requestAdminUser.uid, { isAdminUser: true })
+    if (
+      !requestAdminUser.isAdminUser ||
+      !requestAdminUser.userAdminRole ||
+      !requestAdminUser.userAccessKey
+    ) {
+      await this.firebaseService.UpsertCustomClaims(requestAdminUser.uid, {
+        isAdminUser: true,
+        userAdminRole: adminObj.userAdminRole,
+        userAccessKey: adminObj.userAccessKey,
+      })
     }
   }
 
