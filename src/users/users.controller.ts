@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-user-validate.guard'
-import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
+import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'

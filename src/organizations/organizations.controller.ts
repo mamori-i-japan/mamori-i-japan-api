@@ -22,7 +22,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
-import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
+import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { Organization } from './classes/organization.class'
