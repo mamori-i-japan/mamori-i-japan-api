@@ -26,6 +26,7 @@ import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { Admin } from './classes/admin.class'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
+import { RequestAdminUser } from '../shared/interfaces'
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -48,6 +49,7 @@ export class AdminsController {
   @ApiOperation({ summary: 'Create new admin user' })
   @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
+  @ApiUnauthorizedResponse()
   @ApiConflictResponse()
   @Post('/users')
   @HttpCode(200)
@@ -55,9 +57,8 @@ export class AdminsController {
     @Request() req,
     @Body() createAdminRequest: CreateAdminRequestDto
   ): Promise<CreatedResponse> {
-    createAdminRequest.addedByAdminUserId = req.user.uid
-    createAdminRequest.addedByAdminEmail = req.user.email
-    await this.adminsService.createOneAdminUser(createAdminRequest)
+    const requestAdminUser: RequestAdminUser = req.user
+    await this.adminsService.createOneAdminUser(requestAdminUser, createAdminRequest)
     return {}
   }
 }

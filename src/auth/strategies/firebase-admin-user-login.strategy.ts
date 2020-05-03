@@ -31,6 +31,8 @@ export class FirebaseAdminUserLoginStrategy extends PassportStrategy(
 
     const requestAdminUser: RequestAdminUser = {
       isAdminUser: userDecodedToken.isAdminUser,
+      userAdminRole: userDecodedToken.userAdminRole,
+      userAccessKey: userDecodedToken.userAccessKey,
       uid: userDecodedToken.uid,
       email: userDecodedToken.email,
     }

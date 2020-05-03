@@ -53,6 +53,8 @@ export class AdminsRepository {
         snapshot.forEach((doc) => {
           admin = {
             adminUserId: doc.id,
+            userAdminRole: doc.data().userAdminRole,
+            userAccessKey: doc.data().userAccessKey,
             email: doc.data().email,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
@@ -83,6 +85,8 @@ export class AdminsRepository {
         snapshot.forEach((doc) => {
           const adminEach: Admin = {
             adminUserId: doc.id,
+            userAdminRole: doc.data().userAdminRole,
+            userAccessKey: doc.data().userAccessKey,
             email: doc.data().email,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,

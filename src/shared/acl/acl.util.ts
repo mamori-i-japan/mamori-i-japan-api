@@ -6,22 +6,24 @@ import {
 } from './acl.constants'
 
 /**
- * getXXXAdminACLEntry function returns the keys that need to be added to
+ * getXXXAdminACLKey function returns the keys that need to be added to
  * the accessControlList of a resource.
+ * When checking is a user has access on a resource, the users' userAccessKey
+ * is compared to the accessControlList array.
  */
-export function getSuperAdminACLEntry() {
+export function getSuperAdminACLKey() {
   return superAdminKey
 }
 
-export function getNationalAdminACLEntry() {
+export function getNationalAdminACLKey() {
   return nationalAdminKey
 }
 
-export function getPrefectureAdminACLEntry(prefectureId: string) {
+export function getPrefectureAdminACLKey(prefectureId: string) {
   return prefectureAdminKey + '|' + prefectureId
 }
 
-export function getOrganizationAdminACLEntry(organizationId: string) {
+export function getOrganizationAdminACLKey(organizationId: string) {
   return organizationAdminKey + '|' + organizationId
 }
 
@@ -64,7 +66,7 @@ export function canUserCreatePrefectureAdmin(userAccessKey: string, prefectureId
   if (userAccessKey === nationalAdminKey) {
     return true
   }
-  if (userAccessKey === getPrefectureAdminACLEntry(prefectureId)) {
+  if (userAccessKey === getPrefectureAdminACLKey(prefectureId)) {
     return true
   }
   return false
@@ -81,7 +83,7 @@ export function canUserCreateOrganizationAdmin(
   if (userAccessKey === nationalAdminKey) {
     return true
   }
-  if (userAccessKey === getOrganizationAdminACLEntry(organizationId)) {
+  if (userAccessKey === getOrganizationAdminACLKey(organizationId)) {
     return true
   }
   return false

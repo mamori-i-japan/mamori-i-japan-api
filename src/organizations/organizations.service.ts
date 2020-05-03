@@ -7,9 +7,9 @@ import {
 import { Organization } from './classes/organization.class'
 import { randomBytes } from 'crypto'
 import {
-  getSuperAdminACLEntry,
-  getNationalAdminACLEntry,
-  getOrganizationAdminACLEntry,
+  getSuperAdminACLKey,
+  getNationalAdminACLKey,
+  getOrganizationAdminACLKey,
 } from '../shared/acl'
 
 @Injectable()
@@ -24,9 +24,9 @@ export class OrganizationsService {
     createOrganizationRequestDto.organizationId = randomCode
     createOrganizationRequestDto.organizationCode = randomCode
     createOrganizationRequestDto.accessControlList = [
-      getSuperAdminACLEntry(),
-      getNationalAdminACLEntry(),
-      getOrganizationAdminACLEntry(randomCode),
+      getSuperAdminACLKey(),
+      getNationalAdminACLKey(),
+      getOrganizationAdminACLKey(randomCode),
     ]
 
     return this.organizationsRepository.createOne(createOrganizationRequestDto)

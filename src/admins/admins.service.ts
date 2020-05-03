@@ -1,14 +1,25 @@
-import { Injectable, BadRequestException, ConflictException } from '@nestjs/common'
+import {
+  Injectable,
+  BadRequestException,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { AdminsRepository } from './admins.repository'
 import { CreateAdminDto, CreateAdminRequestDto } from './dto/create-admin.dto'
 import { Admin } from './classes/admin.class'
 import * as firebaseAdmin from 'firebase-admin'
+import { AdminRole, canUserCreateSuperAdmin, getSuperAdminACLKey } from '../shared/acl'
+import { RequestAdminUser } from '../shared/interfaces'
 
 @Injectable()
 export class AdminsService {
   constructor(private adminsRepository: AdminsRepository) {}
 
-  async createOneAdminUser(createAdminRequest: CreateAdminRequestDto): Promise<void> {
+  async createOneAdminUser(
+    requestAdminUser: RequestAdminUser,
+    createAdminRequest: CreateAdminRequestDto
+  ): Promise<void> {
+    console.log('requestAdminUser : ', requestAdminUser)
     console.log('createAdminRequest : ', createAdminRequest)
     // Check if an admin already exists with this email.
     const adminExists = await this.adminsRepository.findOneByEmail(createAdminRequest.email)
@@ -16,7 +27,19 @@ export class AdminsService {
       throw new ConflictException('An admin with this email already exists')
     }
 
-    // Check if the user has access to create new user with adminRole in the payload.
+    let generatedUserAccessKey: string
+    // Check if the user has access to create new user with desired adminRole in the payload.
+    switch (createAdminRequest.adminRole) {
+      case AdminRole.superAdminRole:
+        if (!canUserCreateSuperAdmin(requestAdminUser.userAccessKey)) {
+          throw new UnauthorizedException('Insufficient access to create this adminRole')
+        }
+        generatedUserAccessKey = getSuperAdminACLKey()
+        break
+
+      default:
+        throw new UnauthorizedException('WIP. adminRole not supported yet')
+    }
 
     let firebaseUserRecord: firebaseAdmin.auth.UserRecord
     try {
@@ -32,8 +55,12 @@ export class AdminsService {
     const createAdminDto: CreateAdminDto = new CreateAdminDto()
     createAdminDto.adminUserId = firebaseUserRecord.uid
     createAdminDto.email = createAdminRequest.email
-    createAdminDto.addedByAdminUserId = createAdminRequest.addedByAdminUserId
-    createAdminDto.addedByAdminEmail = createAdminRequest.addedByAdminEmail
+    createAdminDto.addedByAdminUserId = requestAdminUser.uid
+    createAdminDto.addedByAdminEmail = requestAdminUser.email
+    createAdminDto.userAdminRole = createAdminRequest.adminRole
+    createAdminDto.userAccessKey = generatedUserAccessKey
+
+    console.log('createAdminDto : ', createAdminDto)
 
     return this.adminsRepository.createOne(createAdminDto)
   }
