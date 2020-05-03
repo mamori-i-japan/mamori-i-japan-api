@@ -38,6 +38,9 @@ export class AuthService {
     if (adminObj.email !== requestAdminUser.email) {
       throw new ForbiddenException('Email in access token does not match with admin in firestore')
     }
+    if (!adminObj.userAdminRole || !adminObj.userAccessKey) {
+      throw new ForbiddenException('Admin in firestore does not have role and access')
+    }
 
     // If custom claim does not exist, then add it because above validation has passed.
     if (

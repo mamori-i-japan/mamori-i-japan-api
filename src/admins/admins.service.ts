@@ -19,8 +19,11 @@ export class AdminsService {
     requestAdminUser: RequestAdminUser,
     createAdminRequest: CreateAdminRequestDto
   ): Promise<void> {
+    // TODO @yashmurty : WIP
+    // - Only creating with super admin role in payload works for now.
     console.log('requestAdminUser : ', requestAdminUser)
     console.log('createAdminRequest : ', createAdminRequest)
+
     // Check if an admin already exists with this email.
     const adminExists = await this.adminsRepository.findOneByEmail(createAdminRequest.email)
     if (adminExists) {
