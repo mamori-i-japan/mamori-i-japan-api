@@ -33,16 +33,20 @@ export class OrganizationsService {
   }
 
   async findAllOrganizations(): Promise<Organization[]> {
-    return this.organizationsRepository.findAll()
+    // TODO @yashmurty : Fetch access key from user object.
+    const userAccessKey = 'SUPER_ADMIN_KEY'
+    return this.organizationsRepository.findAll(userAccessKey)
   }
 
   async findOneOrganizationById(organizationId: string): Promise<Organization> {
+    // TODO @yashmurty : Fetch resource and perform ACL check.
     return this.organizationsRepository.findOneById(organizationId)
   }
 
   async updateOneOrganization(
     updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<void> {
+    // TODO @yashmurty : Fetch resource and perform ACL check.
     return this.organizationsRepository.updateOne(updateOrganizationRequest)
   }
 

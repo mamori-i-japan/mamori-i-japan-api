@@ -30,12 +30,13 @@ export class OrganizationsRepository {
     return getDoc.data() as Organization
   }
 
-  async findAll(): Promise<Organization[]> {
+  async findAll(userAccessKey: string): Promise<Organization[]> {
     const organizationsArray: Organization[] = []
 
     const organizationsRef = (await this.firestoreDB).collection('organizations')
     await organizationsRef
       .limit(100)
+      .where('accessControlList', 'array-contains', userAccessKey)
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
