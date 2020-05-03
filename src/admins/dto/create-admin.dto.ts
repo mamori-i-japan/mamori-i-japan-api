@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNotEmpty, IsOptional, IsEnum, IsEmail } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsEmail, ValidateIf } from 'class-validator'
 import { AdminRole } from '../../shared/acl'
 
 export class CreateAdminProfileDto {
@@ -45,17 +45,17 @@ export class CreateAdminRequestDto {
   @ApiPropertyOptional({
     description: 'Optional, needed when admin role is ORGANIZATION_ADMIN_ROLE',
   })
+  @ValidateIf((o) => o.adminRole === AdminRole.organizationAdminRole)
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   organizationId: string
 
   @ApiPropertyOptional({
     description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
   })
+  @ValidateIf((o) => o.adminRole === AdminRole.prefectureAdminRole)
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   prefectureId: string
 
   // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.

@@ -9,11 +9,14 @@ export class AdminsService {
   constructor(private adminsRepository: AdminsRepository) {}
 
   async createOneAdminUser(createAdminRequest: CreateAdminRequestDto): Promise<void> {
+    console.log('createAdminRequest : ', createAdminRequest)
     // Check if an admin already exists with this email.
     const adminExists = await this.adminsRepository.findOneByEmail(createAdminRequest.email)
     if (adminExists) {
       throw new ConflictException('An admin with this email already exists')
     }
+
+    // Check if the user has access to create new user with adminRole in the payload.
 
     let firebaseUserRecord: firebaseAdmin.auth.UserRecord
     try {

@@ -55,6 +55,7 @@ export class AdminsController {
     @Request() req,
     @Body() createAdminRequest: CreateAdminRequestDto
   ): Promise<CreatedResponse> {
+    console.log('req.user : ', req.user)
     createAdminRequest.addedByAdminUserId = req.user.uid
     createAdminRequest.addedByAdminEmail = req.user.email
     await this.adminsService.createOneAdminUser(createAdminRequest)
