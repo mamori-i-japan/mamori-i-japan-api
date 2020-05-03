@@ -5,6 +5,7 @@ import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
 import { validateAdminTokenEmailPayload } from '../util'
+import { RequestAdminUser } from '../../shared/interfaces'
 
 @Injectable()
 export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
@@ -33,6 +34,12 @@ export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
       throw new UnauthorizedException('Access token does not contain custom claim isAdminUser')
     }
 
-    done(null, userDecodedToken)
+    const requestAdminUser: RequestAdminUser = {
+      isAdminUser: userDecodedToken.isAdminUser,
+      uid: userDecodedToken.uid,
+      email: userDecodedToken.email,
+    }
+
+    done(null, requestAdminUser)
   }
 }

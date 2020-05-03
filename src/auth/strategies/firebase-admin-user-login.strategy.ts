@@ -5,6 +5,7 @@ import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
 import { validateAdminTokenEmailPayload } from '../util'
+import { RequestAdminUser } from '../../shared/interfaces'
 
 @Injectable()
 export class FirebaseAdminUserLoginStrategy extends PassportStrategy(
@@ -28,7 +29,13 @@ export class FirebaseAdminUserLoginStrategy extends PassportStrategy(
     // Expect all admin access tokens to have email and email_verified data.
     validateAdminTokenEmailPayload(userDecodedToken)
 
+    const requestAdminUser: RequestAdminUser = {
+      isAdminUser: userDecodedToken.isAdminUser,
+      uid: userDecodedToken.uid,
+      email: userDecodedToken.email,
+    }
+
     // NOTE : Passport automatically creates a user object, based on the value we return here.
-    done(null, userDecodedToken)
+    done(null, requestAdminUser)
   }
 }

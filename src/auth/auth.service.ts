@@ -5,6 +5,7 @@ import { CreateUserDto, CreateUserProfileDto } from '../users/dto/create-user.dt
 import { validateOrReject } from 'class-validator'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
+import { RequestAdminUser } from '../shared/interfaces'
 
 @Injectable()
 export class AuthService {
@@ -29,18 +30,18 @@ export class AuthService {
     }
   }
 
-  async adminUserlogin(userDecodedToken: any): Promise<void> {
-    const adminObj = await this.adminsService.findOneAdminById(userDecodedToken.uid)
+  async adminUserlogin(requestAdminUser: RequestAdminUser): Promise<void> {
+    const adminObj = await this.adminsService.findOneAdminById(requestAdminUser.uid)
     if (!adminObj) {
       throw new ForbiddenException('User Id does not belong to an admin')
     }
-    if (adminObj.email !== userDecodedToken.email) {
+    if (adminObj.email !== requestAdminUser.email) {
       throw new ForbiddenException('Email in access token does not match with admin in firestore')
     }
 
     // If custom claim does not exist, then add it because above validation has passed.
-    if (!userDecodedToken.isAdminUser) {
-      await this.firebaseService.UpsertCustomClaims(userDecodedToken.uid, { isAdminUser: true })
+    if (!requestAdminUser.isAdminUser) {
+      await this.firebaseService.UpsertCustomClaims(requestAdminUser.uid, { isAdminUser: true })
     }
   }
 
