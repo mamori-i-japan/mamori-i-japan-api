@@ -42,8 +42,14 @@ export function canUserAccessResource(userAccessKey: string, resource: ResourceW
   if (!resource.accessControlList) {
     throw new UnauthorizedException('Could not check access without accessControlList')
   }
+  if (!resource.accessControlList.length) {
+    throw new UnauthorizedException('Could not check access on empty accessControlList')
+  }
 
-  // TODO @yashmurty : WIP
+  // If accessControlList contains the userAccessKey, return true.
+  if (resource.accessControlList.includes(userAccessKey)) {
+    return true
+  }
 
   return false
 }
