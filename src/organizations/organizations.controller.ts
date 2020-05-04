@@ -53,21 +53,20 @@ export class OrganizationsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new organziation' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: Organization })
   @ApiBadRequestResponse()
   @Post('/organizations')
   @HttpCode(200)
   async postOrganization(
     @Request() req,
     @Body() createOrganizationRequest: CreateOrganizationRequestDto
-  ): Promise<CreatedResponse> {
+  ): Promise<Organization> {
     const requestAdminUser: RequestAdminUser = req.user
 
-    await this.organizationsService.createOneOrganization(
+    return this.organizationsService.createOneOrganization(
       requestAdminUser,
       createOrganizationRequest
     )
-    return {}
   }
 
   @ApiOperation({ summary: 'Get organization by id' })

@@ -13,13 +13,15 @@ export class OrganizationsRepository {
     this.firestoreDB = this.firebaseService.Firestore()
   }
 
-  async createOne(organization: Organization): Promise<void> {
+  async createOne(organization: Organization): Promise<Organization> {
     organization.createdAt = moment.utc()
 
     await (await this.firestoreDB)
       .collection('organizations')
       .doc(organization.organizationCode)
       .set({ ...organization })
+
+    return organization
   }
 
   async findOneById(organizationId: string): Promise<Organization | undefined> {

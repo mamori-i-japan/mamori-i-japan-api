@@ -22,7 +22,7 @@ export class OrganizationsService {
   async createOneOrganization(
     requestAdminUser: RequestAdminUser,
     createOrganizationRequest: CreateOrganizationRequestDto
-  ): Promise<void> {
+  ): Promise<Organization> {
     // New organization can only be created by superAdmin or NationalAdmin.
     if (!canUserCreateNationalAdmin(requestAdminUser.userAccessKey)) {
       throw new UnauthorizedException('User does not have access to create this resource')
