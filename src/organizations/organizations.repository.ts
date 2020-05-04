@@ -13,13 +13,15 @@ export class OrganizationsRepository {
     this.firestoreDB = this.firebaseService.Firestore()
   }
 
-  async createOne(organization: Organization): Promise<void> {
+  async createOne(organization: Organization): Promise<Organization> {
     organization.createdAt = moment.utc()
 
     await (await this.firestoreDB)
       .collection('organizations')
       .doc(organization.organizationCode)
       .set({ ...organization })
+
+    return organization
   }
 
   async findOneById(organizationId: string): Promise<Organization | undefined> {
@@ -30,6 +32,12 @@ export class OrganizationsRepository {
     return getDoc.data() as Organization
   }
 
+  /**
+   * List endpoint that returns all organizations.
+   * It uses the passed userAccessKey to match against the accessControlList array
+   * in the where clause of the list query.
+   * @param userAccessKey: string
+   */
   async findAll(userAccessKey: string): Promise<Organization[]> {
     const organizationsArray: Organization[] = []
 

@@ -45,24 +45,28 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Get all organizations' })
   @ApiOkResponse({ type: [Organization] })
   @Get('/organizations')
-  async getOrganizations(): Promise<Organization[]> {
-    return this.organizationsService.findAllOrganizations()
+  async getOrganizations(@Request() req): Promise<Organization[]> {
+    const requestAdminUser: RequestAdminUser = req.user
+
+    return this.organizationsService.findAllOrganizations(requestAdminUser)
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new organziation' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: Organization })
   @ApiBadRequestResponse()
   @Post('/organizations')
   @HttpCode(200)
   async postOrganization(
     @Request() req,
     @Body() createOrganizationRequest: CreateOrganizationRequestDto
-  ): Promise<CreatedResponse> {
-    createOrganizationRequest.addedByAdminUserId = req.user.uid
-    createOrganizationRequest.addedByAdminEmail = req.user.email
-    await this.organizationsService.createOneOrganization(createOrganizationRequest)
-    return {}
+  ): Promise<Organization> {
+    const requestAdminUser: RequestAdminUser = req.user
+
+    return this.organizationsService.createOneOrganization(
+      requestAdminUser,
+      createOrganizationRequest
+    )
   }
 
   @ApiOperation({ summary: 'Get organization by id' })
@@ -89,11 +93,18 @@ export class OrganizationsController {
   @ApiOkResponse({ type: CreatedResponse })
   @Patch('/organizations/:organizationId')
   async patchMeProfile(
+    @Request() req,
     @Param('organizationId') organizationId: string,
     @Body() updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<CreatedResponse> {
+    const requestAdminUser: RequestAdminUser = req.user
     updateOrganizationRequest.organizationId = organizationId
-    await this.organizationsService.updateOneOrganization(updateOrganizationRequest)
+
+    await this.organizationsService.updateOneOrganization(
+      requestAdminUser,
+      updateOrganizationRequest
+    )
+
     return {}
   }
 }

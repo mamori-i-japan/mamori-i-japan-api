@@ -11,6 +11,7 @@ import {
   getNationalAdminACLKey,
   getOrganizationAdminACLKey,
   canUserAccessResource,
+  canUserCreateNationalAdmin,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 
@@ -19,33 +20,39 @@ export class OrganizationsService {
   constructor(private organizationsRepository: OrganizationsRepository) {}
 
   async createOneOrganization(
-    createOrganizationRequestDto: CreateOrganizationRequestDto
-  ): Promise<void> {
-    const randomCode = await this.generateUniqueOrganizationCode()
+    requestAdminUser: RequestAdminUser,
+    createOrganizationRequest: CreateOrganizationRequestDto
+  ): Promise<Organization> {
+    // New organization can only be created by superAdmin or NationalAdmin.
+    if (!canUserCreateNationalAdmin(requestAdminUser.userAccessKey)) {
+      throw new UnauthorizedException('User does not have access to create this resource')
+    }
 
-    createOrganizationRequestDto.organizationId = randomCode
-    createOrganizationRequestDto.organizationCode = randomCode
-    createOrganizationRequestDto.accessControlList = [
+    const randomCode = await this.generateUniqueOrganizationCode()
+    createOrganizationRequest.organizationId = randomCode
+    createOrganizationRequest.organizationCode = randomCode
+    createOrganizationRequest.addedByAdminUserId = requestAdminUser.uid
+    createOrganizationRequest.addedByAdminEmail = requestAdminUser.email
+    createOrganizationRequest.accessControlList = [
       getSuperAdminACLKey(),
       getNationalAdminACLKey(),
       getOrganizationAdminACLKey(randomCode),
     ]
 
-    return this.organizationsRepository.createOne(createOrganizationRequestDto)
+    return this.organizationsRepository.createOne(createOrganizationRequest)
   }
 
-  async findAllOrganizations(): Promise<Organization[]> {
-    // TODO @yashmurty : Fetch access key from user object.
-    const userAccessKey = 'SUPER_ADMIN_KEY'
-    return this.organizationsRepository.findAll(userAccessKey)
+  async findAllOrganizations(requestAdminUser: RequestAdminUser): Promise<Organization[]> {
+    // ACL check is automatically performed in the repository function.
+    return this.organizationsRepository.findAll(requestAdminUser.userAccessKey)
   }
 
   async findOneOrganizationById(
     requestAdminUser: RequestAdminUser,
     organizationId: string
   ): Promise<Organization> {
-    const organization = await this.organizationsRepository.findOneById(organizationId)
     // Fetch resource and perform ACL check.
+    const organization = await this.organizationsRepository.findOneById(organizationId)
     if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
       throw new UnauthorizedException('User does not have access on this resource')
     }
@@ -54,9 +61,17 @@ export class OrganizationsService {
   }
 
   async updateOneOrganization(
+    requestAdminUser: RequestAdminUser,
     updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<void> {
-    // TODO @yashmurty : Fetch resource and perform ACL check.
+    // Fetch resource and perform ACL check.
+    const organization = await this.organizationsRepository.findOneById(
+      updateOrganizationRequest.organizationId
+    )
+    if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
+      throw new UnauthorizedException('User does not have access on this resource')
+    }
+
     return this.organizationsRepository.updateOne(updateOrganizationRequest)
   }
 
