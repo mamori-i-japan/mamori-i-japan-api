@@ -30,6 +30,12 @@ export class OrganizationsRepository {
     return getDoc.data() as Organization
   }
 
+  /**
+   * List endpoint that returns all organizations.
+   * It uses the passed userAccessKey to match against the accessControlList array
+   * in the where clause of the list query.
+   * @param userAccessKey: string
+   */
   async findAll(userAccessKey: string): Promise<Organization[]> {
     const organizationsArray: Organization[] = []
 

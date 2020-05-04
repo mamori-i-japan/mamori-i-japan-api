@@ -45,8 +45,10 @@ export class OrganizationsController {
   @ApiOperation({ summary: 'Get all organizations' })
   @ApiOkResponse({ type: [Organization] })
   @Get('/organizations')
-  async getOrganizations(): Promise<Organization[]> {
-    return this.organizationsService.findAllOrganizations()
+  async getOrganizations(@Request() req): Promise<Organization[]> {
+    const requestAdminUser: RequestAdminUser = req.user
+
+    return this.organizationsService.findAllOrganizations(requestAdminUser)
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))

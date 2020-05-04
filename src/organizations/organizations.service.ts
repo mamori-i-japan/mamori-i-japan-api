@@ -21,6 +21,8 @@ export class OrganizationsService {
   async createOneOrganization(
     createOrganizationRequestDto: CreateOrganizationRequestDto
   ): Promise<void> {
+    // TODO @yashmurty : Check if user belongs to superAdmin or NationalAdmin.
+
     const randomCode = await this.generateUniqueOrganizationCode()
 
     createOrganizationRequestDto.organizationId = randomCode
@@ -34,10 +36,9 @@ export class OrganizationsService {
     return this.organizationsRepository.createOne(createOrganizationRequestDto)
   }
 
-  async findAllOrganizations(): Promise<Organization[]> {
-    // TODO @yashmurty : Fetch access key from user object.
-    const userAccessKey = 'SUPER_ADMIN_KEY'
-    return this.organizationsRepository.findAll(userAccessKey)
+  async findAllOrganizations(requestAdminUser: RequestAdminUser): Promise<Organization[]> {
+    // ACL check is automatically performed in the repository function.
+    return this.organizationsRepository.findAll(requestAdminUser.userAccessKey)
   }
 
   async findOneOrganizationById(
