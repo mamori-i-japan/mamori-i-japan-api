@@ -23,8 +23,8 @@ export class OrganizationsService {
     requestAdminUser: RequestAdminUser,
     createOrganizationRequest: CreateOrganizationRequestDto
   ): Promise<void> {
-    // TODO @yashmurty : Check if user belongs to superAdmin or NationalAdmin.
-    if (canUserCreateNationalAdmin('ASD')) {
+    // New organization can only be created by superAdmin or NationalAdmin.
+    if (!canUserCreateNationalAdmin(requestAdminUser.userAccessKey)) {
       throw new UnauthorizedException('User does not have access to create this resource')
     }
 
