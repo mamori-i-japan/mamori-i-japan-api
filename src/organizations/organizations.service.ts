@@ -11,6 +11,7 @@ import {
   getNationalAdminACLKey,
   getOrganizationAdminACLKey,
   canUserAccessResource,
+  canUserCreateNationalAdmin,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 
@@ -19,21 +20,26 @@ export class OrganizationsService {
   constructor(private organizationsRepository: OrganizationsRepository) {}
 
   async createOneOrganization(
-    createOrganizationRequestDto: CreateOrganizationRequestDto
+    requestAdminUser: RequestAdminUser,
+    createOrganizationRequest: CreateOrganizationRequestDto
   ): Promise<void> {
     // TODO @yashmurty : Check if user belongs to superAdmin or NationalAdmin.
+    if (canUserCreateNationalAdmin('ASD')) {
+      throw new UnauthorizedException('User does not have access to create this resource')
+    }
 
     const randomCode = await this.generateUniqueOrganizationCode()
-
-    createOrganizationRequestDto.organizationId = randomCode
-    createOrganizationRequestDto.organizationCode = randomCode
-    createOrganizationRequestDto.accessControlList = [
+    createOrganizationRequest.organizationId = randomCode
+    createOrganizationRequest.organizationCode = randomCode
+    createOrganizationRequest.addedByAdminUserId = requestAdminUser.uid
+    createOrganizationRequest.addedByAdminEmail = requestAdminUser.email
+    createOrganizationRequest.accessControlList = [
       getSuperAdminACLKey(),
       getNationalAdminACLKey(),
       getOrganizationAdminACLKey(randomCode),
     ]
 
-    return this.organizationsRepository.createOne(createOrganizationRequestDto)
+    return this.organizationsRepository.createOne(createOrganizationRequest)
   }
 
   async findAllOrganizations(requestAdminUser: RequestAdminUser): Promise<Organization[]> {

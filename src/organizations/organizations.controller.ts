@@ -61,9 +61,12 @@ export class OrganizationsController {
     @Request() req,
     @Body() createOrganizationRequest: CreateOrganizationRequestDto
   ): Promise<CreatedResponse> {
-    createOrganizationRequest.addedByAdminUserId = req.user.uid
-    createOrganizationRequest.addedByAdminEmail = req.user.email
-    await this.organizationsService.createOneOrganization(createOrganizationRequest)
+    const requestAdminUser: RequestAdminUser = req.user
+
+    await this.organizationsService.createOneOrganization(
+      requestAdminUser,
+      createOrganizationRequest
+    )
     return {}
   }
 
