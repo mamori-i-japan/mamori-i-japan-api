@@ -6,6 +6,11 @@ import {
 } from './dto/create-organization.dto'
 import { Organization } from './classes/organization.class'
 import { randomBytes } from 'crypto'
+import {
+  getSuperAdminACLKey,
+  getNationalAdminACLKey,
+  getOrganizationAdminACLKey,
+} from '../shared/acl'
 
 @Injectable()
 export class OrganizationsService {
@@ -16,23 +21,32 @@ export class OrganizationsService {
   ): Promise<void> {
     const randomCode = await this.generateUniqueOrganizationCode()
 
-    createOrganizationRequestDto.id = randomCode
+    createOrganizationRequestDto.organizationId = randomCode
     createOrganizationRequestDto.organizationCode = randomCode
+    createOrganizationRequestDto.accessControlList = [
+      getSuperAdminACLKey(),
+      getNationalAdminACLKey(),
+      getOrganizationAdminACLKey(randomCode),
+    ]
 
     return this.organizationsRepository.createOne(createOrganizationRequestDto)
   }
 
   async findAllOrganizations(): Promise<Organization[]> {
-    return this.organizationsRepository.findAll()
+    // TODO @yashmurty : Fetch access key from user object.
+    const userAccessKey = 'SUPER_ADMIN_KEY'
+    return this.organizationsRepository.findAll(userAccessKey)
   }
 
   async findOneOrganizationById(organizationId: string): Promise<Organization> {
+    // TODO @yashmurty : Fetch resource and perform ACL check.
     return this.organizationsRepository.findOneById(organizationId)
   }
 
   async updateOneOrganization(
     updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<void> {
+    // TODO @yashmurty : Fetch resource and perform ACL check.
     return this.organizationsRepository.updateOne(updateOrganizationRequest)
   }
 

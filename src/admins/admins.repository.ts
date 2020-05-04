@@ -37,6 +37,39 @@ export class AdminsRepository {
     return getDoc.data() as Admin
   }
 
+  async findOneByEmail(email: string): Promise<Admin | undefined> {
+    let admin: Admin
+
+    const adminsRef = (await this.firestoreDB).collection('admins')
+    await adminsRef
+      .limit(1)
+      .where('email', '==', email)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          return
+        }
+
+        snapshot.forEach((doc) => {
+          admin = {
+            adminUserId: doc.id,
+            userAdminRole: doc.data().userAdminRole,
+            userAccessKey: doc.data().userAccessKey,
+            email: doc.data().email,
+            addedByAdminUserId: doc.data().addedByAdminUserId,
+            addedByAdminEmail: doc.data().addedByAdminEmail,
+            created: doc.data().created,
+          }
+        })
+      })
+      .catch((err) => {
+        console.log('Error getting documents', err)
+        throw new Error(err)
+      })
+
+    return admin
+  }
+
   async findAll(): Promise<Admin[] | undefined> {
     const adminsArray: Admin[] = []
 
@@ -52,6 +85,8 @@ export class AdminsRepository {
         snapshot.forEach((doc) => {
           const adminEach: Admin = {
             adminUserId: doc.id,
+            userAdminRole: doc.data().userAdminRole,
+            userAccessKey: doc.data().userAccessKey,
             email: doc.data().email,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,

@@ -22,7 +22,7 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
-import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
+import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { Organization } from './classes/organization.class'
@@ -66,9 +66,11 @@ export class OrganizationsController {
 
   @ApiOperation({ summary: 'Get organization by id' })
   @ApiOkResponse({ type: Organization })
-  @Get('/organizations/:id')
-  async getOrganizationById(@Param('id') id: string): Promise<Organization> {
-    const organization = await this.organizationsService.findOneOrganizationById(id)
+  @Get('/organizations/:organizationId')
+  async getOrganizationById(
+    @Param('organizationId') organizationId: string
+  ): Promise<Organization> {
+    const organization = await this.organizationsService.findOneOrganizationById(organizationId)
     if (!organization) {
       throw new NotFoundException('Could not find organization with this id')
     }
@@ -78,12 +80,12 @@ export class OrganizationsController {
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update organization' })
   @ApiOkResponse({ type: CreatedResponse })
-  @Patch('/organizations/:id')
+  @Patch('/organizations/:organizationId')
   async patchMeProfile(
-    @Param('id') id: string,
+    @Param('organizationId') organizationId: string,
     @Body() updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<CreatedResponse> {
-    updateOrganizationRequest.id = id
+    updateOrganizationRequest.organizationId = organizationId
     await this.organizationsService.updateOneOrganization(updateOrganizationRequest)
     return {}
   }

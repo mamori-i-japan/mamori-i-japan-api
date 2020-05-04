@@ -17,14 +17,16 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
+  ApiConflictResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 import { CreateAdminRequestDto } from './dto/create-admin.dto'
-import { VALIDATION_PIPE_OPTIONS } from '../constants/validation-pipe'
+import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { Admin } from './classes/admin.class'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
+import { RequestAdminUser } from '../shared/interfaces'
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -47,15 +49,16 @@ export class AdminsController {
   @ApiOperation({ summary: 'Create new admin user' })
   @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
+  @ApiUnauthorizedResponse()
+  @ApiConflictResponse()
   @Post('/users')
   @HttpCode(200)
   async postAdminUser(
     @Request() req,
     @Body() createAdminRequest: CreateAdminRequestDto
   ): Promise<CreatedResponse> {
-    createAdminRequest.addedByAdminUserId = req.user.uid
-    createAdminRequest.addedByAdminEmail = req.user.email
-    await this.adminsService.createOneAdminUser(createAdminRequest)
+    const requestAdminUser: RequestAdminUser = req.user
+    await this.adminsService.createOneAdminUser(requestAdminUser, createAdminRequest)
     return {}
   }
 }

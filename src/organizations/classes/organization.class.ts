@@ -1,9 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Moment } from 'moment-timezone'
+import { ResourceWithACL } from '../../shared/acl'
 
-export class Organization {
+export class Organization extends ResourceWithACL {
   @ApiProperty()
-  id: string
+  organizationId: string
 
   @ApiProperty()
   name: string
@@ -21,5 +22,8 @@ export class Organization {
   addedByAdminEmail: string
 
   @ApiPropertyOptional({ example: 1588297800 })
-  created?: Moment
+  createdAt?: Moment
+
+  @ApiPropertyOptional({ example: 1588297800 })
+  updatedAt?: Moment
 }

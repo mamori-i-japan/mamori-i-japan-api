@@ -14,7 +14,8 @@ export class OrganizationsRepository {
   }
 
   async createOne(organization: Organization): Promise<void> {
-    organization.created = moment.utc()
+    organization.createdAt = moment.utc()
+
     await (await this.firestoreDB)
       .collection('organizations')
       .doc(organization.organizationCode)
@@ -29,12 +30,13 @@ export class OrganizationsRepository {
     return getDoc.data() as Organization
   }
 
-  async findAll(): Promise<Organization[]> {
+  async findAll(userAccessKey: string): Promise<Organization[]> {
     const organizationsArray: Organization[] = []
 
     const organizationsRef = (await this.firestoreDB).collection('organizations')
     await organizationsRef
       .limit(100)
+      .where('accessControlList', 'array-contains', userAccessKey)
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {
@@ -43,13 +45,15 @@ export class OrganizationsRepository {
 
         snapshot.forEach((doc) => {
           const organizationEach: Organization = {
-            id: doc.id,
+            organizationId: doc.id,
             name: doc.data().name,
             message: doc.data().message,
             organizationCode: doc.data().organizationCode,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
-            created: doc.data().created,
+            createdAt: doc.data().createdAt,
+            updatedAt: doc.data().updatedAt,
+            accessControlList: doc.data().accessControlList,
           }
           organizationsArray.push(organizationEach)
         })
@@ -63,15 +67,12 @@ export class OrganizationsRepository {
   }
 
   async updateOne(updateOrganizationRequest: UpdateOrganizationRequestDto): Promise<void> {
-    const organizationId = updateOrganizationRequest.id
+    const organizationId = updateOrganizationRequest.organizationId
     const organization = await this.findOneById(organizationId)
 
     if (!organization) {
       throw new NotFoundException('Could not find organization with this id')
     }
-
-    // We don't want to insert unneccessary id field in the document.
-    delete updateOrganizationRequest.id
 
     await (await this.firestoreDB)
       .collection('organizations')

@@ -4,7 +4,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
-import { validateAdminTokenEmailPayload } from '../util'
+import { validateAdminTokenEmailPayload, validateAdminTokenCustomClaims } from '../util'
+import { RequestAdminUser } from '../../shared/interfaces'
 
 @Injectable()
 export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
@@ -27,12 +28,17 @@ export class FirebaseAdminUserValidateStrategy extends PassportStrategy(
 
     // Expect all admin access tokens to have email and email_verified data.
     validateAdminTokenEmailPayload(userDecodedToken)
+    // Check custom claims for isAdminUser, userAdminRole and userAccessKey.
+    validateAdminTokenCustomClaims(userDecodedToken)
 
-    // Check isAdminUser custom claim.
-    if (!userDecodedToken.isAdminUser) {
-      throw new UnauthorizedException('Access token does not contain custom claim isAdminUser')
+    const requestAdminUser: RequestAdminUser = {
+      isAdminUser: userDecodedToken.isAdminUser,
+      userAdminRole: userDecodedToken.userAdminRole,
+      userAccessKey: userDecodedToken.userAccessKey,
+      uid: userDecodedToken.uid,
+      email: userDecodedToken.email,
     }
 
-    done(null, userDecodedToken)
+    done(null, requestAdminUser)
   }
 }
