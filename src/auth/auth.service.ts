@@ -6,6 +6,7 @@ import { validateOrReject } from 'class-validator'
 import { LoginNormalUserRequestDto } from './dto/login-normal-user.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import { RequestAdminUser } from '../shared/interfaces'
+import { Admin } from '../admins/classes/admin.class'
 
 @Injectable()
 export class AuthService {
@@ -38,22 +39,9 @@ export class AuthService {
     if (adminObj.email !== requestAdminUser.email) {
       throw new ForbiddenException('Email in access token does not match with admin in firestore')
     }
-    if (!adminObj.userAdminRole || !adminObj.userAccessKey) {
-      throw new ForbiddenException('Admin in firestore does not have role and access')
-    }
 
     // If custom claim does not exist, then add it because above validation has passed.
-    if (
-      !requestAdminUser.isAdminUser ||
-      !requestAdminUser.userAdminRole ||
-      !requestAdminUser.userAccessKey
-    ) {
-      await this.firebaseService.UpsertCustomClaims(requestAdminUser.uid, {
-        isAdminUser: true,
-        userAdminRole: adminObj.userAdminRole,
-        userAccessKey: adminObj.userAccessKey,
-      })
-    }
+    await this.upsertAdminCustomClaims(requestAdminUser, adminObj)
   }
 
   /**
@@ -77,5 +65,32 @@ export class AuthService {
     createUserProfileDto.prefecture = loginNormalUserRequestDto.prefecture
 
     await this.usersService.createOneUser(createUserDto, createUserProfileDto)
+  }
+
+  /**
+   * Upsert admin custom claims to JWT if they don't already exist.
+   * Also validate if the admin role and key exist in the firestore entry.
+   * @param requestAdminUser: RequestAdminUser
+   * @param admin: Admin
+   */
+  private async upsertAdminCustomClaims(
+    requestAdminUser: RequestAdminUser,
+    admin: Admin
+  ): Promise<void> {
+    if (!admin.userAdminRole || !admin.userAccessKey) {
+      throw new ForbiddenException('Admin in firestore does not have role and access')
+    }
+
+    if (
+      !requestAdminUser.isAdminUser ||
+      !requestAdminUser.userAdminRole ||
+      !requestAdminUser.userAccessKey
+    ) {
+      await this.firebaseService.UpsertCustomClaims(requestAdminUser.uid, {
+        isAdminUser: true,
+        userAdminRole: admin.userAdminRole,
+        userAccessKey: admin.userAccessKey,
+      })
+    }
   }
 }
