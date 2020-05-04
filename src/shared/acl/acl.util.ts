@@ -4,6 +4,8 @@ import {
   prefectureAdminKey,
   organizationAdminKey,
 } from './acl.constants'
+import { UnauthorizedException } from '@nestjs/common'
+import { ResourceWithACL } from './acl.class'
 
 /**
  * getXXXAdminACLKey function returns the keys that need to be added to
@@ -28,10 +30,27 @@ export function getOrganizationAdminACLKey(organizationId: string) {
 }
 
 /**
- * canUserEditResource function is used to check if a user can view/edit a resource
+ * canUserAccessResource function is used to check if a user can view/edit a resource
  */
-export function canUserEditResource(userAccessKey: string, accessControlList: string[]): boolean {
-  // WIP
+export function canUserAccessResource(userAccessKey: string, resource: ResourceWithACL): boolean {
+  if (!userAccessKey) {
+    throw new UnauthorizedException('Could not check access without userAccessKey')
+  }
+  if (!resource) {
+    throw new UnauthorizedException('Could not check access on empty resource')
+  }
+  if (!resource.accessControlList) {
+    throw new UnauthorizedException('Could not check access without accessControlList')
+  }
+  if (!resource.accessControlList.length) {
+    throw new UnauthorizedException('Could not check access on empty accessControlList')
+  }
+
+  // If accessControlList contains the userAccessKey, return true.
+  if (resource.accessControlList.includes(userAccessKey)) {
+    return true
+  }
+
   return false
 }
 

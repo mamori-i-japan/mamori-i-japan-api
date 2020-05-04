@@ -8,12 +8,23 @@ import { AdminsRepository } from './admins.repository'
 import { CreateAdminDto, CreateAdminRequestDto } from './dto/create-admin.dto'
 import { Admin } from './classes/admin.class'
 import * as firebaseAdmin from 'firebase-admin'
-import { AdminRole, canUserCreateSuperAdmin, getSuperAdminACLKey } from '../shared/acl'
+import {
+  AdminRole,
+  canUserCreateSuperAdmin,
+  getSuperAdminACLKey,
+  getOrganizationAdminACLKey,
+  canUserCreateOrganizationAdmin,
+  canUserCreateNationalAdmin,
+} from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
+import { OrganizationsService } from '../organizations/organizations.service'
 
 @Injectable()
 export class AdminsService {
-  constructor(private adminsRepository: AdminsRepository) {}
+  constructor(
+    private adminsRepository: AdminsRepository,
+    private organizationsService: OrganizationsService
+  ) {}
 
   async createOneAdminUser(
     requestAdminUser: RequestAdminUser,
@@ -30,18 +41,55 @@ export class AdminsService {
       throw new ConflictException('An admin with this email already exists')
     }
 
-    let generatedUserAccessKey: string
+    // Start preparing the create admin object. It will be passed to the repo function.
+    const createAdminDto: CreateAdminDto = new CreateAdminDto()
+    createAdminDto.email = createAdminRequest.email
+    createAdminDto.addedByAdminUserId = requestAdminUser.uid
+    createAdminDto.addedByAdminEmail = requestAdminUser.email
+    createAdminDto.userAdminRole = createAdminRequest.adminRole
+
     // Check if the user has access to create new user with desired adminRole in the payload.
+    // Also, determine what accessKey will be added to the new created admin.
     switch (createAdminRequest.adminRole) {
       case AdminRole.superAdminRole:
         if (!canUserCreateSuperAdmin(requestAdminUser.userAccessKey)) {
           throw new UnauthorizedException('Insufficient access to create this adminRole')
         }
-        generatedUserAccessKey = getSuperAdminACLKey()
+        createAdminDto.userAccessKey = getSuperAdminACLKey()
+        break
+
+      case AdminRole.nationalAdminRole:
+        if (!canUserCreateNationalAdmin(requestAdminUser.userAccessKey)) {
+          throw new UnauthorizedException('Insufficient access to create this adminRole')
+        }
+        throw new UnauthorizedException('WIP. nationalAdminRole not supported yet')
+
+      case AdminRole.prefectureAdminRole:
+        throw new UnauthorizedException('WIP. prefectureAdminRole not supported yet')
+
+      case AdminRole.organizationAdminRole:
+        if (
+          !canUserCreateOrganizationAdmin(
+            requestAdminUser.userAccessKey,
+            createAdminRequest.organizationId
+          )
+        ) {
+          throw new UnauthorizedException('Insufficient access to create this adminRole')
+        }
+        // Check if organizationId is valid
+        const isOrganizationCodeValid = await this.organizationsService.isOrganizationCodeValid(
+          createAdminRequest.organizationId
+        )
+        if (!isOrganizationCodeValid) {
+          throw new BadRequestException('Invalid organizationId value')
+        }
+
+        createAdminDto.userAccessKey = getOrganizationAdminACLKey(createAdminRequest.organizationId)
+        createAdminDto.organizationId = createAdminRequest.organizationId
         break
 
       default:
-        throw new UnauthorizedException('WIP. adminRole not supported yet')
+        throw new BadRequestException('Invalid adminRole value')
     }
 
     let firebaseUserRecord: firebaseAdmin.auth.UserRecord
@@ -55,13 +103,7 @@ export class AdminsService {
       throw new BadRequestException(error.message)
     }
 
-    const createAdminDto: CreateAdminDto = new CreateAdminDto()
     createAdminDto.adminUserId = firebaseUserRecord.uid
-    createAdminDto.email = createAdminRequest.email
-    createAdminDto.addedByAdminUserId = requestAdminUser.uid
-    createAdminDto.addedByAdminEmail = requestAdminUser.email
-    createAdminDto.userAdminRole = createAdminRequest.adminRole
-    createAdminDto.userAccessKey = generatedUserAccessKey
 
     console.log('createAdminDto : ', createAdminDto)
 

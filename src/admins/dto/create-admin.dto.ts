@@ -25,6 +25,22 @@ export class CreateAdminDto {
   @IsNotEmpty()
   userAccessKey: string
 
+  @ApiPropertyOptional({
+    description: 'Optional, needed when admin role is ORGANIZATION_ADMIN_ROLE',
+  })
+  @ValidateIf((o) => o.userAdminRole === AdminRole.organizationAdminRole)
+  @IsString()
+  @IsNotEmpty()
+  organizationId: string
+
+  @ApiPropertyOptional({
+    description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
+  })
+  @ValidateIf((o) => o.userAdminRole === AdminRole.prefectureAdminRole)
+  @IsString()
+  @IsNotEmpty()
+  prefectureId: string
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

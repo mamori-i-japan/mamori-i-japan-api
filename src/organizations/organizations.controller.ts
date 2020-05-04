@@ -31,6 +31,7 @@ import {
   UpdateOrganizationRequestDto,
 } from './dto/create-organization.dto'
 import { OrganizationsService } from './organizations.service'
+import { RequestAdminUser } from '../shared/interfaces'
 
 @ApiTags('organization')
 @ApiBearerAuth()
@@ -68,12 +69,18 @@ export class OrganizationsController {
   @ApiOkResponse({ type: Organization })
   @Get('/organizations/:organizationId')
   async getOrganizationById(
+    @Request() req,
     @Param('organizationId') organizationId: string
   ): Promise<Organization> {
-    const organization = await this.organizationsService.findOneOrganizationById(organizationId)
+    const requestAdminUser: RequestAdminUser = req.user
+    const organization = await this.organizationsService.findOneOrganizationById(
+      requestAdminUser,
+      organizationId
+    )
     if (!organization) {
       throw new NotFoundException('Could not find organization with this id')
     }
+
     return organization
   }
 
