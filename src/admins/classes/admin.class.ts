@@ -12,6 +12,16 @@ export class Admin {
   @ApiProperty()
   userAccessKey: string
 
+  @ApiPropertyOptional({
+    description: 'Optional, needed when admin role is ORGANIZATION_ADMIN_ROLE',
+  })
+  organizationId?: string
+
+  @ApiPropertyOptional({
+    description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
+  })
+  prefectureId?: string
+
   @ApiProperty()
   email: string
 
