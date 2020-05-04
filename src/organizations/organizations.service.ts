@@ -44,8 +44,8 @@ export class OrganizationsService {
     requestAdminUser: RequestAdminUser,
     organizationId: string
   ): Promise<Organization> {
-    const organization = await this.organizationsRepository.findOneById(organizationId)
     // Fetch resource and perform ACL check.
+    const organization = await this.organizationsRepository.findOneById(organizationId)
     if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
       throw new UnauthorizedException('User does not have access on this resource')
     }
@@ -54,9 +54,17 @@ export class OrganizationsService {
   }
 
   async updateOneOrganization(
+    requestAdminUser: RequestAdminUser,
     updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<void> {
-    // TODO @yashmurty : Fetch resource and perform ACL check.
+    // Fetch resource and perform ACL check.
+    const organization = await this.organizationsRepository.findOneById(
+      updateOrganizationRequest.organizationId
+    )
+    if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
+      throw new UnauthorizedException('User does not have access on this resource')
+    }
+
     return this.organizationsRepository.updateOne(updateOrganizationRequest)
   }
 

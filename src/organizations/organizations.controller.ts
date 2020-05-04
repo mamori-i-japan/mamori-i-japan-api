@@ -89,11 +89,18 @@ export class OrganizationsController {
   @ApiOkResponse({ type: CreatedResponse })
   @Patch('/organizations/:organizationId')
   async patchMeProfile(
+    @Request() req,
     @Param('organizationId') organizationId: string,
     @Body() updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<CreatedResponse> {
+    const requestAdminUser: RequestAdminUser = req.user
     updateOrganizationRequest.organizationId = organizationId
-    await this.organizationsService.updateOneOrganization(updateOrganizationRequest)
+
+    await this.organizationsService.updateOneOrganization(
+      requestAdminUser,
+      updateOrganizationRequest
+    )
+
     return {}
   }
 }
