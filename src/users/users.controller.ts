@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   ValidationPipe,
   Post,
+  Delete,
   Body,
   HttpCode,
   Patch,
@@ -16,6 +17,7 @@ import {
   ApiTags,
   ApiBearerAuth,
   ApiOkResponse,
+  ApiNoContentResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -25,6 +27,7 @@ import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
+import { DeleteUserOrganizationDto } from './dto/delete-user-organization.dto'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { UserProfile } from './classes/user.class'
@@ -56,6 +59,22 @@ export class UsersController {
   ): Promise<void> {
     updateUserProfileDto.userId = req.user.uid
     return this.usersService.updateUserProfile(updateUserProfileDto)
+  }
+
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
+  @ApiOperation({ summary: 'Let the users themselves leave from the organization' })
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @Delete('/me/organization')
+  @HttpCode(204)
+  async deleteMeOrganization(
+    @Request() req,
+    @Body() deleteUserOrganization: DeleteUserOrganizationDto
+  ): Promise<void> {
+    deleteUserOrganization.userId = req.user.uid
+    deleteUserOrganization.organizationCode = req.user.organizationCode
+    await this.usersService.deleteUserOrganization(deleteUserOrganization)
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
