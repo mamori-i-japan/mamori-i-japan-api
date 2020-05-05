@@ -30,6 +30,7 @@ export class UpdateUserProfileDto {
   @ApiPropertyOptional({ example: 'A12B34' })
   @IsString()
   @IsOptional()
+  @IsNotEmpty()
   @Transform((value) => value.toUpperCase(), { toClassOnly: true })
   organizationCode: string
 
