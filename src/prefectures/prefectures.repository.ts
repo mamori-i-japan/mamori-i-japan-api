@@ -84,7 +84,8 @@ export class PrefecturesRepository {
         throw new Error(err)
       })
 
-    return prefecturesArray
+    const prefecturesArraySorted = prefecturesArray.sort((a, b) => a.prefectureId - b.prefectureId)
+    return prefecturesArraySorted
   }
 
   async updateOne(updatePrefectureRequest: UpdatePrefectureRequestDto): Promise<void> {
