@@ -81,9 +81,6 @@ export class OrganizationsController {
       requestAdminUser,
       organizationId
     )
-    if (!organization) {
-      throw new NotFoundException('Could not find organization with this id')
-    }
 
     return organization
   }

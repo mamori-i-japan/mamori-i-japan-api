@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common'
 import { PrefecturesRepository } from './prefectures.repository'
 import { CreatePrefectureRequestDto, UpdatePrefectureRequestDto } from './dto/create-prefecture.dto'
 import { Prefecture } from './classes/prefecture.class'
@@ -48,6 +53,9 @@ export class PrefecturesService {
   ): Promise<Prefecture> {
     // Fetch resource and perform ACL check.
     const prefecture = await this.prefecturesRepository.findOneById(prefectureId)
+    if (!prefecture) {
+      throw new NotFoundException('Could not find prefecture with this id')
+    }
     if (!canUserAccessResource(requestAdminUser.userAccessKey, prefecture)) {
       throw new UnauthorizedException('User does not have access on this resource')
     }
@@ -63,6 +71,9 @@ export class PrefecturesService {
     const prefecture = await this.prefecturesRepository.findOneById(
       updatePrefectureRequest.prefectureId
     )
+    if (!prefecture) {
+      throw new NotFoundException('Could not find prefecture with this id')
+    }
     if (!canUserAccessResource(requestAdminUser.userAccessKey, prefecture)) {
       throw new UnauthorizedException('User does not have access on this resource')
     }

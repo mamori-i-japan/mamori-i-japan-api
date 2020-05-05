@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max } from 'class-validator'
 import { ResourceWithACL } from '../../shared/acl'
 
 export class CreatePrefectureRequestDto extends ResourceWithACL {
