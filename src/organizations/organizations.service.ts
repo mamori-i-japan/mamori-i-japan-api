@@ -72,16 +72,8 @@ export class OrganizationsService {
     requestAdminUser: RequestAdminUser,
     updateOrganizationRequest: UpdateOrganizationRequestDto
   ): Promise<void> {
-    // Fetch resource and perform ACL check.
-    const organization = await this.organizationsRepository.findOneById(
-      updateOrganizationRequest.organizationId
-    )
-    if (!organization) {
-      throw new NotFoundException('Could not find organization with this id')
-    }
-    if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
-      throw new UnauthorizedException('User does not have access on this resource')
-    }
+    // Fetch resource and perform ACL check. Check performed within the called function.
+    await this.getOneOrganizationById(requestAdminUser, updateOrganizationRequest.organizationId)
 
     return this.organizationsRepository.updateOne(updateOrganizationRequest)
   }

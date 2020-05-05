@@ -15,26 +15,25 @@ import {
   getOrganizationAdminACLKey,
   canUserCreateOrganizationAdmin,
   canUserCreateNationalAdmin,
+  canUserCreatePrefectureAdmin,
+  getPrefectureAdminACLKey,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 import { OrganizationsService } from '../organizations/organizations.service'
+import { PrefecturesService } from '../prefectures/prefectures.service'
 
 @Injectable()
 export class AdminsService {
   constructor(
     private adminsRepository: AdminsRepository,
-    private organizationsService: OrganizationsService
+    private organizationsService: OrganizationsService,
+    private prefecturesService: PrefecturesService
   ) {}
 
   async createOneAdminUser(
     requestAdminUser: RequestAdminUser,
     createAdminRequest: CreateAdminRequestDto
   ): Promise<void> {
-    // TODO @yashmurty : WIP
-    // - Only creating with super admin role in payload works for now.
-    console.log('requestAdminUser : ', requestAdminUser)
-    console.log('createAdminRequest : ', createAdminRequest)
-
     // Check if an admin already exists with this email.
     const adminExists = await this.adminsRepository.findOneByEmail(createAdminRequest.email)
     if (adminExists) {
@@ -65,7 +64,25 @@ export class AdminsService {
         throw new UnauthorizedException('WIP. nationalAdminRole not supported yet')
 
       case AdminRole.prefectureAdminRole:
-        throw new UnauthorizedException('WIP. prefectureAdminRole not supported yet')
+        if (
+          !canUserCreatePrefectureAdmin(
+            requestAdminUser.userAccessKey,
+            createAdminRequest.prefectureId
+          )
+        ) {
+          throw new UnauthorizedException('Insufficient access to create this adminRole')
+        }
+        // Check if prefectureId is valid
+        const isPrefectureCodeValid = await this.prefecturesService.isPrefectureCodeValid(
+          createAdminRequest.prefectureId
+        )
+        if (!isPrefectureCodeValid) {
+          throw new BadRequestException('Invalid prefectureId value')
+        }
+
+        createAdminDto.userAccessKey = getPrefectureAdminACLKey(createAdminRequest.prefectureId)
+        createAdminDto.prefectureId = createAdminRequest.prefectureId
+        break
 
       case AdminRole.organizationAdminRole:
         if (
@@ -104,8 +121,6 @@ export class AdminsService {
     }
 
     createAdminDto.adminUserId = firebaseUserRecord.uid
-
-    console.log('createAdminDto : ', createAdminDto)
 
     return this.adminsRepository.createOne(createAdminDto)
   }

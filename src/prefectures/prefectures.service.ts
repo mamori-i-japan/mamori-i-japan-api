@@ -63,16 +63,8 @@ export class PrefecturesService {
     requestAdminUser: RequestAdminUser,
     updatePrefectureRequest: UpdatePrefectureRequestDto
   ): Promise<void> {
-    // Fetch resource and perform ACL check.
-    const prefecture = await this.prefecturesRepository.findOneById(
-      updatePrefectureRequest.prefectureId
-    )
-    if (!prefecture) {
-      throw new NotFoundException('Could not find prefecture with this id')
-    }
-    if (!canUserAccessResource(requestAdminUser.userAccessKey, prefecture)) {
-      throw new UnauthorizedException('User does not have access on this resource')
-    }
+    // Fetch resource and perform ACL check. Check performed within the called function.
+    await this.getOnePrefectureById(requestAdminUser, updatePrefectureRequest.prefectureId)
 
     return this.prefecturesRepository.updateOne(updatePrefectureRequest)
   }
