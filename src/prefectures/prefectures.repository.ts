@@ -25,7 +25,7 @@ export class PrefecturesRepository {
     // in denormalizedForAppAccess sub-collection.
     // We denormalize this data to keep our get/list queries for admin webapp simple,
     // since we don't need to fetch the sub-collection every time.
-    if (prefecture.message) {
+    if (prefecture.message || prefecture.message === '') {
       const denormalizedForAppAccess: PrefectureForAppAccess = {
         messageForAppAccess: prefecture.message,
       }
@@ -108,7 +108,7 @@ export class PrefecturesRepository {
     // in denormalizedForAppAccess sub-collection.
     // We denormalize this data to keep our get/list queries for admin webapp simple,
     // since we don't need to fetch the sub-collection every time.
-    if (updatePrefectureRequest.message) {
+    if (updatePrefectureRequest.message || updatePrefectureRequest.message === '') {
       const denormalizedForAppAccess: PrefectureForAppAccess = {
         messageForAppAccess: updatePrefectureRequest.message,
       }
