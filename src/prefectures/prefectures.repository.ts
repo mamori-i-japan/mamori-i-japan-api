@@ -59,6 +59,7 @@ export class PrefecturesRepository {
 
     const prefecturesRef = (await this.firestoreDB).collection('prefectures')
     await prefecturesRef
+      .orderBy('prefectureId', 'asc')
       .limit(100)
       .where('accessControlList', 'array-contains', userAccessKey)
       .get()
@@ -84,8 +85,7 @@ export class PrefecturesRepository {
         throw new Error(err)
       })
 
-    const prefecturesArraySorted = prefecturesArray.sort((a, b) => a.prefectureId - b.prefectureId)
-    return prefecturesArraySorted
+    return prefecturesArray
   }
 
   async updateOne(updatePrefectureRequest: UpdatePrefectureRequestDto): Promise<void> {
