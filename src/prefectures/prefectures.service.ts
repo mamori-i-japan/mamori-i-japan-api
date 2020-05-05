@@ -108,7 +108,6 @@ export class PrefecturesService {
       console.log('Creating new prefecture for this id : ', prefectureId)
       const createPrefectureRequest = new CreatePrefectureRequestDto()
       createPrefectureRequest.prefectureId = prefectureId
-      createPrefectureRequest.name = 'Prefecture name ' + prefectureId
       createPrefectureRequest.message = 'Prefecture message ' + prefectureId
 
       await this.createOnePrefecture(requestAdminUser, createPrefectureRequest)

@@ -71,7 +71,6 @@ export class PrefecturesRepository {
         snapshot.forEach((doc) => {
           const prefectureEach: Prefecture = {
             prefectureId: parseInt(doc.id, 10),
-            name: doc.data().name,
             message: doc.data().message,
             createdAt: doc.data().createdAt,
             updatedAt: doc.data().updatedAt,
