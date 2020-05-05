@@ -117,4 +117,10 @@ export class AdminsService {
   async findAllAdminUsers(): Promise<Admin[]> {
     return this.adminsRepository.findAll()
   }
+
+  async deleteOneAdminById(adminId: string): Promise<void> {
+    const admin = await this.adminsRepository.findOneById(adminId)
+    // TODO @yashmurty :
+    // Fetch admin and check for ACL. If okay, proceed to delete.
+  }
 }
