@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max } from 'class-validator'
 import { ResourceWithACL } from '../../shared/acl'
 
 export class CreatePrefectureRequestDto extends ResourceWithACL {
@@ -14,11 +14,11 @@ export class CreatePrefectureRequestDto extends ResourceWithACL {
   @IsOptional()
   message: string
 
-  // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
-  organizationId: string
-  organizationCode: string
-  addedByAdminUserId: string
-  addedByAdminEmail: string
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(47)
+  prefectureId: number
 }
 
 export class UpdatePrefectureRequestDto {
@@ -35,5 +35,5 @@ export class UpdatePrefectureRequestDto {
   message: string
 
   // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
-  prefectureId: string
+  prefectureId: number
 }

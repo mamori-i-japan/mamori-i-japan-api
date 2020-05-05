@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNotEmpty, IsEnum, IsEmail, ValidateIf } from 'class-validator'
+import { IsString, IsNotEmpty, IsEnum, IsEmail, ValidateIf, Min, IsInt, Max } from 'class-validator'
 import { AdminRole } from '../../shared/acl'
 
 export class CreateAdminProfileDto {
@@ -37,9 +37,10 @@ export class CreateAdminDto {
     description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
   })
   @ValidateIf((o) => o.userAdminRole === AdminRole.prefectureAdminRole)
-  @IsString()
-  @IsNotEmpty()
-  prefectureId: string
+  @IsInt()
+  @Min(0)
+  @Max(47)
+  prefectureId: number
 
   @ApiProperty()
   @IsString()
@@ -80,7 +81,8 @@ export class CreateAdminRequestDto {
     description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
   })
   @ValidateIf((o) => o.adminRole === AdminRole.prefectureAdminRole)
-  @IsString()
-  @IsNotEmpty()
-  prefectureId: string
+  @IsInt()
+  @Min(0)
+  @Max(47)
+  prefectureId: number
 }

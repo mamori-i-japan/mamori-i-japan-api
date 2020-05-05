@@ -18,7 +18,7 @@ export class PrefecturesRepository {
 
     await (await this.firestoreDB)
       .collection('prefectures')
-      .doc(prefecture.prefectureId)
+      .doc(prefecture.prefectureId.toString())
       .set({ ...prefecture })
 
     // In case an prefecture message has been provided, we create a copy of the message
@@ -31,19 +31,19 @@ export class PrefecturesRepository {
       }
       await (await this.firestoreDB)
         .collection('prefectures')
-        .doc(prefecture.prefectureId)
+        .doc(prefecture.prefectureId.toString())
         .collection('denormalizedForAppAccess')
-        .doc(prefecture.prefectureId)
+        .doc(prefecture.prefectureId.toString())
         .set({ ...denormalizedForAppAccess })
     }
 
     return prefecture
   }
 
-  async findOneById(prefectureId: string): Promise<Prefecture | undefined> {
+  async findOneById(prefectureId: number): Promise<Prefecture | undefined> {
     const getDoc = await (await this.firestoreDB)
       .collection('prefectures')
-      .doc(prefectureId)
+      .doc(prefectureId.toString())
       .get()
     return getDoc.data() as Prefecture
   }
@@ -69,7 +69,7 @@ export class PrefecturesRepository {
 
         snapshot.forEach((doc) => {
           const prefectureEach: Prefecture = {
-            prefectureId: doc.id,
+            prefectureId: parseInt(doc.id, 10),
             name: doc.data().name,
             message: doc.data().message,
             createdAt: doc.data().createdAt,
@@ -97,7 +97,7 @@ export class PrefecturesRepository {
 
     await (await this.firestoreDB)
       .collection('prefectures')
-      .doc(prefectureId)
+      .doc(prefectureId.toString())
       .update({
         ...updatePrefectureRequest,
         updatedAt: moment.utc(),
@@ -113,9 +113,9 @@ export class PrefecturesRepository {
       }
       await (await this.firestoreDB)
         .collection('prefectures')
-        .doc(prefectureId)
+        .doc(prefectureId.toString())
         .collection('denormalizedForAppAccess')
-        .doc(prefectureId)
+        .doc(prefectureId.toString())
         .set({ ...denormalizedForAppAccess })
     }
   }

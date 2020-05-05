@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common'
 import { OrganizationsRepository } from './organizations.repository'
 import {
   CreateOrganizationRequestDto,
@@ -47,12 +52,15 @@ export class OrganizationsService {
     return this.organizationsRepository.findAll(requestAdminUser.userAccessKey)
   }
 
-  async findOneOrganizationById(
+  async getOneOrganizationById(
     requestAdminUser: RequestAdminUser,
     organizationId: string
   ): Promise<Organization> {
     // Fetch resource and perform ACL check.
     const organization = await this.organizationsRepository.findOneById(organizationId)
+    if (!organization) {
+      throw new NotFoundException('Could not find organization with this id')
+    }
     if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
       throw new UnauthorizedException('User does not have access on this resource')
     }
@@ -68,6 +76,9 @@ export class OrganizationsService {
     const organization = await this.organizationsRepository.findOneById(
       updateOrganizationRequest.organizationId
     )
+    if (!organization) {
+      throw new NotFoundException('Could not find organization with this id')
+    }
     if (!canUserAccessResource(requestAdminUser.userAccessKey, organization)) {
       throw new UnauthorizedException('User does not have access on this resource')
     }
