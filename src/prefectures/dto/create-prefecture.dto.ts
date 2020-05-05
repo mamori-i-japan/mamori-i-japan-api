@@ -14,10 +14,11 @@ export class CreatePrefectureRequestDto extends ResourceWithACL {
   @IsOptional()
   message: string
 
-  // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(47)
   prefectureId: number
-  addedByAdminUserId: string
-  addedByAdminEmail: string
 }
 
 export class UpdatePrefectureRequestDto {

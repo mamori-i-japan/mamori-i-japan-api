@@ -11,7 +11,6 @@ import {
   HttpCode,
   Patch,
   Param,
-  NotFoundException,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -49,18 +48,15 @@ export class PrefecturesController {
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
-  @ApiOperation({ summary: 'Create new organziation' })
+  @ApiOperation({ summary: 'Creates any missing prefectures' })
   @ApiOkResponse({ type: Prefecture })
   @ApiBadRequestResponse()
   @Post('/prefectures')
   @HttpCode(200)
-  async postPrefecture(
-    @Request() req,
-    @Body() createPrefectureRequest: CreatePrefectureRequestDto
-  ): Promise<Prefecture> {
+  async postPrefecture(@Request() req): Promise<void> {
     const requestAdminUser: RequestAdminUser = req.user
 
-    return this.prefecturesService.createOnePrefecture(requestAdminUser, createPrefectureRequest)
+    return this.prefecturesService.setupInitialPrefectures(requestAdminUser)
   }
 
   @ApiOperation({ summary: 'Get prefecture by id' })

@@ -29,14 +29,10 @@ export class PrefecturesService {
       throw new UnauthorizedException('User does not have access to create this resource')
     }
 
-    const randomCode = 1
-    createPrefectureRequest.prefectureId = randomCode
-    createPrefectureRequest.addedByAdminUserId = requestAdminUser.uid
-    createPrefectureRequest.addedByAdminEmail = requestAdminUser.email
     createPrefectureRequest.accessControlList = [
       getSuperAdminACLKey(),
       getNationalAdminACLKey(),
-      getPrefectureAdminACLKey(randomCode),
+      getPrefectureAdminACLKey(createPrefectureRequest.prefectureId),
     ]
 
     return this.prefecturesRepository.createOne(createPrefectureRequest)
@@ -96,5 +92,34 @@ export class PrefecturesService {
     }
 
     return true
+  }
+
+  /**
+   * Creates the necessary prefecture if does not exist.
+   */
+  async setupInitialPrefectures(requestAdminUser: RequestAdminUser): Promise<void> {
+    const startPrefectureId = 0
+    const endPrefectureId = 47
+
+    // This initial setup can only be performed by superAdmin or NationalAdmin.
+    if (!canUserCreateNationalAdmin(requestAdminUser.userAccessKey)) {
+      throw new UnauthorizedException('User does not have access to create this resource')
+    }
+
+    for (let prefectureId = startPrefectureId; prefectureId <= endPrefectureId; prefectureId++) {
+      const existingPrefecture = await this.prefecturesRepository.findOneById(prefectureId)
+      if (existingPrefecture) {
+        console.log('Prefecture already exists for this id : ', prefectureId)
+        continue
+      }
+
+      console.log('Creating new prefecture for this id : ', prefectureId)
+      const createPrefectureRequest = new CreatePrefectureRequestDto()
+      createPrefectureRequest.prefectureId = prefectureId
+      createPrefectureRequest.name = 'Prefecture name ' + prefectureId
+      createPrefectureRequest.message = 'Prefecture message ' + prefectureId
+
+      await this.createOnePrefecture(requestAdminUser, createPrefectureRequest)
+    }
   }
 }
