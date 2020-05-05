@@ -95,8 +95,14 @@ export class UsersRepository {
     )
   }
 
-  async deleteDiagnosisKeysForOrg(deleteUserOrganization: DeleteUserOrganizationDto): Promise<void> {
+  async deleteDiagnosisKeysForOrg(
+    deleteUserOrganization: DeleteUserOrganizationDto
+  ): Promise<void> {
     const { organizationCode, randomID } = deleteUserOrganization
+
+    if (!randomID) {
+      return
+    }
 
     await (await this.firestoreDB)
       .collection('diagnosisKeysForOrg')

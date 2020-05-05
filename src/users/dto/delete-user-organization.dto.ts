@@ -1,8 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsNotEmpty } from 'class-validator'
+import { ApiPropertyOptional } from '@nestjs/swagger'
+import { IsString, IsOptional, IsNotEmpty } from 'class-validator'
 
 export class DeleteUserOrganizationDto {
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   randomID: string
