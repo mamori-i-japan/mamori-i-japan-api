@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
-import { Prefecture } from './classes/prefecture.class'
+import { Prefecture, PrefectureForAppAccess } from './classes/prefecture.class'
 import { UpdatePrefectureRequestDto } from './dto/create-prefecture.dto'
 
 @Injectable()
@@ -20,6 +20,22 @@ export class PrefecturesRepository {
       .collection('prefectures')
       .doc(prefecture.prefectureId)
       .set({ ...prefecture })
+
+    // In case an prefecture message has been provided, we create a copy of the message
+    // in denormalizedForAppAccess sub-collection.
+    // We denormalize this data to keep our get/list queries for admin webapp simple,
+    // since we don't need to fetch the sub-collection every time.
+    if (prefecture.message) {
+      const denormalizedForAppAccess: PrefectureForAppAccess = {
+        messageForAppAccess: prefecture.message,
+      }
+      await (await this.firestoreDB)
+        .collection('prefectures')
+        .doc(prefecture.prefectureId)
+        .collection('denormalizedForAppAccess')
+        .doc(prefecture.prefectureId)
+        .set({ ...denormalizedForAppAccess })
+    }
 
     return prefecture
   }
@@ -73,9 +89,9 @@ export class PrefecturesRepository {
 
   async updateOne(updatePrefectureRequest: UpdatePrefectureRequestDto): Promise<void> {
     const prefectureId = updatePrefectureRequest.prefectureId
-    const prefecture = await this.findOneById(prefectureId)
+    const existingPrefecture = await this.findOneById(prefectureId)
 
-    if (!prefecture) {
+    if (!existingPrefecture) {
       throw new NotFoundException('Could not find prefecture with this id')
     }
 
@@ -86,5 +102,21 @@ export class PrefecturesRepository {
         ...updatePrefectureRequest,
         updatedAt: moment.utc(),
       })
+
+    // In case an prefecture message has been provided, we update the copy of the message
+    // in denormalizedForAppAccess sub-collection.
+    // We denormalize this data to keep our get/list queries for admin webapp simple,
+    // since we don't need to fetch the sub-collection every time.
+    if (updatePrefectureRequest.message) {
+      const denormalizedForAppAccess: PrefectureForAppAccess = {
+        messageForAppAccess: updatePrefectureRequest.message,
+      }
+      await (await this.firestoreDB)
+        .collection('prefectures')
+        .doc(prefectureId)
+        .collection('denormalizedForAppAccess')
+        .doc(prefectureId)
+        .set({ ...denormalizedForAppAccess })
+    }
   }
 }
