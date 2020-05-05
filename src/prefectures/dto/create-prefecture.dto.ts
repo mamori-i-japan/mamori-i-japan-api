@@ -3,14 +3,8 @@ import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max } from 'class-validat
 import { ResourceWithACL } from '../../shared/acl'
 
 export class CreatePrefectureRequestDto extends ResourceWithACL {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  name: string
-
   @ApiPropertyOptional({ example: 'This is optional message. Can be later added via PATCH.' })
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   message: string
 
@@ -22,15 +16,8 @@ export class CreatePrefectureRequestDto extends ResourceWithACL {
 }
 
 export class UpdatePrefectureRequestDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  name: string
-
   @ApiPropertyOptional({ example: 'This is optional message. Can be later added via PATCH.' })
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   message: string
 

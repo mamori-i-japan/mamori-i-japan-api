@@ -7,9 +7,6 @@ export class Prefecture extends ResourceWithACL {
   @ApiProperty()
   prefectureId: number
 
-  @ApiProperty()
-  name: string
-
   @ApiPropertyOptional({ example: 'This is optional message' })
   message?: string
 

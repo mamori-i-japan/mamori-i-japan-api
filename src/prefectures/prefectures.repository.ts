@@ -25,7 +25,7 @@ export class PrefecturesRepository {
     // in denormalizedForAppAccess sub-collection.
     // We denormalize this data to keep our get/list queries for admin webapp simple,
     // since we don't need to fetch the sub-collection every time.
-    if (prefecture.message) {
+    if (prefecture.message || prefecture.message === '') {
       const denormalizedForAppAccess: PrefectureForAppAccess = {
         messageForAppAccess: prefecture.message,
       }
@@ -59,6 +59,7 @@ export class PrefecturesRepository {
 
     const prefecturesRef = (await this.firestoreDB).collection('prefectures')
     await prefecturesRef
+      .orderBy('prefectureId', 'asc')
       .limit(100)
       .where('accessControlList', 'array-contains', userAccessKey)
       .get()
@@ -70,7 +71,6 @@ export class PrefecturesRepository {
         snapshot.forEach((doc) => {
           const prefectureEach: Prefecture = {
             prefectureId: parseInt(doc.id, 10),
-            name: doc.data().name,
             message: doc.data().message,
             createdAt: doc.data().createdAt,
             updatedAt: doc.data().updatedAt,
@@ -107,7 +107,7 @@ export class PrefecturesRepository {
     // in denormalizedForAppAccess sub-collection.
     // We denormalize this data to keep our get/list queries for admin webapp simple,
     // since we don't need to fetch the sub-collection every time.
-    if (updatePrefectureRequest.message) {
+    if (updatePrefectureRequest.message || updatePrefectureRequest.message === '') {
       const denormalizedForAppAccess: PrefectureForAppAccess = {
         messageForAppAccess: updatePrefectureRequest.message,
       }

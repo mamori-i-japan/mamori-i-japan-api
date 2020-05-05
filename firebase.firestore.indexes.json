@@ -1,4 +1,19 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "prefectures",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "accessControlList",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "prefectureId",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }
