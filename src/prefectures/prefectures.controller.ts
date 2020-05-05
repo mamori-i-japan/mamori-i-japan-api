@@ -67,7 +67,7 @@ export class PrefecturesController {
     @Param('prefectureId') prefectureId: number
   ): Promise<Prefecture> {
     const requestAdminUser: RequestAdminUser = req.user
-    const prefecture = await this.prefecturesService.findOnePrefectureById(
+    const prefecture = await this.prefecturesService.getOnePrefectureById(
       requestAdminUser,
       prefectureId
     )

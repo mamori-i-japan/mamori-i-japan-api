@@ -43,7 +43,7 @@ export class PrefecturesService {
     return this.prefecturesRepository.findAll(requestAdminUser.userAccessKey)
   }
 
-  async findOnePrefectureById(
+  async getOnePrefectureById(
     requestAdminUser: RequestAdminUser,
     prefectureId: number
   ): Promise<Prefecture> {

@@ -52,7 +52,7 @@ export class OrganizationsService {
     return this.organizationsRepository.findAll(requestAdminUser.userAccessKey)
   }
 
-  async findOneOrganizationById(
+  async getOneOrganizationById(
     requestAdminUser: RequestAdminUser,
     organizationId: string
   ): Promise<Organization> {

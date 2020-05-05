@@ -77,7 +77,7 @@ export class OrganizationsController {
     @Param('organizationId') organizationId: string
   ): Promise<Organization> {
     const requestAdminUser: RequestAdminUser = req.user
-    const organization = await this.organizationsService.findOneOrganizationById(
+    const organization = await this.organizationsService.getOneOrganizationById(
       requestAdminUser,
       organizationId
     )
