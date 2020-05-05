@@ -3,6 +3,7 @@ import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { User, UserProfile } from './classes/user.class'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
+import { DeleteUserOrganizationDto } from './dto/delete-user-organization.dto'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import { OrganizationsService } from '../organizations/organizations.service'
 
@@ -107,6 +108,13 @@ export class UsersService {
 
     // Removes the custom claim organization code from user JWT.
     await this.firebaseService.DeleteCustomClaims(userId, ['organizationCode'])
+  }
+
+  async deleteUserOrganization(deleteUserOrganization: DeleteUserOrganizationDto): Promise<void> {
+    await this.usersRepository.deleteDiagnosisKeysForOrg(deleteUserOrganization)
+
+    const userId = deleteUserOrganization.userId
+    await this.removeUserOrganizationCode(userId)
   }
 
   async createDiagnosisKeysForOrg(

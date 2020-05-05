@@ -6,6 +6,7 @@ import { POSITIVE_RECOVERY_PERIOD } from './constants'
 import * as moment from 'moment-timezone'
 import * as zlib from 'zlib'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
+import { DeleteUserOrganizationDto } from './dto/delete-user-organization.dto'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 
 @Injectable()
@@ -92,6 +93,28 @@ export class UsersRepository {
         await file.setMetadata({ contentType: 'application/gzip' })
       })
     )
+  }
+
+  async deleteDiagnosisKeysForOrg(
+    deleteUserOrganization: DeleteUserOrganizationDto
+  ): Promise<void> {
+    const { organizationCode, randomID } = deleteUserOrganization
+
+    if (!randomID) {
+      return
+    }
+
+    await (await this.firestoreDB)
+      .collection('diagnosisKeysForOrg')
+      .doc(organizationCode)
+      .collection('tempIDs')
+      .where('randomID', '==', randomID)
+      .get()
+      .then((query) => {
+        query.forEach((doc) => {
+          doc.ref.delete()
+        })
+      })
   }
 
   async createDiagnosisKeysForOrg(
