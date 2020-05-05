@@ -49,7 +49,7 @@ export class PrefecturesController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Creates any missing prefectures' })
-  @ApiOkResponse({ type: Prefecture })
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @Post('/prefectures')
   @HttpCode(200)
