@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
-import { Organization } from './classes/organization.class'
+import { Organization, OrganizationForAppAccess } from './classes/organization.class'
 import { UpdateOrganizationRequestDto } from './dto/create-organization.dto'
 
 @Injectable()
@@ -26,8 +26,7 @@ export class OrganizationsRepository {
     // We denormalize this data to keep our get/list queries for admin webapp simple,
     // since we don't need to fetch the sub-collection every time.
     if (organization.message) {
-      const denormalizedForAppAccess = {
-        createdAt: organization.createdAt,
+      const denormalizedForAppAccess: OrganizationForAppAccess = {
         messageForAppAccess: organization.message,
       }
       await (await this.firestoreDB)
@@ -93,9 +92,9 @@ export class OrganizationsRepository {
 
   async updateOne(updateOrganizationRequest: UpdateOrganizationRequestDto): Promise<void> {
     const organizationId = updateOrganizationRequest.organizationId
-    const organization = await this.findOneById(organizationId)
+    const existingOrganization = await this.findOneById(organizationId)
 
-    if (!organization) {
+    if (!existingOrganization) {
       throw new NotFoundException('Could not find organization with this id')
     }
 
@@ -111,15 +110,15 @@ export class OrganizationsRepository {
     // in denormalizedForAppAccess sub-collection.
     // We denormalize this data to keep our get/list queries for admin webapp simple,
     // since we don't need to fetch the sub-collection every time.
-    if (organization.message) {
-      const denormalizedForAppAccess = {
-        messageForAppAccess: organization.message,
+    if (updateOrganizationRequest.message) {
+      const denormalizedForAppAccess: OrganizationForAppAccess = {
+        messageForAppAccess: updateOrganizationRequest.message,
       }
       await (await this.firestoreDB)
         .collection('organizations')
-        .doc(organization.organizationId)
+        .doc(organizationId)
         .collection('denormalizedForAppAccess')
-        .doc(organization.organizationId)
+        .doc(organizationId)
         .set({ ...denormalizedForAppAccess })
     }
   }
