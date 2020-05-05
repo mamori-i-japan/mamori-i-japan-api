@@ -18,8 +18,25 @@ export class OrganizationsRepository {
 
     await (await this.firestoreDB)
       .collection('organizations')
-      .doc(organization.organizationCode)
+      .doc(organization.organizationId)
       .set({ ...organization })
+
+    // In case an organization message has been provided, we create a copy of the message
+    // in denormalizedForAppAccess sub-collection.
+    // We denormalize this data to keep our get/list queries for admin webapp simple,
+    // since we don't need to fetch the sub-collection every time.
+    if (organization.message) {
+      const denormalizedForAppAccess = {
+        createdAt: organization.createdAt,
+        messageForAppAccess: organization.message,
+      }
+      await (await this.firestoreDB)
+        .collection('organizations')
+        .doc(organization.organizationId)
+        .collection('denormalizedForAppAccess')
+        .doc(organization.organizationId)
+        .set({ ...denormalizedForAppAccess })
+    }
 
     return organization
   }
@@ -89,5 +106,21 @@ export class OrganizationsRepository {
         ...updateOrganizationRequest,
         updatedAt: moment.utc(),
       })
+
+    // In case an organization message has been provided, we update the copy of the message
+    // in denormalizedForAppAccess sub-collection.
+    // We denormalize this data to keep our get/list queries for admin webapp simple,
+    // since we don't need to fetch the sub-collection every time.
+    if (organization.message) {
+      const denormalizedForAppAccess = {
+        messageForAppAccess: organization.message,
+      }
+      await (await this.firestoreDB)
+        .collection('organizations')
+        .doc(organization.organizationId)
+        .collection('denormalizedForAppAccess')
+        .doc(organization.organizationId)
+        .set({ ...denormalizedForAppAccess })
+    }
   }
 }
