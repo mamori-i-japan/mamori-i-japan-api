@@ -25,7 +25,7 @@ import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
 import { CreatedResponse } from '../shared/classes/created-response.class'
 import { Prefecture } from './classes/prefecture.class'
-import { CreatePrefectureRequestDto, UpdatePrefectureRequestDto } from './dto/create-prefecture.dto'
+import { UpdatePrefectureRequestDto } from './dto/create-prefecture.dto'
 import { PrefecturesService } from './prefectures.service'
 import { RequestAdminUser } from '../shared/interfaces'
 
