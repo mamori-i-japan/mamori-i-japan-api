@@ -15,15 +15,18 @@ import {
   getOrganizationAdminACLKey,
   canUserCreateOrganizationAdmin,
   canUserCreateNationalAdmin,
+  canUserCreatePrefectureAdmin,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 import { OrganizationsService } from '../organizations/organizations.service'
+import { PrefecturesService } from '../prefectures/prefectures.service'
 
 @Injectable()
 export class AdminsService {
   constructor(
     private adminsRepository: AdminsRepository,
-    private organizationsService: OrganizationsService
+    private organizationsService: OrganizationsService,
+    private prefecturesService: PrefecturesService
   ) {}
 
   async createOneAdminUser(
@@ -65,6 +68,22 @@ export class AdminsService {
         throw new UnauthorizedException('WIP. nationalAdminRole not supported yet')
 
       case AdminRole.prefectureAdminRole:
+        if (
+          !canUserCreatePrefectureAdmin(
+            requestAdminUser.userAccessKey,
+            createAdminRequest.prefectureId
+          )
+        ) {
+          throw new UnauthorizedException('Insufficient access to create this adminRole')
+        }
+        // Check if prefectureId is valid
+        const isPrefectureCodeValid = await this.prefecturesService.isPrefectureCodeValid(
+          createAdminRequest.prefectureId
+        )
+        if (!isPrefectureCodeValid) {
+          throw new BadRequestException('Invalid prefectureId value')
+        }
+
         throw new UnauthorizedException('WIP. prefectureAdminRole not supported yet')
 
       case AdminRole.organizationAdminRole:
