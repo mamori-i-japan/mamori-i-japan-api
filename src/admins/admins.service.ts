@@ -16,6 +16,7 @@ import {
   canUserCreateOrganizationAdmin,
   canUserCreateNationalAdmin,
   canUserCreatePrefectureAdmin,
+  getPrefectureAdminACLKey,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 import { OrganizationsService } from '../organizations/organizations.service'
@@ -33,11 +34,6 @@ export class AdminsService {
     requestAdminUser: RequestAdminUser,
     createAdminRequest: CreateAdminRequestDto
   ): Promise<void> {
-    // TODO @yashmurty : WIP
-    // - Only creating with super admin role in payload works for now.
-    console.log('requestAdminUser : ', requestAdminUser)
-    console.log('createAdminRequest : ', createAdminRequest)
-
     // Check if an admin already exists with this email.
     const adminExists = await this.adminsRepository.findOneByEmail(createAdminRequest.email)
     if (adminExists) {
@@ -84,7 +80,9 @@ export class AdminsService {
           throw new BadRequestException('Invalid prefectureId value')
         }
 
-        throw new UnauthorizedException('WIP. prefectureAdminRole not supported yet')
+        createAdminDto.userAccessKey = getPrefectureAdminACLKey(createAdminRequest.prefectureId)
+        createAdminDto.prefectureId = createAdminRequest.prefectureId
+        break
 
       case AdminRole.organizationAdminRole:
         if (
@@ -123,8 +121,6 @@ export class AdminsService {
     }
 
     createAdminDto.adminUserId = firebaseUserRecord.uid
-
-    console.log('createAdminDto : ', createAdminDto)
 
     return this.adminsRepository.createOne(createAdminDto)
   }
