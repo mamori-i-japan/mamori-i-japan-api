@@ -5,7 +5,7 @@ import * as firebaseAdmin from 'firebase-admin'
 
 export class Prefecture extends ResourceWithACL {
   @ApiProperty()
-  prefectureId: string
+  prefectureId: number
 
   @ApiProperty()
   name: string

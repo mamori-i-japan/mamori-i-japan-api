@@ -20,7 +20,7 @@ export class Admin {
   @ApiPropertyOptional({
     description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
   })
-  prefectureId?: string
+  prefectureId?: number
 
   @ApiProperty()
   email: string

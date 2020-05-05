@@ -15,8 +15,7 @@ export class CreatePrefectureRequestDto extends ResourceWithACL {
   message: string
 
   // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
-  organizationId: string
-  organizationCode: string
+  prefectureId: number
   addedByAdminUserId: string
   addedByAdminEmail: string
 }
@@ -35,5 +34,5 @@ export class UpdatePrefectureRequestDto {
   message: string
 
   // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
-  prefectureId: string
+  prefectureId: number
 }

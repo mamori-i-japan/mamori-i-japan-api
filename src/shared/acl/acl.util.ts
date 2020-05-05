@@ -21,7 +21,7 @@ export function getNationalAdminACLKey() {
   return nationalAdminKey
 }
 
-export function getPrefectureAdminACLKey(prefectureId: string) {
+export function getPrefectureAdminACLKey(prefectureId: number) {
   return prefectureAdminKey + '|' + prefectureId
 }
 
@@ -77,7 +77,7 @@ export function canUserCreateNationalAdmin(userAccessKey: string): boolean {
   return false
 }
 
-export function canUserCreatePrefectureAdmin(userAccessKey: string, prefectureId: string): boolean {
+export function canUserCreatePrefectureAdmin(userAccessKey: string, prefectureId: number): boolean {
   // Checks if the user performing an action has prefectureAdmin access or above.
   if (userAccessKey === superAdminKey) {
     return true
