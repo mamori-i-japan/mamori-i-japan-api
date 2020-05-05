@@ -80,6 +80,10 @@ export class UsersService {
           )
       }
     }
+
+    if (updateUserProfileDto.organizationCode === '') {
+      await this.removeUserOrganizationCode(updateUserProfileDto.userId)
+    }
   }
 
   /**
