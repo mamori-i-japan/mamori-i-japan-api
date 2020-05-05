@@ -106,4 +106,11 @@ export class AdminsRepository {
 
     return adminsArray
   }
+
+  async deleteOneById(adminUserId: string): Promise<void> {
+    await (await this.firestoreDB)
+      .collection('admins')
+      .doc(adminUserId)
+      .delete()
+  }
 }

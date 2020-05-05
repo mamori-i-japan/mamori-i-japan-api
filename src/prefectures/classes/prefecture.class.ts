@@ -19,3 +19,7 @@ export class Prefecture extends ResourceWithACL {
   @ApiPropertyOptional({ example: 1588297800 })
   updatedAt?: Moment
 }
+
+export class PrefectureForAppAccess {
+  messageForAppAccess: string
+}

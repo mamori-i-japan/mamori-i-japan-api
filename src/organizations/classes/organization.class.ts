@@ -27,3 +27,7 @@ export class Organization extends ResourceWithACL {
   @ApiPropertyOptional({ example: 1588297800 })
   updatedAt?: Moment
 }
+
+export class OrganizationForAppAccess {
+  messageForAppAccess: string
+}
