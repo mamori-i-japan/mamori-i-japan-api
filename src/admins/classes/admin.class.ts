@@ -32,7 +32,7 @@ export class Admin {
   addedByAdminEmail: string
 
   @ApiPropertyOptional({ example: 1588297800 })
-  created?: Moment
+  createdAt?: Moment
 }
 
 export class AdminProfile {
