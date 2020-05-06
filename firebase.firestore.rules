@@ -3,23 +3,36 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
-      // No client side reads for core user data
+      // No client side reads for core users data
       allow read, write: if false;
 
-      // Allow authenticated users to read, write their profile
+      // Allow authenticated users to read their profile
       match /profile/{userId} {
         allow read: if request.auth.uid == userId;
-        allow write: if request.auth.uid == userId;
+        allow write: if false;
       }
     }
 
-    match /userStatuses/{userId} {
-      // Allow authenticated users to read their status
-      allow read: if request.auth.uid == userId;
+    match /organizations/{organizationId} {
+      // No client side reads for core organizations data
+      allow read, write: if false;
+
+      // Allow organizations users to read organizations message
+      match /denormalizedForAppAccess/{organizationId} {
+        allow read: if request.auth.token.organizationCode == organizationId;
+        allow write: if false;
+      }
     }
 
-    match /prefectureMessages/{prefectureMessage} {
-      allow read, write: if true;
+    match /prefectures/{prefectureId} {
+      // No client side reads for core prefectures data
+      allow read, write: if false;
+
+      // Allow authenticated users to read prefectures message
+      match /denormalizedForAppAccess/{prefectureId} {
+        allow read: request.auth.uid != null;
+        allow write: if false;
+      }
     }
   }
 }
