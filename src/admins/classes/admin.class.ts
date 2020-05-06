@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Moment } from 'moment-timezone'
 import { ResourceWithACL, AdminRole } from '../../shared/acl'
 
-export class Admin {
+export class Admin extends ResourceWithACL {
   @ApiProperty()
   adminUserId: string
 

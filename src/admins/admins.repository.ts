@@ -52,6 +52,7 @@ export class AdminsRepository {
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             createdAt: doc.data().createdAt,
+            accessControlList: doc.data().accessControlList,
           }
         })
       })
@@ -86,6 +87,7 @@ export class AdminsRepository {
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             createdAt: doc.data().createdAt,
+            accessControlList: doc.data().accessControlList,
           }
           adminsArray.push(adminEach)
         })
