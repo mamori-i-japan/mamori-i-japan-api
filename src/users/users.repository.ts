@@ -98,23 +98,27 @@ export class UsersRepository {
   async deleteDiagnosisKeysForOrg(
     deleteUserOrganization: DeleteUserOrganizationDto
   ): Promise<void> {
-    const { organizationCode, randomID } = deleteUserOrganization
+    const { organizationCode, randomIDs } = deleteUserOrganization
 
-    if (!randomID) {
+    if (randomIDs.length === 0) {
       return
     }
 
-    await (await this.firestoreDB)
-      .collection('diagnosisKeysForOrg')
-      .doc(organizationCode)
-      .collection('tempIDs')
-      .where('randomID', '==', randomID)
-      .get()
-      .then((query) => {
-        query.forEach((doc) => {
-          doc.ref.delete()
-        })
+    await Promise.all(
+      randomIDs.map(async ({ randomID }) => {
+        await (await this.firestoreDB)
+          .collection('diagnosisKeysForOrg')
+          .doc(organizationCode)
+          .collection('tempIDs')
+          .where('randomID', '==', randomID)
+          .get()
+          .then((query) => {
+            query.forEach((doc) => {
+              doc.ref.delete()
+            })
+          })
       })
+    )
   }
 
   async createDiagnosisKeysForOrg(
