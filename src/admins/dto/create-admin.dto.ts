@@ -2,13 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsString, IsNotEmpty, IsEnum, IsEmail, ValidateIf, Min, IsInt, Max } from 'class-validator'
 import { AdminRole } from '../../shared/acl'
 
-export class CreateAdminProfileDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  name: string
-}
-
 export class CreateAdminDto {
   @ApiProperty()
   @IsString()

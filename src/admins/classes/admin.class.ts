@@ -34,7 +34,3 @@ export class Admin {
   @ApiPropertyOptional({ example: 1588297800 })
   createdAt?: Moment
 }
-
-export class AdminProfile {
-  name: string
-}
