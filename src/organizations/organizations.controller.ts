@@ -22,8 +22,8 @@ import {
 } from '@nestjs/swagger'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
-import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
-import { CreatedResponse } from '../shared/classes/created-response.class'
+import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
+import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { Organization } from './classes/organization.class'
 import {
   CreateOrganizationRequestDto,
@@ -36,7 +36,7 @@ import { RequestAdminUser } from '../shared/interfaces'
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @UseGuards(FirebaseAdminUserValidateGuard)
-@UseInterceptors(CreatedResponseInterceptor)
+@UseInterceptors(NoResponseBodyInterceptor)
 @Controller('admins')
 export class OrganizationsController {
   constructor(private organizationsService: OrganizationsService) {}
@@ -86,13 +86,13 @@ export class OrganizationsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update organization' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: NoResponseBody })
   @Patch('/organizations/:organizationId')
   async patchMeProfile(
     @Request() req,
     @Param('organizationId') organizationId: string,
     @Body() updateOrganizationRequest: UpdateOrganizationRequestDto
-  ): Promise<CreatedResponse> {
+  ): Promise<NoResponseBody> {
     const requestAdminUser: RequestAdminUser = req.user
     updateOrganizationRequest.organizationId = organizationId
 
