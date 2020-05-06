@@ -22,8 +22,8 @@ import {
 } from '@nestjs/swagger'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
-import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
-import { CreatedResponse } from '../shared/classes/created-response.class'
+import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
+import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { Prefecture } from './classes/prefecture.class'
 import { UpdatePrefectureRequestDto } from './dto/create-prefecture.dto'
 import { PrefecturesService } from './prefectures.service'
@@ -33,7 +33,7 @@ import { RequestAdminUser } from '../shared/interfaces'
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @UseGuards(FirebaseAdminUserValidateGuard)
-@UseInterceptors(CreatedResponseInterceptor)
+@UseInterceptors(NoResponseBodyInterceptor)
 @Controller('admins')
 export class PrefecturesController {
   constructor(private prefecturesService: PrefecturesService) {}
@@ -49,7 +49,7 @@ export class PrefecturesController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Creates any missing prefectures' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: NoResponseBody })
   @ApiBadRequestResponse()
   @Post('/prefectures')
   @HttpCode(200)
@@ -77,13 +77,13 @@ export class PrefecturesController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update prefecture' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: NoResponseBody })
   @Patch('/prefectures/:prefectureId')
   async patchMeProfile(
     @Request() req,
     @Param('prefectureId') prefectureId: number,
     @Body() updatePrefectureRequest: UpdatePrefectureRequestDto
-  ): Promise<CreatedResponse> {
+  ): Promise<NoResponseBody> {
     const requestAdminUser: RequestAdminUser = req.user
     updatePrefectureRequest.prefectureId = prefectureId
 

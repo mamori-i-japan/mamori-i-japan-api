@@ -3,7 +3,7 @@ import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 @Injectable()
-export class CreatedResponseInterceptor implements NestInterceptor {
+export class NoResponseBodyInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(map((data) => (data === undefined ? {} : data)))
   }

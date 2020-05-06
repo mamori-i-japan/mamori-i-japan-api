@@ -24,15 +24,15 @@ import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-us
 import { CreateAdminRequestDto } from './dto/create-admin.dto'
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { Admin } from './classes/admin.class'
-import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
-import { CreatedResponse } from '../shared/classes/created-response.class'
+import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
+import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { RequestAdminUser } from '../shared/interfaces'
 
 @ApiTags('admin')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @UseGuards(FirebaseAdminUserValidateGuard)
-@UseInterceptors(CreatedResponseInterceptor)
+@UseInterceptors(NoResponseBodyInterceptor)
 @Controller('admins')
 export class AdminsController {
   constructor(private adminsService: AdminsService) {}
@@ -47,7 +47,7 @@ export class AdminsController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Create new admin user' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: NoResponseBody })
   @ApiBadRequestResponse()
   @ApiUnauthorizedResponse()
   @ApiConflictResponse()
@@ -56,7 +56,7 @@ export class AdminsController {
   async postAdminUser(
     @Request() req,
     @Body() createAdminRequest: CreateAdminRequestDto
-  ): Promise<CreatedResponse> {
+  ): Promise<NoResponseBody> {
     const requestAdminUser: RequestAdminUser = req.user
     await this.adminsService.createOneAdminUser(requestAdminUser, createAdminRequest)
     return {}

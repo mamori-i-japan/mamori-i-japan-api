@@ -17,7 +17,6 @@ import {
   ApiTags,
   ApiBearerAuth,
   ApiOkResponse,
-  ApiNoContentResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -28,15 +27,15 @@ import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
 import { DeleteUserOrganizationDto } from './dto/delete-user-organization.dto'
-import { CreatedResponseInterceptor } from '../shared/interceptors/created-response.interceptor'
-import { CreatedResponse } from '../shared/classes/created-response.class'
+import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
+import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { UserProfile } from './classes/user.class'
 
 @ApiTags('app')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse()
 @UseGuards(FirebaseNormalUserValidateGuard)
-@UseInterceptors(CreatedResponseInterceptor)
+@UseInterceptors(NoResponseBodyInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -51,7 +50,7 @@ export class UsersController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update user profile' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: NoResponseBody })
   @Patch('/me/profile')
   async patchMeProfile(
     @Request() req,
@@ -63,23 +62,24 @@ export class UsersController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Let the users themselves leave from the organization' })
-  @ApiNoContentResponse()
+  @ApiOkResponse({ type: NoResponseBody })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Delete('/me/organization')
-  @HttpCode(204)
+  @HttpCode(200)
   async deleteMeOrganization(
     @Request() req,
     @Body() deleteUserOrganization: DeleteUserOrganizationDto
-  ): Promise<void> {
+  ): Promise<NoResponseBody> {
     deleteUserOrganization.userId = req.user.uid
     deleteUserOrganization.organizationCode = req.user.organizationCode
     await this.usersService.deleteUserOrganization(deleteUserOrganization)
+    return {}
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Give the user a positive flag by user-self' })
-  @ApiOkResponse({ type: CreatedResponse })
+  @ApiOkResponse({ type: NoResponseBody })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Post('/me/diagnosis_keys_for_org')
@@ -87,7 +87,7 @@ export class UsersController {
   async createDiagnosisKeysForOrg(
     @Request() req,
     @Body() createDiagnosisKeysForOrg: CreateDiagnosisKeysForOrgDto
-  ): Promise<CreatedResponse> {
+  ): Promise<NoResponseBody> {
     createDiagnosisKeysForOrg.organizationCode = req.user.organizationCode
     await this.usersService.createDiagnosisKeysForOrg(createDiagnosisKeysForOrg)
     return {}
