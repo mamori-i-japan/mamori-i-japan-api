@@ -30,7 +30,7 @@ service cloud.firestore {
 
       // Allow authenticated users to read prefectures message
       match /denormalizedForAppAccess/{prefectureId} {
-        allow read: request.auth.uid != null;
+        allow read: if request.auth.uid != null;
         allow write: if false;
       }
     }
