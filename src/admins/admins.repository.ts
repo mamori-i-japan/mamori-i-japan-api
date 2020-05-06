@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Admin, AdminProfile } from './classes/admin.class'
+import { Admin } from './classes/admin.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
@@ -12,21 +12,12 @@ export class AdminsRepository {
     this.firestoreDB = this.firebaseService.Firestore()
   }
 
-  async createOne(admin: Admin, adminProfile?: AdminProfile): Promise<void> {
+  async createOne(admin: Admin): Promise<void> {
     admin.createdAt = moment.utc()
     await (await this.firestoreDB)
       .collection('admins')
       .doc(admin.adminUserId)
       .set({ ...admin })
-
-    if (adminProfile) {
-      await (await this.firestoreDB)
-        .collection('admins')
-        .doc(admin.adminUserId)
-        .collection('profile')
-        .doc(admin.adminUserId)
-        .set({ ...adminProfile })
-    }
   }
 
   async findOneById(adminUserId: string): Promise<Admin | undefined> {
@@ -61,6 +52,7 @@ export class AdminsRepository {
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             createdAt: doc.data().createdAt,
+            accessControlList: doc.data().accessControlList,
           }
         })
       })
@@ -95,6 +87,7 @@ export class AdminsRepository {
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
             createdAt: doc.data().createdAt,
+            accessControlList: doc.data().accessControlList,
           }
           adminsArray.push(adminEach)
         })

@@ -17,6 +17,7 @@ import {
   canUserCreateNationalAdmin,
   canUserCreatePrefectureAdmin,
   getPrefectureAdminACLKey,
+  getNationalAdminACLKey,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 import { OrganizationsService } from '../organizations/organizations.service'
@@ -46,7 +47,7 @@ export class AdminsService {
     createAdminDto.addedByAdminUserId = requestAdminUser.uid
     createAdminDto.addedByAdminEmail = requestAdminUser.email
     createAdminDto.userAdminRole = createAdminRequest.adminRole
-
+    createAdminDto.accessControlList = [getSuperAdminACLKey()]
     // Check if the user has access to create new user with desired adminRole in the payload.
     // Also, determine what accessKey will be added to the new created admin.
     switch (createAdminRequest.adminRole) {
@@ -55,6 +56,8 @@ export class AdminsService {
           throw new UnauthorizedException('Insufficient access to create this adminRole')
         }
         createAdminDto.userAccessKey = getSuperAdminACLKey()
+        // No need to add any ACL Key in accessControlList, since it already contains the
+        // superAdmin key added above.
         break
 
       case AdminRole.nationalAdminRole:
@@ -82,6 +85,11 @@ export class AdminsService {
 
         createAdminDto.userAccessKey = getPrefectureAdminACLKey(createAdminRequest.prefectureId)
         createAdminDto.prefectureId = createAdminRequest.prefectureId
+        createAdminDto.accessControlList.push(
+          getNationalAdminACLKey(),
+          getPrefectureAdminACLKey(createAdminRequest.prefectureId)
+        )
+
         break
 
       case AdminRole.organizationAdminRole:
@@ -103,6 +111,11 @@ export class AdminsService {
 
         createAdminDto.userAccessKey = getOrganizationAdminACLKey(createAdminRequest.organizationId)
         createAdminDto.organizationId = createAdminRequest.organizationId
+        createAdminDto.accessControlList.push(
+          getNationalAdminACLKey(),
+          getOrganizationAdminACLKey(createAdminRequest.organizationId)
+        )
+
         break
 
       default:

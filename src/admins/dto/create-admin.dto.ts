@@ -1,60 +1,16 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsString, IsNotEmpty, IsEnum, IsEmail, ValidateIf, Min, IsInt, Max } from 'class-validator'
-import { AdminRole } from '../../shared/acl'
+import { AdminRole, ResourceWithACL } from '../../shared/acl'
 
-export class CreateAdminProfileDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  name: string
-}
-
-export class CreateAdminDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+export class CreateAdminDto extends ResourceWithACL {
+  // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
   adminUserId: string
-
-  @ApiProperty({ enum: AdminRole })
-  @IsNotEmpty()
-  @IsEnum(AdminRole)
   userAdminRole: AdminRole
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   userAccessKey: string
-
-  @ApiPropertyOptional({
-    description: 'Optional, needed when admin role is ORGANIZATION_ADMIN_ROLE',
-  })
-  @ValidateIf((o) => o.userAdminRole === AdminRole.organizationAdminRole)
-  @IsString()
-  @IsNotEmpty()
   organizationId: string
-
-  @ApiPropertyOptional({
-    description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',
-  })
-  @ValidateIf((o) => o.userAdminRole === AdminRole.prefectureAdminRole)
-  @IsInt()
-  @Min(0)
-  @Max(47)
   prefectureId: number
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   email: string
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   addedByAdminUserId: string
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   addedByAdminEmail: string
 }
 
