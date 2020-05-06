@@ -17,7 +17,6 @@ import {
   ApiTags,
   ApiBearerAuth,
   ApiOkResponse,
-  ApiNoContentResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
   ApiNotFoundResponse,
@@ -63,18 +62,19 @@ export class UsersController {
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Let the users themselves leave from the organization' })
-  @ApiNoContentResponse()
+  @ApiOkResponse({ type: CreatedResponse })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @Delete('/me/organization')
-  @HttpCode(204)
+  @HttpCode(200)
   async deleteMeOrganization(
     @Request() req,
     @Body() deleteUserOrganization: DeleteUserOrganizationDto
-  ): Promise<void> {
+  ): Promise<CreatedResponse> {
     deleteUserOrganization.userId = req.user.uid
     deleteUserOrganization.organizationCode = req.user.organizationCode
     await this.usersService.deleteUserOrganization(deleteUserOrganization)
+    return {}
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
