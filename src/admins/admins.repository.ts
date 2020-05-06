@@ -13,7 +13,7 @@ export class AdminsRepository {
   }
 
   async createOne(admin: Admin, adminProfile?: AdminProfile): Promise<void> {
-    admin.created = moment.utc()
+    admin.createdAt = moment.utc()
     await (await this.firestoreDB)
       .collection('admins')
       .doc(admin.adminUserId)
@@ -60,7 +60,7 @@ export class AdminsRepository {
             email: doc.data().email,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
-            created: doc.data().created,
+            createdAt: doc.data().createdAt,
           }
         })
       })
@@ -94,7 +94,7 @@ export class AdminsRepository {
             email: doc.data().email,
             addedByAdminUserId: doc.data().addedByAdminUserId,
             addedByAdminEmail: doc.data().addedByAdminEmail,
-            created: doc.data().created,
+            createdAt: doc.data().createdAt,
           }
           adminsArray.push(adminEach)
         })

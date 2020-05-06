@@ -11,7 +11,6 @@ import {
   HttpCode,
   Patch,
   Param,
-  NotFoundException,
 } from '@nestjs/common'
 import {
   ApiOperation,

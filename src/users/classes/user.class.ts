@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class User {
   userId: string
-  created?: Moment
+  createdAt?: Moment
 }
 
 export class UserProfile {
