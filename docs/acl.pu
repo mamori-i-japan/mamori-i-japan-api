@@ -26,11 +26,41 @@ note over "Firestore"
   accessControlList, 
   array-contains, 
   userAccessKey
-  )
+)
 end note
 
 "Firestore" -> "Service": Return array of organizations
 
 "Service" -> "AdminUser": Organizations LIST based on ACL
+
+
+== ACL on GET by ID endpoints ==
+autonumber 1
+
+AdminUser  -> "NestJS Guard": GET /admins/organizations/ABC
+note over "NestJS Guard" 
+Expects JWT Payload:
+- isAdminUser 
+- userAdminRole 
+- userAccessKey
+end note
+
+"NestJS Guard" -> "Service":  Pass userAccessKey to organization service
+note left "Service" 
+Example value: 
+- userAccessKey: SUPER_ADMIN_KEY
+end note
+
+"Service" -> "Firestore": Fetch single document \n based on ID ABC
+
+"Firestore" -> "Service": Return ABC organization
+note over "Service" 
+canUserAccessResource(
+  userAccessKey, 
+  organization
+)
+end note
+
+"Service" -> "AdminUser": Organizations GET by ID based on ACL
 
 @enduml
