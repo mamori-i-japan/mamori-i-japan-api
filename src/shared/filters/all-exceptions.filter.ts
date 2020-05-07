@@ -41,6 +41,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       responseObject['message'] = exception.message
     } else {
       console.log(exception)
+      responseObject['error'] = 'INTERNAL SERVER'
     }
 
     this.appLogger.debug(JSON.stringify({ status, responseObject }))
