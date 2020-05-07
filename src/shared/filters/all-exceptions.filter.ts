@@ -37,7 +37,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     // Log the stack for non-HttpException errors
     if (exception instanceof Error) {
       this.appLogger.error(exception.message, exception.stack, exception.name)
-      responseObject['error'] = exception.message
+      responseObject['error'] = exception.name
+      responseObject['message'] = exception.message
     } else {
       console.log(exception)
     }
