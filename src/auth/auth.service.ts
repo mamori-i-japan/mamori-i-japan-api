@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   async adminUserlogin(requestAdminUser: RequestAdminUser): Promise<void> {
-    const adminObj = await this.adminsService.findOneAdminById(requestAdminUser.uid)
+    const adminObj = await this.adminsService.findOneAdminByIdInternal(requestAdminUser.uid)
     if (!adminObj) {
       throw new ForbiddenException('User Id does not belong to an admin')
     }
