@@ -10,7 +10,6 @@ export class CreateOrganizationRequestDto extends ResourceWithACL {
 
   @ApiPropertyOptional({ example: 'This is optional message. Can be later added via PATCH.' })
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   message: string
 
@@ -30,7 +29,6 @@ export class UpdateOrganizationRequestDto {
 
   @ApiPropertyOptional({ example: 'This is optional message. Can be later added via PATCH.' })
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   message: string
 
