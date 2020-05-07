@@ -166,14 +166,17 @@ export class AdminsService {
   }
 
   async findAllAdminUsers(): Promise<Admin[]> {
+    // TODO @yashmurty :
+    // Fetch resource and perform ACL check.
+
     return this.adminsRepository.findAll()
   }
 
-  async deleteOneAdminById(adminId: string): Promise<void> {
-    const admin = await this.adminsRepository.findOneById(adminId)
+  async deleteOneAdminById(requestAdminUser: RequestAdminUser, adminId: string): Promise<void> {
     // TODO @yashmurty :
-    // Fetch admin and check for ACL. If okay, proceed to delete.
+    // Fetch resource and perform ACL check. Check performed within the called function.
+    const admin = await this.getOneAdminById(requestAdminUser, adminId)
 
-    console.log()
+    console.log('admin : ', admin)
   }
 }
