@@ -1,0 +1,36 @@
+@startuml
+
+title ACL
+
+== ACL on LIST endpoints ==
+autonumber 1
+
+actor AdminUser
+AdminUser  -> "NestJS Guard": GET /admins/organizations
+note over "NestJS Guard" 
+Expects JWT Payload:
+- isAdminUser 
+- userAdminRole 
+- userAccessKey
+end note
+
+"NestJS Guard" -> "Service":  Pass userAccessKey to organization service
+note left "Service" 
+Example value: 
+- userAccessKey: SUPER_ADMIN_KEY
+end note
+
+"Service" -> "Firestore": Fetch all accessible documents \n in organizations collection
+note over "Firestore" 
+.where(
+  accessControlList, 
+  array-contains, 
+  userAccessKey
+  )
+end note
+
+"Firestore" -> "Service": Return array of organizations
+
+"Service" -> "AdminUser": Organizations LIST based on ACL
+
+@enduml
