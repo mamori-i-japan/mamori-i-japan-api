@@ -27,18 +27,19 @@ export class AllExceptionsFilter implements ExceptionFilter {
       return response.status(status).json(responseObject)
     }
 
-    // Log the stack for non-HttpException errors
-    if (exception instanceof Error) {
-      this.appLogger.error(exception.message, exception.stack, exception.name)
-    } else {
-      console.log(exception)
-    }
-
     const status = HttpStatus.INTERNAL_SERVER_ERROR
     const responseObject = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       url: request.url,
+    }
+
+    // Log the stack for non-HttpException errors
+    if (exception instanceof Error) {
+      this.appLogger.error(exception.message, exception.stack, exception.name)
+      responseObject['error'] = exception.message
+    } else {
+      console.log(exception)
     }
 
     this.appLogger.debug(JSON.stringify({ status, responseObject }))

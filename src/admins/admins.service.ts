@@ -24,13 +24,15 @@ import {
 import { RequestAdminUser } from '../shared/interfaces'
 import { OrganizationsService } from '../organizations/organizations.service'
 import { PrefecturesService } from '../prefectures/prefectures.service'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 
 @Injectable()
 export class AdminsService {
   constructor(
     private adminsRepository: AdminsRepository,
     private organizationsService: OrganizationsService,
-    private prefecturesService: PrefecturesService
+    private prefecturesService: PrefecturesService,
+    private firebaseService: FirebaseService
   ) {}
 
   async createOneAdminUser(
@@ -175,8 +177,10 @@ export class AdminsService {
   async deleteOneAdminById(requestAdminUser: RequestAdminUser, adminId: string): Promise<void> {
     // TODO @yashmurty :
     // Fetch resource and perform ACL check. Check performed within the called function.
-    const admin = await this.getOneAdminById(requestAdminUser, adminId)
+    await this.getOneAdminById(requestAdminUser, adminId)
 
-    console.log('admin : ', admin)
+    // Delete admin in Firestore as well as Firebase Auth.
+    // await this.adminsRepository.findOneById(adminId)
+    await this.firebaseService.DeleteFirebaseUser('adminId')
   }
 }
