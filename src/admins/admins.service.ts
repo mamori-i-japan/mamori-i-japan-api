@@ -179,8 +179,9 @@ export class AdminsService {
     // Fetch resource and perform ACL check. Check performed within the called function.
     await this.getOneAdminById(requestAdminUser, adminId)
 
-    // Delete admin in Firestore as well as Firebase Auth.
-    // await this.adminsRepository.findOneById(adminId)
-    await this.firebaseService.DeleteFirebaseUser('adminId')
+    // Delete admin in Firestore admins collection.
+    await this.adminsRepository.deleteOneById(adminId)
+    // Delete admin in Firebase auth.
+    await this.firebaseService.DeleteFirebaseUser(adminId)
   }
 }
