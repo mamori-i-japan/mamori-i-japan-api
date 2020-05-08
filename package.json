@@ -79,7 +79,7 @@
     "prettier": "1.19.1",
     "serverless": "^1.70.0",
     "serverless-deployment-bucket": "^1.1.2",
-    "serverless-domain-manager": "^3.3.1",
+    "serverless-domain-manager": "^3.3.2",
     "serverless-layers": "^2.2.2",
     "serverless-offline": "^6.1.5",
     "serverless-prune-plugin": "^1.4.2",
