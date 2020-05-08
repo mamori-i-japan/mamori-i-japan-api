@@ -60,4 +60,12 @@ export class FirebaseService {
     // Overwrite firebase custom claims with newCustomClaims.
     await firebaseAdmin.auth().setCustomUserClaims(userId, newCustomClaims)
   }
+
+  /**
+   * Delete user in firebase auth.
+   * @param userId: string
+   */
+  async DeleteFirebaseUser(userId: string): Promise<void> {
+    await firebaseAdmin.auth().deleteUser(userId)
+  }
 }

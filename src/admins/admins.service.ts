@@ -3,6 +3,7 @@ import {
   BadRequestException,
   ConflictException,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common'
 import { AdminsRepository } from './admins.repository'
 import { CreateAdminDto, CreateAdminRequestDto } from './dto/create-admin.dto'
@@ -18,17 +19,20 @@ import {
   canUserCreatePrefectureAdmin,
   getPrefectureAdminACLKey,
   getNationalAdminACLKey,
+  canUserAccessResource,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
 import { OrganizationsService } from '../organizations/organizations.service'
 import { PrefecturesService } from '../prefectures/prefectures.service'
+import { FirebaseService } from '../shared/firebase/firebase.service'
 
 @Injectable()
 export class AdminsService {
   constructor(
     private adminsRepository: AdminsRepository,
     private organizationsService: OrganizationsService,
-    private prefecturesService: PrefecturesService
+    private prefecturesService: PrefecturesService,
+    private firebaseService: FirebaseService
   ) {}
 
   async createOneAdminUser(
@@ -138,17 +142,46 @@ export class AdminsService {
     return this.adminsRepository.createOne(createAdminDto)
   }
 
-  async findOneAdminById(adminId: string): Promise<Admin | undefined> {
+  async getOneAdminById(
+    requestAdminUser: RequestAdminUser,
+    organizationId: string
+  ): Promise<Admin> {
+    // Fetch resource and perform ACL check.
+    const admin = await this.adminsRepository.findOneById(organizationId)
+    if (!admin) {
+      throw new NotFoundException('Could not find admin with this id')
+    }
+    if (!canUserAccessResource(requestAdminUser.userAccessKey, admin)) {
+      throw new UnauthorizedException('User does not have access on this resource')
+    }
+
+    return admin
+  }
+
+  /**
+   * Fetches one admin by adminId.
+   * Internal functions do not perform any ACL checks and should be used carefully.
+   * @param adminId: string
+   */
+  async findOneAdminByIdInternal(adminId: string): Promise<Admin | undefined> {
     return this.adminsRepository.findOneById(adminId)
   }
 
   async findAllAdminUsers(): Promise<Admin[]> {
+    // TODO @yashmurty :
+    // Fetch resource and perform ACL check.
+
     return this.adminsRepository.findAll()
   }
 
-  async deleteOneAdminById(adminId: string): Promise<void> {
-    const admin = await this.adminsRepository.findOneById(adminId)
+  async deleteOneAdminById(requestAdminUser: RequestAdminUser, adminId: string): Promise<void> {
     // TODO @yashmurty :
-    // Fetch admin and check for ACL. If okay, proceed to delete.
+    // Fetch resource and perform ACL check. Check performed within the called function.
+    await this.getOneAdminById(requestAdminUser, adminId)
+
+    // Delete admin in Firestore admins collection.
+    await this.adminsRepository.deleteOneById(adminId)
+    // Delete admin in Firebase auth.
+    await this.firebaseService.DeleteFirebaseUser(adminId)
   }
 }
