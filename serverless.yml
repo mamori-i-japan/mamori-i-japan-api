@@ -24,6 +24,8 @@ provider:
     FIREBASE_token_uri: ${ssm:/envvars/${self:provider.stage}/FIREBASE_token_uri~true}
     FIREBASE_auth_provider_x509_cert_url: ${ssm:/envvars/${self:provider.stage}/FIREBASE_auth_provider_x509_cert_url~true}
     FIREBASE_client_x509_cert_url: ${ssm:/envvars/${self:provider.stage}/FIREBASE_client_x509_cert_url~true}
+  logs:
+    restApi: true
 
 package:
   include:
