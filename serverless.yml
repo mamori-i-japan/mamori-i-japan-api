@@ -6,6 +6,7 @@ provider:
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'ap-northeast-1'}
+  logRetentionInDays: ${self:custom.LOG_RETENTION_IN_DAYS.${self:provider.stage}}
   deploymentBucket:
     name: contact-tracing-api-serverless
     blockPublicAccess: true
@@ -80,6 +81,13 @@ custom:
     dev: api-dev
     stg: api-stg
     prd: api
+  LOG_RETENTION_IN_DAYS:
+    dev: '7'
+    stg: '7'
+    prd: ''  # Never expire
 
-# resources:
-#   Resources:
+resources:
+  extensions:
+    LambdaDashswaggerLogGroup:
+      Properties:
+        RetentionInDays: '1'
