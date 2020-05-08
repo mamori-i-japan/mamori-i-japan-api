@@ -9,6 +9,8 @@ import {
   ValidationPipe,
   Request,
   HttpCode,
+  Param,
+  Delete,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -59,6 +61,27 @@ export class AdminsController {
   ): Promise<NoResponseBody> {
     const requestAdminUser: RequestAdminUser = req.user
     await this.adminsService.createOneAdminUser(requestAdminUser, createAdminRequest)
+
+    return {}
+  }
+
+  @ApiOperation({ summary: 'Get admin by id' })
+  @ApiOkResponse({ type: Admin })
+  @Get('/users/:userId')
+  async getAdminById(@Request() req, @Param('userId') userId: string): Promise<Admin> {
+    const requestAdminUser: RequestAdminUser = req.user
+    const admin = await this.adminsService.getOneAdminById(requestAdminUser, userId)
+
+    return admin
+  }
+
+  @ApiOperation({ summary: 'Get admin by id' })
+  @ApiOkResponse({ type: Admin })
+  @Delete('/users/:userId')
+  async deleteAdminById(@Request() req, @Param('userId') userId: string): Promise<NoResponseBody> {
+    const requestAdminUser: RequestAdminUser = req.user
+    await this.adminsService.deleteOneAdminById(requestAdminUser, userId)
+
     return {}
   }
 }

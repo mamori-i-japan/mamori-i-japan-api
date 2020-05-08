@@ -27,13 +27,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       return response.status(status).json(responseObject)
     }
 
-    // Log the stack for non-HttpException errors
-    if (exception instanceof Error) {
-      this.appLogger.error(exception.message, exception.stack, exception.name)
-    } else {
-      this.appLogger.error(exception)
-    }
-
     const status = HttpStatus.INTERNAL_SERVER_ERROR
     const responseObject = {
       statusCode: status,
@@ -41,7 +34,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
       url: request.url,
     }
 
-    this.appLogger.warn({ status, responseObject })
+    // Log the stack for non-HttpException errors
+    if (exception instanceof Error) {
+      this.appLogger.error(exception.message, exception.stack, exception.name)
+      responseObject['error'] = exception.name
+      responseObject['message'] = exception.message
+    } else {
+      console.log(exception)
+      responseObject['error'] = 'INTERNAL SERVER'
+    }
+
+    this.appLogger.debug(JSON.stringify({ status, responseObject }))
     return response.status(status).json(responseObject)
   }
 }
