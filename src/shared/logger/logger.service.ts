@@ -1,5 +1,5 @@
 import { LoggerService, Injectable, Scope } from '@nestjs/common'
-import { createLogger, Logger, LoggerOptions, transports } from 'winston'
+import { createLogger, Logger, transports } from 'winston'
 
 // We inject a transient instance of the Logger into our feature modules
 // so that each one has its own custom context.

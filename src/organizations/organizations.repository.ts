@@ -92,11 +92,6 @@ export class OrganizationsRepository {
 
   async updateOne(updateOrganizationRequest: UpdateOrganizationRequestDto): Promise<void> {
     const organizationId = updateOrganizationRequest.organizationId
-    const existingOrganization = await this.findOneById(organizationId)
-
-    if (!existingOrganization) {
-      throw new NotFoundException('Could not find organization with this id')
-    }
 
     await (await this.firestoreDB)
       .collection('organizations')
