@@ -13,7 +13,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest()
     const method = request.method
     const url = request.originalUrl
-    this.appLogger.debug(JSON.stringify({ method, url }))
+    this.appLogger.log({ method, url })
 
     const now = Date.now()
     return next.handle().pipe(
@@ -22,7 +22,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const statusCode = response.statusCode
 
         const responseTime = Date.now() - now
-        this.appLogger.debug(JSON.stringify({ method, url, statusCode, responseTime }))
+        this.appLogger.log({ method, url, statusCode, responseTime })
       })
     )
   }

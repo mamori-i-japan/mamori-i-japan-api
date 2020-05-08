@@ -8,7 +8,7 @@ export class AppService {
   }
 
   getHello(): string {
-    this.appLogger.debug('Logged from getHello service function')
+    this.appLogger.log('Logged from getHello service function')
 
     return 'Hello World!'
   }
