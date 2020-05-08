@@ -23,7 +23,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ...errorMessage,
       }
 
-      this.appLogger.debug(JSON.stringify({ status, responseObject }))
+      this.appLogger.warn({ status, responseObject })
       return response.status(status).json(responseObject)
     }
 
@@ -31,7 +31,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof Error) {
       this.appLogger.error(exception.message, exception.stack, exception.name)
     } else {
-      console.log(exception)
+      this.appLogger.error(exception)
     }
 
     const status = HttpStatus.INTERNAL_SERVER_ERROR
@@ -41,7 +41,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       url: request.url,
     }
 
-    this.appLogger.debug(JSON.stringify({ status, responseObject }))
+    this.appLogger.warn({ status, responseObject })
     return response.status(status).json(responseObject)
   }
 }
