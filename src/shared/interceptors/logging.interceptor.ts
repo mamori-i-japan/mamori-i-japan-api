@@ -2,6 +2,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable } from 'rxjs'
 import { tap } from 'rxjs/operators'
 import { AppLogger } from '../logger/logger.service'
+import { REQUEST_ID_TOKEN_HEADER } from '../constants'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -13,7 +14,9 @@ export class LoggingInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest()
     const method = request.method
     const url = request.originalUrl
-    this.appLogger.log({ method, url })
+    const requestID = request.headers[REQUEST_ID_TOKEN_HEADER]
+
+    this.appLogger.log({ method, requestID, url })
 
     const now = Date.now()
     return next.handle().pipe(
@@ -22,7 +25,7 @@ export class LoggingInterceptor implements NestInterceptor {
         const statusCode = response.statusCode
 
         const responseTime = Date.now() - now
-        this.appLogger.log({ method, url, statusCode, responseTime })
+        this.appLogger.log({ method, requestID, url, statusCode, responseTime })
       })
     )
   }
