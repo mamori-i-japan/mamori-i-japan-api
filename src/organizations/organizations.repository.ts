@@ -117,4 +117,13 @@ export class OrganizationsRepository {
         .set({ ...denormalizedForAppAccess })
     }
   }
+
+  async deleteOneById(organizationId: string): Promise<void> {
+    // TODO @yashmurty :
+    // Make sure to delete the sub-collection denormalizedForAppAccess
+    await (await this.firestoreDB)
+      .collection('organizations')
+      .doc(organizationId)
+      .delete()
+  }
 }

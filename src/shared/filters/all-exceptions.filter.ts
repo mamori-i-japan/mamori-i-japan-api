@@ -1,5 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common'
 import { AppLogger } from '../logger/logger.service'
+import { REQUEST_ID_TOKEN_HEADER } from '../constants'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -11,6 +12,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse()
     const request = ctx.getRequest()
+    const requestID = request.headers[REQUEST_ID_TOKEN_HEADER]
 
     if (exception instanceof HttpException) {
       const status = exception.getStatus()
@@ -23,7 +25,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ...errorMessage,
       }
 
-      this.appLogger.warn({ status, responseObject })
+      this.appLogger.warn({ status, requestID, responseObject })
       return response.status(status).json(responseObject)
     }
 
@@ -44,7 +46,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       responseObject['error'] = 'INTERNAL SERVER'
     }
 
-    this.appLogger.warn({ status, responseObject })
+    this.appLogger.warn({ status, requestID, responseObject })
     return response.status(status).json(responseObject)
   }
 }
