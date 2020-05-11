@@ -76,7 +76,7 @@ export class AdminsController {
   }
 
   @ApiOperation({ summary: 'Get admin by id' })
-  @ApiOkResponse({ type: Admin })
+  @ApiOkResponse({ type: NoResponseBody })
   @Delete('/users/:userId')
   async deleteAdminById(@Request() req, @Param('userId') userId: string): Promise<NoResponseBody> {
     const requestAdminUser: RequestAdminUser = req.user
