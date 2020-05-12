@@ -11,6 +11,7 @@ import {
   HttpCode,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common'
 import {
   ApiOperation,
@@ -29,6 +30,7 @@ import { Admin } from './classes/admin.class'
 import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
 import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { RequestAdminUser } from '../shared/interfaces'
+import { PaginationParamsDto } from 'src/shared/classes/pagination-params.class'
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -40,11 +42,14 @@ export class AdminsController {
   constructor(private adminsService: AdminsService) {}
 
   // TODO @yashmurty : Investigate pagination for this later.
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Get all admin users' })
   @ApiOkResponse({ type: [Admin] })
   @Get('/users')
-  async getAdminUsers(): Promise<Admin[]> {
-    return this.adminsService.findAllAdminUsers()
+  async getAdminUsers(@Request() req, @Query() query: PaginationParamsDto): Promise<Admin[]> {
+    const requestAdminUser: RequestAdminUser = req.user
+
+    return this.adminsService.findAllAdminUsers(requestAdminUser)
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
