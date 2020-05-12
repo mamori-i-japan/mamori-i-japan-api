@@ -53,12 +53,10 @@ export class UsersRepository {
     return getDoc.data() as UserProfile
   }
 
-  async createDiagnosisKeys(
-    createDiagnosisKeys: CreateDiagnosisKeysDto
-  ): Promise<void> {
+  async createDiagnosisKeys(createDiagnosisKeys: CreateDiagnosisKeysDto): Promise<void> {
     const { randomID, tempIDs, healthCenterToken } = createDiagnosisKeys
 
-    if (!this.validateHealthCenterToken(/* healthCenterToken */)) {
+    if (!(this.validateHealthCenterToken(/* healthCenterToken */))) {
       throw new BadRequestException()
     }
 
@@ -88,9 +86,7 @@ export class UsersRepository {
         })
       })
 
-    const file = (await this.firestoreStorage)
-      .bucket()
-      .file('positives.json.gz')
+    const file = (await this.firestoreStorage).bucket().file('positives.json.gz')
     const json = JSON.stringify({ data: [].concat(...tempIDs) })
     const gzip = zlib.gzipSync(json)
 

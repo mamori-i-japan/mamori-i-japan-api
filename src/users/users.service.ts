@@ -31,9 +31,7 @@ export class UsersService {
     }
   }
 
-  async createDiagnosisKeys(
-    createDiagnosisKeys: CreateDiagnosisKeysDto
-  ): Promise<void> {
+  async createDiagnosisKeys(createDiagnosisKeys: CreateDiagnosisKeysDto): Promise<void> {
     return this.usersRepository.createDiagnosisKeys(createDiagnosisKeys)
   }
 
