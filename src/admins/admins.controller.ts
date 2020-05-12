@@ -48,7 +48,6 @@ export class AdminsController {
   @Get('/users')
   async getAdminUsers(@Request() req, @Query() query: PaginationParamsDto): Promise<Admin[]> {
     const requestAdminUser: RequestAdminUser = req.user
-    console.log('query : ', query)
     return this.adminsService.findAllAdminUsers(requestAdminUser, query.limit, query.offset)
   }
 
