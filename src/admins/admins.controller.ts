@@ -48,8 +48,8 @@ export class AdminsController {
   @Get('/users')
   async getAdminUsers(@Request() req, @Query() query: PaginationParamsDto): Promise<Admin[]> {
     const requestAdminUser: RequestAdminUser = req.user
-
-    return this.adminsService.findAllAdminUsers(requestAdminUser)
+    console.log('query : ', query)
+    return this.adminsService.findAllAdminUsers(requestAdminUser, query.limit, query.offset)
   }
 
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
