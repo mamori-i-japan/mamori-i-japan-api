@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
+import { CreateDiagnosisKeysDto } from './dto/create-diagnosis-keys.dto'
 
 @Injectable()
 export class UsersRepository {
@@ -48,6 +49,25 @@ export class UsersRepository {
     return getDoc.data() as UserProfile
   }
 
+  async createDiagnosisKeys(
+    createDiagnosisKeys: CreateDiagnosisKeysDto
+  ): Promise<void> {
+    const { randomID, tempIDs, healthCenterToken } = createDiagnosisKeys
+
+    if (!this.validateHealthCenterToken(/* healthCenterToken */)) {
+      throw new BadRequestException()
+    }
+
+    await Promise.all(
+      tempIDs.map(async ({ tempID, validFrom, validTo }) => {
+        await (await this.firestoreDB)
+          .collection('diagnosisKeys')
+          .doc(tempID)
+          .set({ randomID, validFrom, validTo, healthCenterToken })
+      })
+    )
+  }
+
   async updateUserProfilePrefecture(updateUserProfileDto: UpdateUserProfileDto): Promise<void> {
     const userId = updateUserProfileDto.userId
 
@@ -57,5 +77,10 @@ export class UsersRepository {
       .collection('profile')
       .doc(userId)
       .update({ prefecture: updateUserProfileDto.prefecture })
+  }
+
+  // TODO : Implement a mock of Health Center API integration
+  private validateHealthCenterToken(/* healthCenterToken: string */): boolean {
+    return true
   }
 }
