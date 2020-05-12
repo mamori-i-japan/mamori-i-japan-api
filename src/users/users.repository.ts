@@ -105,7 +105,8 @@ export class UsersRepository {
       .update({ prefecture: updateUserProfileDto.prefecture })
   }
 
-  // TODO : Implement a mock of Health Center API integration
+  // TODO : Implement an integration with Health Center's API.
+  //        It's better to make it asynchronous when this is implemented!
   private validateHealthCenterToken(/* healthCenterToken: string */): boolean {
     return true
   }
