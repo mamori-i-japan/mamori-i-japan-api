@@ -30,7 +30,7 @@ import { Admin } from './classes/admin.class'
 import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
 import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { RequestAdminUser } from '../shared/interfaces'
-import { PaginationParamsDto } from 'src/shared/classes/pagination-params.class'
+import { PaginationParamsDto } from '../shared/classes/pagination-params.class'
 
 @ApiTags('admin')
 @ApiBearerAuth()
