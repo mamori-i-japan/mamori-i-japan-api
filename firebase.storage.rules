@@ -9,10 +9,5 @@ service firebase.storage {
     match /positives.json.gz {
       allow read: if request.auth != null
     }
-
-    match /{organizationCode}/positives.json.gz {
-      allow read: if request.auth != null
-                  && request.auth.token.organizationCode == organizationCode
-    }
   }
 }

@@ -1,9 +1,4 @@
-import {
-  superAdminKey,
-  nationalAdminKey,
-  prefectureAdminKey,
-  organizationAdminKey,
-} from './acl.constants'
+import { superAdminKey, nationalAdminKey, prefectureAdminKey } from './acl.constants'
 import { UnauthorizedException } from '@nestjs/common'
 import { ResourceWithACL } from './acl.class'
 
@@ -23,10 +18,6 @@ export function getNationalAdminACLKey() {
 
 export function getPrefectureAdminACLKey(prefectureId: number) {
   return prefectureAdminKey + '|' + prefectureId
-}
-
-export function getOrganizationAdminACLKey(organizationId: string) {
-  return organizationAdminKey + '|' + organizationId
 }
 
 /**
@@ -56,7 +47,7 @@ export function canUserAccessResource(userAccessKey: string, resource: ResourceW
 
 /**
  * canUserCreateXXX function is used when inviting new admin users with admin roles.
- * - It will prevent organization admin user to create a super admin, etc.
+ * - It will prevent prefecture admin user to create a super admin, etc.
  */
 export function canUserCreateSuperAdmin(userAccessKey: string): boolean {
   // Checks if the user performing an action has superAdmin access.
@@ -86,23 +77,6 @@ export function canUserCreatePrefectureAdmin(userAccessKey: string, prefectureId
     return true
   }
   if (userAccessKey === getPrefectureAdminACLKey(prefectureId)) {
-    return true
-  }
-  return false
-}
-
-export function canUserCreateOrganizationAdmin(
-  userAccessKey: string,
-  organizationId: string
-): boolean {
-  // Checks if the user performing an action has organizationAdmin access or above.
-  if (userAccessKey === superAdminKey) {
-    return true
-  }
-  if (userAccessKey === nationalAdminKey) {
-    return true
-  }
-  if (userAccessKey === getOrganizationAdminACLKey(organizationId)) {
     return true
   }
   return false

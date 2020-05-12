@@ -9,7 +9,4 @@ export class User {
 export class UserProfile {
   @ApiProperty({ example: 14 })
   prefecture: number
-
-  @ApiProperty({ example: 'A12B34' })
-  organizationCode?: string
 }

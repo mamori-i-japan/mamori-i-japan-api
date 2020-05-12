@@ -8,7 +8,6 @@ import { SharedModule } from '../shared/shared.module'
 import { FirebaseAdminUserLoginStrategy } from './strategies/firebase-admin-user-login.strategy'
 import { FirebaseAdminUserValidateStrategy } from './strategies/firebase-admin-user-validate.strategy'
 import { AdminsModule } from '../admins/admins.module'
-import { FirebaseNormalUserOrgValidateStrategy } from './strategies/firebase-normal-user-org-validate.strategy'
 
 @Module({
   imports: [AdminsModule, UsersModule, SharedModule],
@@ -16,7 +15,6 @@ import { FirebaseNormalUserOrgValidateStrategy } from './strategies/firebase-nor
     AuthService,
     FirebaseNormalUserLoginStrategy,
     FirebaseNormalUserValidateStrategy,
-    FirebaseNormalUserOrgValidateStrategy,
     FirebaseAdminUserLoginStrategy,
     FirebaseAdminUserValidateStrategy,
   ],
