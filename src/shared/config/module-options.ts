@@ -21,5 +21,6 @@ export const configModuleOptions: ConfigModuleOptions = {
     FIREBASE_STORAGE_BUCKET: Joi.string().required(),
     // eslint-disable-next-line @typescript-eslint/camelcase
     FIREBASE_private_key: Joi.string().required(),
+    FIREBASE_WEB_API_KEY: Joi.string().required(),
   }),
 }

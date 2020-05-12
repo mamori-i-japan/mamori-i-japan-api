@@ -1,14 +1,9 @@
 import * as request from 'supertest'
 
 // TODO @yashmurty : WIP.
-export async function generateFirebaseDefaultToken(
-  customToken: string,
-  firebaseServerAPIKey: string
-) {
-  await request(
-    `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${firebaseServerAPIKey}`
-  )
-    .post('/')
+export async function generateFirebaseDefaultToken(customToken: string, firebaseWebAPIKey: string) {
+  await request(`https://identitytoolkit.googleapis.com/`)
+    .post(`/v1/accounts:signInWithCustomToken?key=${firebaseWebAPIKey}`)
     .send({
       token: customToken,
       returnSecureToken: true,
