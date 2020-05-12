@@ -52,16 +52,16 @@ commands:
     steps:
       - run:
           name: lint
-          command: npm run lint
+          command: npm run ci:lint
 
   npm_test:
     steps:
       - run:
           name: test
-          command: npm run test:cov
+          command: npm run ci:test:cov
       - run:
           name: e2e test
-          command: npm run test:e2e
+          command: npm run ci:test:e2e
       - store_artifacts:
           path: coverage
 

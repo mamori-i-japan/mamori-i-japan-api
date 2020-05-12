@@ -1,6 +1,6 @@
 import { Strategy, VerifiedCallback } from 'passport-custom'
 import { PassportStrategy } from '@nestjs/passport'
-import { Injectable, UnauthorizedException, InternalServerErrorException } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ExtractJwt } from 'passport-jwt'
 import { Request } from 'express'
 import * as firebaseAdmin from 'firebase-admin'
