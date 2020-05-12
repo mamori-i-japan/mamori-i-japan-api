@@ -36,4 +36,8 @@ export class UsersService {
   ): Promise<void> {
     return this.usersRepository.createDiagnosisKeys(createDiagnosisKeys)
   }
+
+  async uploadDiagnosisKeysList(): Promise<void> {
+    return this.usersRepository.uploadDiagnosisKeysList()
+  }
 }
