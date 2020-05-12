@@ -20,9 +20,8 @@ describe('AppController (e2e)', () => {
 
     // TODO @yashmurty : Add API Key to env file.
     const configService = app.get(ConfigService)
-    const firebasePrivateKey = configService.get('FIREBASE_private_key')
-    const firebaseWebAPIKey = ''
-
+    const firebaseWebAPIKey = configService.get('FIREBASE_WEB_API_KEY')
+    console.log('firebaseWebAPIKey : ', firebaseWebAPIKey)
     customToken = await firebaseAdmin.auth().createCustomToken('uid')
 
     await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
