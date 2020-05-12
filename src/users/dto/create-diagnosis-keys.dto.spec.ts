@@ -1,7 +1,7 @@
-import { SetPositiveFlagDto } from './create-diagnosis-keys.dto'
+import { CreateDiagnosisKeysDto } from './create-diagnosis-keys.dto'
 
-describe('SetPositiveFlagDto', () => {
+describe('CreateDiagnosisKeysDto', () => {
   it('should be defined', () => {
-    expect(new SetPositiveFlagDto()).toBeDefined()
+    expect(new CreateDiagnosisKeysDto()).toBeDefined()
   })
 })
