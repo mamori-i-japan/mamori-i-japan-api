@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, IsArray, IsNotEmpty, ValidateNested } from 'class-validator'
+import { IsString, IsNotEmpty } from 'class-validator'
 import { Type, Transform } from 'class-transformer'
 import { Moment } from 'moment-timezone'
 import * as moment from 'moment-timezone'
