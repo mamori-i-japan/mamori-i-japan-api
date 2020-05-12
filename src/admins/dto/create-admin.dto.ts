@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNotEmpty, IsEnum, IsEmail, ValidateIf, Min, IsInt, Max } from 'class-validator'
+import { IsNotEmpty, IsEnum, IsEmail, ValidateIf, Min, IsInt, Max } from 'class-validator'
 import { AdminRole, ResourceWithACL } from '../../shared/acl'
 
 export class CreateAdminDto extends ResourceWithACL {
@@ -7,7 +7,6 @@ export class CreateAdminDto extends ResourceWithACL {
   adminUserId: string
   userAdminRole: AdminRole
   userAccessKey: string
-  organizationId: string
   prefectureId: number
   email: string
   addedByAdminUserId: string
@@ -24,14 +23,6 @@ export class CreateAdminRequestDto {
   @IsNotEmpty()
   @IsEnum(AdminRole)
   adminRole: AdminRole
-
-  @ApiPropertyOptional({
-    description: 'Optional, needed when admin role is ORGANIZATION_ADMIN_ROLE',
-  })
-  @ValidateIf((o) => o.adminRole === AdminRole.organizationAdminRole)
-  @IsString()
-  @IsNotEmpty()
-  organizationId: string
 
   @ApiPropertyOptional({
     description: 'Optional, needed when admin role is PREFECTURE_ADMIN_ROLE',

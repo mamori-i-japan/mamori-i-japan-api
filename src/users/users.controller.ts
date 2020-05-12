@@ -6,10 +6,7 @@ import {
   UsePipes,
   UseInterceptors,
   ValidationPipe,
-  Post,
-  Delete,
   Body,
-  HttpCode,
   Patch,
 } from '@nestjs/common'
 import {
@@ -18,15 +15,11 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiUnauthorizedResponse,
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
 } from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
-import { CreateDiagnosisKeysForOrgDto } from './dto/create-diagnosis-keys.dto'
-import { DeleteUserOrganizationDto } from './dto/delete-user-organization.dto'
 import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
 import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { UserProfile } from './classes/user.class'
@@ -58,38 +51,5 @@ export class UsersController {
   ): Promise<void> {
     updateUserProfileDto.userId = req.user.uid
     return this.usersService.updateUserProfile(updateUserProfileDto)
-  }
-
-  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
-  @ApiOperation({ summary: 'Let the users themselves leave from the organization' })
-  @ApiOkResponse({ type: NoResponseBody })
-  @ApiBadRequestResponse()
-  @ApiNotFoundResponse()
-  @Delete('/me/organization')
-  @HttpCode(200)
-  async deleteMeOrganization(
-    @Request() req,
-    @Body() deleteUserOrganization: DeleteUserOrganizationDto
-  ): Promise<NoResponseBody> {
-    deleteUserOrganization.userId = req.user.uid
-    deleteUserOrganization.organizationCode = req.user.organizationCode
-    await this.usersService.deleteUserOrganization(deleteUserOrganization)
-    return {}
-  }
-
-  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
-  @ApiOperation({ summary: 'Give the user a positive flag by user-self' })
-  @ApiOkResponse({ type: NoResponseBody })
-  @ApiBadRequestResponse()
-  @ApiNotFoundResponse()
-  @Post('/me/diagnosis_keys_for_org')
-  @HttpCode(200)
-  async createDiagnosisKeysForOrg(
-    @Request() req,
-    @Body() createDiagnosisKeysForOrg: CreateDiagnosisKeysForOrgDto
-  ): Promise<NoResponseBody> {
-    createDiagnosisKeysForOrg.organizationCode = req.user.organizationCode
-    await this.usersService.createDiagnosisKeysForOrg(createDiagnosisKeysForOrg)
-    return {}
   }
 }

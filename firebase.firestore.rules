@@ -13,17 +13,6 @@ service cloud.firestore {
       }
     }
 
-    match /organizations/{organizationId} {
-      // No client side reads for core organizations data
-      allow read, write: if false;
-
-      // Allow organizations users to read organizations message
-      match /denormalizedForAppAccess/{organizationId} {
-        allow read: if request.auth.token.organizationCode == organizationId;
-        allow write: if false;
-      }
-    }
-
     match /prefectures/{prefectureId} {
       // No client side reads for core prefectures data
       allow read, write: if false;

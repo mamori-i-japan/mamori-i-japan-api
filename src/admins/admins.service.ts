@@ -13,8 +13,6 @@ import {
   AdminRole,
   canUserCreateSuperAdmin,
   getSuperAdminACLKey,
-  getOrganizationAdminACLKey,
-  canUserCreateOrganizationAdmin,
   canUserCreateNationalAdmin,
   canUserCreatePrefectureAdmin,
   getPrefectureAdminACLKey,
@@ -22,7 +20,6 @@ import {
   canUserAccessResource,
 } from '../shared/acl'
 import { RequestAdminUser } from '../shared/interfaces'
-import { OrganizationsService } from '../organizations/organizations.service'
 import { PrefecturesService } from '../prefectures/prefectures.service'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 
@@ -30,7 +27,6 @@ import { FirebaseService } from '../shared/firebase/firebase.service'
 export class AdminsService {
   constructor(
     private adminsRepository: AdminsRepository,
-    private organizationsService: OrganizationsService,
     private prefecturesService: PrefecturesService,
     private firebaseService: FirebaseService
   ) {}
@@ -96,32 +92,6 @@ export class AdminsService {
 
         break
 
-      case AdminRole.organizationAdminRole:
-        if (
-          !canUserCreateOrganizationAdmin(
-            requestAdminUser.userAccessKey,
-            createAdminRequest.organizationId
-          )
-        ) {
-          throw new UnauthorizedException('Insufficient access to create this adminRole')
-        }
-        // Check if organizationId is valid
-        const isOrganizationCodeValid = await this.organizationsService.isOrganizationCodeValid(
-          createAdminRequest.organizationId
-        )
-        if (!isOrganizationCodeValid) {
-          throw new BadRequestException('Invalid organizationId value')
-        }
-
-        createAdminDto.userAccessKey = getOrganizationAdminACLKey(createAdminRequest.organizationId)
-        createAdminDto.organizationId = createAdminRequest.organizationId
-        createAdminDto.accessControlList.push(
-          getNationalAdminACLKey(),
-          getOrganizationAdminACLKey(createAdminRequest.organizationId)
-        )
-
-        break
-
       default:
         throw new BadRequestException('Invalid adminRole value')
     }
@@ -142,12 +112,9 @@ export class AdminsService {
     return this.adminsRepository.createOne(createAdminDto)
   }
 
-  async getOneAdminById(
-    requestAdminUser: RequestAdminUser,
-    organizationId: string
-  ): Promise<Admin> {
+  async getOneAdminById(requestAdminUser: RequestAdminUser, adminId: string): Promise<Admin> {
     // Fetch resource and perform ACL check.
-    const admin = await this.adminsRepository.findOneById(organizationId)
+    const admin = await this.adminsRepository.findOneById(adminId)
     if (!admin) {
       throw new NotFoundException('Could not find admin with this id')
     }
