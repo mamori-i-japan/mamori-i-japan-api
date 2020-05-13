@@ -4,12 +4,13 @@ import * as request from 'supertest'
 import { AppModule } from './../src/app.module'
 import { ConfigService } from '@nestjs/config'
 import * as firebaseAdmin from 'firebase-admin'
-import { generateFirebaseDefaultToken } from './util'
+import { generateFirebaseDefaultToken, deleteFirebaseTestUser } from './util'
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication
   let customToken: string
   let firebaseDefaultToken: string
+  const testUIDNormalUser = 'E2E_TEST_UID_NORMAL_USER'
 
   beforeAll(async (done) => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -21,8 +22,7 @@ describe('AuthController (e2e)', () => {
 
     const configService = app.get(ConfigService)
     const firebaseWebAPIKey = configService.get('FIREBASE_WEB_API_KEY')
-    console.log('firebaseWebAPIKey : ', firebaseWebAPIKey)
-    customToken = await firebaseAdmin.auth().createCustomToken('RANDOM_UID_FOR_TEST', {
+    customToken = await firebaseAdmin.auth().createCustomToken(testUIDNormalUser, {
       // eslint-disable-next-line @typescript-eslint/camelcase
       provider_id: 'anonymous',
     })
@@ -130,6 +130,8 @@ describe('AuthController (e2e)', () => {
   })
 
   afterAll(async (done) => {
+    await deleteFirebaseTestUser(testUIDNormalUser)
+
     await firebaseAdmin.app().delete()
     await app.close()
     done()
