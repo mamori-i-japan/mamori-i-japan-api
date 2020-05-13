@@ -28,7 +28,6 @@ describe('AuthController (e2e)', () => {
     })
 
     firebaseDefaultToken = await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
-    console.log('firebaseDefaultToken : ', firebaseDefaultToken)
 
     done()
   })

@@ -1,6 +1,12 @@
 import axios from 'axios'
 import * as firebaseAdmin from 'firebase-admin'
 
+/**
+ * Generate firebase default token. Uses the custom token generated via
+ * Firebase Admin SDK and returns firebase idToken.
+ * @param customToken
+ * @param firebaseWebAPIKey
+ */
 export async function generateFirebaseDefaultToken(
   customToken: string,
   firebaseWebAPIKey: string
@@ -31,7 +37,6 @@ export async function generateFirebaseDefaultToken(
  * Delete the test user from firebase auth and firestore.
  * @param testUIDNormalUser
  */
-
 export async function deleteFirebaseTestUser(testUIDNormalUser: string): Promise<void> {
   await firebaseAdmin.auth().deleteUser(testUIDNormalUser)
   await firebaseAdmin
