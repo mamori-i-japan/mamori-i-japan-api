@@ -63,12 +63,19 @@ export class AdminsRepository {
     return admin
   }
 
-  async findAll(): Promise<Admin[] | undefined> {
+  async findAll(
+    userAccessKey: string,
+    limit: number,
+    offset: number
+  ): Promise<Admin[] | undefined> {
     const adminsArray: Admin[] = []
 
     const adminsRef = (await this.firestoreDB).collection('admins')
     await adminsRef
-      .limit(100)
+      .orderBy('email')
+      .where('accessControlList', 'array-contains', userAccessKey)
+      .limit(limit)
+      .offset(offset)
       .get()
       .then((snapshot) => {
         if (snapshot.empty) {

@@ -1,6 +1,20 @@
 {
   "indexes": [
     {
+      "collectionGroup": "admins",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "accessControlList",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "email",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "prefectures",
       "queryScope": "COLLECTION",
       "fields": [

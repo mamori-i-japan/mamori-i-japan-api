@@ -134,15 +134,16 @@ export class AdminsService {
     return this.adminsRepository.findOneById(adminId)
   }
 
-  async findAllAdminUsers(): Promise<Admin[]> {
-    // TODO @yashmurty :
-    // Fetch resource and perform ACL check.
-
-    return this.adminsRepository.findAll()
+  async findAllAdminUsers(
+    requestAdminUser: RequestAdminUser,
+    limit: number,
+    offset: number
+  ): Promise<Admin[]> {
+    // ACL check is automatically performed in the repository function.
+    return this.adminsRepository.findAll(requestAdminUser.userAccessKey, limit, offset)
   }
 
   async deleteOneAdminById(requestAdminUser: RequestAdminUser, adminId: string): Promise<void> {
-    // TODO @yashmurty :
     // Fetch resource and perform ACL check. Check performed within the called function.
     await this.getOneAdminById(requestAdminUser, adminId)
 
