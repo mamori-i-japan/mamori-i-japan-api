@@ -7,13 +7,15 @@ import * as firebaseAdmin from 'firebase-admin'
 describe('AppController (e2e)', () => {
   let app: INestApplication
 
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()
+
+    done()
   })
 
   it('/ (GET)', (done) => {
@@ -24,8 +26,9 @@ describe('AppController (e2e)', () => {
       .end(() => done())
   })
 
-  afterAll(async () => {
+  afterAll(async (done) => {
     await firebaseAdmin.app().delete()
     await app.close()
+    done()
   })
 })

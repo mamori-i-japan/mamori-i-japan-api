@@ -11,7 +11,7 @@ describe('AuthController (e2e)', () => {
   let customToken: string
   let firebaseDefaultToken: string
 
-  beforeAll(async () => {
+  beforeAll(async (done) => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile()
@@ -27,6 +27,8 @@ describe('AuthController (e2e)', () => {
     })
 
     firebaseDefaultToken = await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
+
+    done()
   })
 
   it('/auth/login (POST) - No Auth bearer', (done) => {
@@ -128,5 +130,6 @@ describe('AuthController (e2e)', () => {
   afterAll(async (done) => {
     await firebaseAdmin.app().delete()
     await app.close()
+    done()
   })
 })
