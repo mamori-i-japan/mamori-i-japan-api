@@ -5,6 +5,7 @@ export async function generateFirebaseDefaultToken(
   firebaseWebAPIKey: string
 ): Promise<string> {
   let firebaseDefaultToken: string
+  console.log('customToken : ', customToken)
 
   await axios
     .post(
