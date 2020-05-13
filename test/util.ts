@@ -19,7 +19,7 @@ export async function generateFirebaseDefaultToken(
       firebaseDefaultToken = response.data.idToken
     })
     .catch(function(error) {
-      console.log(error)
+      console.log(error.response.data)
       throw error
     })
 
