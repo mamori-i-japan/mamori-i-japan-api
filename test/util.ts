@@ -1,24 +1,26 @@
-import * as request from 'supertest'
+import axios from 'axios'
 
-// TODO @yashmurty : WIP.
 export async function generateFirebaseDefaultToken(
   customToken: string,
   firebaseWebAPIKey: string
 ): Promise<string> {
   let firebaseDefaultToken: string
-  await request(`https://identitytoolkit.googleapis.com/`)
+
+  await axios
     .post(
-      `/v1/accounts:signInWithCustomToken?key=
-    ${firebaseWebAPIKey}`
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=
+    ${firebaseWebAPIKey}`,
+      {
+        token: customToken,
+        returnSecureToken: true,
+      }
     )
-    .send({
-      token: customToken,
-      returnSecureToken: true,
+    .then(function(response) {
+      firebaseDefaultToken = response.data.idToken
     })
-    .set('Content-Type', 'application/json')
-    .expect((response) => {
-      expect(response.body.idToken).toBeDefined()
-      firebaseDefaultToken = response.body.idToken
+    .catch(function(error) {
+      console.log(error)
+      throw error
     })
 
   return firebaseDefaultToken
