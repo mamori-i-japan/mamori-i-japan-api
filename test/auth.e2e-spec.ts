@@ -9,6 +9,7 @@ import { generateFirebaseDefaultToken } from './util'
 describe('AppController (e2e)', () => {
   let app: INestApplication
   let customToken: string
+  let firebaseDefaultToken: string
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -21,10 +22,12 @@ describe('AppController (e2e)', () => {
     // TODO @yashmurty : Add API Key to env file.
     const configService = app.get(ConfigService)
     const firebaseWebAPIKey = configService.get('FIREBASE_WEB_API_KEY')
-    console.log('firebaseWebAPIKey : ', firebaseWebAPIKey)
-    customToken = await firebaseAdmin.auth().createCustomToken('uid')
+    customToken = await firebaseAdmin.auth().createCustomToken('uid', {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      provider_id: 'anonymous',
+    })
 
-    await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
+    firebaseDefaultToken = await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
   })
 
   it('/auth/login (POST) - No Auth bearer', () => {
@@ -56,6 +59,32 @@ describe('AppController (e2e)', () => {
       .expect((response) => {
         expect(response.body.error).toEqual('Unauthorized')
         expect(response.body.message).toContain('expects an ID token, but was given a custom token')
+      })
+  })
+
+  it('/auth/login (POST) - FDT Auth bearer without prefecture', () => {
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .set('Authorization', `Bearer ${firebaseDefaultToken}`)
+      .expect(400)
+      .expect((response) => {
+        expect(response.body.error).toEqual('Bad Request')
+        expect(response.body.message).toBeInstanceOf(Array)
+        expect(response.body.message[0]).toContain('prefecture must be a number')
+      })
+  })
+
+  it('/auth/login (POST) - FDT Auth bearer with prefecture', () => {
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .set('Authorization', `Bearer ${firebaseDefaultToken}`)
+      .expect(400)
+      .expect((response) => {
+        console.log('---------------- ')
+        console.log('response.body : ', response.body)
+        expect(response.body.error).toEqual('Bad Request')
+        expect(response.body.message).toBeInstanceOf(Array)
+        expect(response.body.message[0]).toContain('prefecture must be a number')
       })
   })
 })
