@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNumber } from 'class-validator'
+import { IsInt, Min, Max } from 'class-validator'
 
 export class LoginNormalUserRequestDto {
   @ApiProperty()
-  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(47)
   prefecture: number
 }
