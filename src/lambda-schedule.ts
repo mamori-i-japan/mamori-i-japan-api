@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { AppLogger } from './shared/logger/logger.service'
+import { UsersService } from './users/users.service'
 
 exports.handler = async () => {
   const app = await NestFactory.create(AppModule, {
@@ -10,5 +11,6 @@ exports.handler = async () => {
 
   await app.init()
 
-  return
+  const usersService = app.get(UsersService)
+  return usersService.uploadDiagnosisKeysList()
 }
