@@ -20,6 +20,8 @@ export async function generateFirebaseDefaultToken(
     })
     .catch(function(error) {
       console.log(error.response.data)
+      console.log('-----')
+      console.log(error.response.data.error)
       throw error
     })
 
