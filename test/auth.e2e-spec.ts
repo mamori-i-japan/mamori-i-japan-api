@@ -21,12 +21,14 @@ describe('AuthController (e2e)', () => {
 
     const configService = app.get(ConfigService)
     const firebaseWebAPIKey = configService.get('FIREBASE_WEB_API_KEY')
+    console.log('firebaseWebAPIKey : ', firebaseWebAPIKey)
     customToken = await firebaseAdmin.auth().createCustomToken('RANDOM_UID_FOR_TEST', {
       // eslint-disable-next-line @typescript-eslint/camelcase
       provider_id: 'anonymous',
     })
 
     firebaseDefaultToken = await generateFirebaseDefaultToken(customToken, firebaseWebAPIKey)
+    console.log('firebaseDefaultToken : ', firebaseDefaultToken)
 
     done()
   })
