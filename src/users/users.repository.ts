@@ -87,7 +87,7 @@ export class UsersRepository {
       })
 
     const file = (await this.firestoreStorage).bucket().file('positives.json.gz')
-    const json = JSON.stringify({ data: [].concat(...tempIDs) })
+    const json = JSON.stringify({ data: tempIDs })
     const gzip = zlib.gzipSync(json)
 
     await file.save(gzip)
