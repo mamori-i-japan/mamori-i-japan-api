@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator'
+import { IsString, IsOptional, IsNotEmpty, IsInt, Max, Min } from 'class-validator'
 
 export class CreateUserDto {
   @ApiProperty()
@@ -10,14 +10,18 @@ export class CreateUserDto {
 
 export class CreateUserProfileDto {
   @ApiProperty()
-  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(47)
   prefecture: number
 }
 
 export class UpdateUserProfileDto {
   @ApiPropertyOptional({ example: 14 })
   @IsOptional()
-  @IsNumber()
+  @IsInt()
+  @Min(0)
+  @Max(47)
   prefecture: number
 
   // Keys without any decorators are non-Whitelisted. Validator will throw error if it's passed in payload.
