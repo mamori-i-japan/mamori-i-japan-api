@@ -19,6 +19,7 @@ import {
   ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
@@ -62,6 +63,7 @@ export class PrefecturesController {
   @ApiOperation({ summary: 'Get prefecture by id' })
   @ApiOkResponse({ type: Prefecture })
   @Get('/prefectures/:prefectureId')
+  @ApiNotFoundResponse()
   async getPrefectureById(
     @Request() req,
     @Param('prefectureId') prefectureId: number
@@ -78,6 +80,7 @@ export class PrefecturesController {
   @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
   @ApiOperation({ summary: 'Update prefecture' })
   @ApiOkResponse({ type: NoResponseBody })
+  @ApiNotFoundResponse()
   @Patch('/prefectures/:prefectureId')
   async patchMeProfile(
     @Request() req,
