@@ -21,6 +21,7 @@ import {
   ApiUnauthorizedResponse,
   ApiBadRequestResponse,
   ApiConflictResponse,
+  ApiNotFoundResponse,
 } from '@nestjs/swagger'
 import { AdminsService } from './admins.service'
 import { FirebaseAdminUserValidateGuard } from '../auth/guards/firebase-admin-user-validate.guard'
@@ -71,6 +72,7 @@ export class AdminsController {
 
   @ApiOperation({ summary: 'Get admin by id' })
   @ApiOkResponse({ type: Admin })
+  @ApiNotFoundResponse()
   @Get('/users/:userId')
   async getAdminById(@Request() req, @Param('userId') userId: string): Promise<Admin> {
     const requestAdminUser: RequestAdminUser = req.user
@@ -81,6 +83,7 @@ export class AdminsController {
 
   @ApiOperation({ summary: 'Get admin by id' })
   @ApiOkResponse({ type: NoResponseBody })
+  @ApiNotFoundResponse()
   @Delete('/users/:userId')
   async deleteAdminById(@Request() req, @Param('userId') userId: string): Promise<NoResponseBody> {
     const requestAdminUser: RequestAdminUser = req.user
