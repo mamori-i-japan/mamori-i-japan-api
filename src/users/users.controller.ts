@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Request,
   UseGuards,
   UsePipes,
@@ -25,6 +26,7 @@ import { FirebaseNormalUserValidateGuard } from '../auth/guards/firebase-normal-
 import { VALIDATION_PIPE_OPTIONS } from '../shared/constants/validation-pipe'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateDiagnosisKeysDto } from './dto/create-diagnosis-keys.dto'
+import { DeleteDiagnosisKeysDto } from './dto/delete-diagnosis-keys.dto'
 import { NoResponseBodyInterceptor } from '../shared/interceptors/no-response-body.interceptor'
 import { NoResponseBody } from '../shared/classes/no-response-body.class'
 import { UserProfile } from './classes/user.class'
@@ -70,6 +72,21 @@ export class UsersController {
     @Body() createDiagnosisKeys: CreateDiagnosisKeysDto
   ): Promise<NoResponseBody> {
     await this.usersService.createDiagnosisKeys(createDiagnosisKeys)
+    return {}
+  }
+
+  @UsePipes(new ValidationPipe(VALIDATION_PIPE_OPTIONS))
+  @ApiOperation({ summary: 'Let the users themselves eliminate the positive flag' })
+  @ApiOkResponse({ type: NoResponseBody })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @Delete('/me/diagnosis_keys')
+  @HttpCode(200)
+  async deleteDiagnosisKeys(
+    @Request() req,
+    @Body() deleteDiagnosisKeys: DeleteDiagnosisKeysDto
+  ): Promise<NoResponseBody> {
+    await this.usersService.deleteDiagnosisKeys(deleteDiagnosisKeys)
     return {}
   }
 }
