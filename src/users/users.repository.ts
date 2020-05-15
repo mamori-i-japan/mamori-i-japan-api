@@ -5,6 +5,7 @@ import * as firebaseAdmin from 'firebase-admin'
 import * as moment from 'moment-timezone'
 import { UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateDiagnosisKeysDto } from './dto/create-diagnosis-keys.dto'
+import { DeleteDiagnosisKeysDto } from './dto/delete-diagnosis-keys.dto'
 import { POSITIVE_RECOVERY_PERIOD } from './constants'
 import * as zlib from 'zlib'
 
@@ -67,6 +68,28 @@ export class UsersRepository {
           .doc(tempID)
           .set({ randomID, validFrom, validTo, healthCenterToken, positiveFlag: true })
           // TODO : As a temporary implementation, positiveFlag is hardcoded to always be true.
+      })
+    )
+  }
+
+  async deleteDiagnosisKeys(deleteDiagnosisKeys: DeleteDiagnosisKeysDto): Promise<void> {
+    const { randomIDs } = deleteDiagnosisKeys
+
+    if (randomIDs.length === 0) {
+      return
+    }
+
+    await Promise.all(
+      randomIDs.map(async ({ randomID }) => {
+        await (await this.firestoreDB)
+          .collection('diagnosisKeys')
+          .where('randomID', '==', randomID)
+          .get()
+          .then((query) => {
+            query.forEach((doc) => {
+              doc.ref.delete()
+            })
+          })
       })
     )
   }

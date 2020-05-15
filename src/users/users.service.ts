@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { UsersRepository } from './users.repository'
 import { CreateUserDto, CreateUserProfileDto, UpdateUserProfileDto } from './dto/create-user.dto'
 import { CreateDiagnosisKeysDto } from './dto/create-diagnosis-keys.dto'
+import { DeleteDiagnosisKeysDto } from './dto/delete-diagnosis-keys.dto'
 import { User, UserProfile } from './classes/user.class'
 import { FirebaseService } from '../shared/firebase/firebase.service'
 
@@ -33,6 +34,10 @@ export class UsersService {
 
   async createDiagnosisKeys(createDiagnosisKeys: CreateDiagnosisKeysDto): Promise<void> {
     return this.usersRepository.createDiagnosisKeys(createDiagnosisKeys)
+  }
+
+  async deleteDiagnosisKeys(deleteDiagnosisKeys: DeleteDiagnosisKeysDto): Promise<void> {
+    return this.usersRepository.deleteDiagnosisKeys(deleteDiagnosisKeys)
   }
 
   async uploadDiagnosisKeysList(): Promise<void> {
