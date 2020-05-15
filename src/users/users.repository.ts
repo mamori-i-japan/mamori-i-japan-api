@@ -65,7 +65,8 @@ export class UsersRepository {
         await (await this.firestoreDB)
           .collection('diagnosisKeys')
           .doc(tempID)
-          .set({ randomID, validFrom, validTo, healthCenterToken })
+          .set({ randomID, validFrom, validTo, healthCenterToken, positiveFlag: true })
+          // TODO : As a temporary implementation, positiveFlag is hardcoded to always be true.
       })
     )
   }
@@ -79,6 +80,7 @@ export class UsersRepository {
     const tempIDs = await (await this.firestoreDB)
       .collection('diagnosisKeys')
       .where('validFrom', '>=', recoveredDate)
+      .where('positiveFlag', '==', true)
       .get()
       .then((query) => {
         return query.docs.map((doc) => {
