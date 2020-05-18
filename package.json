@@ -58,7 +58,9 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "uuid": "^8.0.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",
@@ -92,9 +94,7 @@
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.7.4",
-    "uuid": "^8.0.0",
-    "winston": "^3.2.1"
+    "typescript": "^3.7.4"
   },
   "jest": {
     "moduleFileExtensions": [
