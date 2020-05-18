@@ -1,5 +1,7 @@
-## API List (🚧 This will be Swaggerized in the near future 🚧)
-
-### Auth
+## Auth
 
 ![](./auth.svg)
+
+## ACL
+
+![](./ACL.svg)
