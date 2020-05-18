@@ -9,7 +9,7 @@
     "Yash Murty <yashmurty@gmail.com> (https://github.com/yashmurty)"
   ],
   "private": true,
-  "license": "UNLICENSED",
+  "license": "BSD-2-Clause",
   "engines": {
     "node": "12.16.2"
   },
