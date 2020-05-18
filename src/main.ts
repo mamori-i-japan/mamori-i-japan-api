@@ -17,8 +17,8 @@ async function bootstrap() {
   const backendAppPort = configService.get('BACKEND_APP_PORT')
 
   const options = new DocumentBuilder()
-    .setTitle('contact-tracing-api')
-    .setDescription('SwaggerUI for contact-tracing-api API')
+    .setTitle('mamori-i-japan-api')
+    .setDescription('SwaggerUI for mamori-i-japan-api API')
     .setVersion('1.0')
     .addBearerAuth()
     .build()
