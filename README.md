@@ -2,6 +2,14 @@
 
 This is a proof-of-concept app which utilizes the following projects/technologies.
 
+### Overview and Dataflow Diagram
+
+![](./docs/overview.jpg)
+
+![](./docs/dfd.jpg)
+
+[The images made by miro (read only access)](https://miro.com/app/board/o9J_ksGHtPE=/)
+
 ### Primary Tasks for PoC
 
 - [NestJS](https://github.com/nestjs/nest) - NodeJS Framework.
