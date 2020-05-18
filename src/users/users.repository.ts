@@ -67,7 +67,7 @@ export class UsersRepository {
           .collection('diagnosisKeys')
           .doc(tempID)
           .set({ randomID, validFrom, validTo, healthCenterToken, positiveFlag: true })
-          // TODO : As a temporary implementation, positiveFlag is hardcoded to always be true.
+        // TODO : As a temporary implementation, positiveFlag is hardcoded to always be true.
       })
     )
   }
