@@ -1,14 +1,14 @@
 {
   "name": "mamori-i-japan-api",
   "version": "0.0.1",
-  "description": "",
+  "description": "REST API Application for Japanese Contact Tracing App a.k.a. \"まもりあいJAPAN\".",
   "author": {
     "name": "まもりあいJAPAN",
     "url": "https://github.com/mamori-i-japan"
   },
   "contributors": [
     "Daisuke Hirata <daisukihirata@gmail.com> (https://github.com/DaisukeHirata)",
-    "Shogo MITOMO <shogo.mitomo@monstar-lab.com> (https://github.com/shogo-mitomo)",
+    "Shogo Mitomo <shogo.mitomo@monstar-lab.com> (https://github.com/shogo-mitomo)",
     "Yash Murty <yashmurty@gmail.com> (https://github.com/yashmurty)"
   ],
   "private": false,
