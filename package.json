@@ -8,7 +8,7 @@
     "Shogo MITOMO <shogo.mitomo@monstar-lab.com> (https://github.com/shogo-mitomo)",
     "Yash Murty <yashmurty@gmail.com> (https://github.com/yashmurty)"
   ],
-  "private": true,
+  "private": false,
   "license": "BSD-2-Clause",
   "engines": {
     "node": "12.16.2"
