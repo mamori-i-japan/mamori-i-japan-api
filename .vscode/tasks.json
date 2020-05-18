@@ -3,21 +3,12 @@
   "tasks": [
     {
       "type": "typescript",
-      "label": "tsc",
       "tsconfig": "tsconfig.json",
-      "problemMatcher": ["$tsc"]
-    },
-    {
-      "type": "shell",
-      "label": "swagger",
-      "command": "cpx \"src/**/*.yaml\" dist/",
-      "options": {
-        "cwd": "${workspaceRoot}"
-      }
-    },
-    {
-      "label": "Build",
-      "dependsOn": ["tsc", "swagger"]
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "group": "build",
+      "label": "tsc: build - tsconfig.json"
     }
   ]
 }
