@@ -4,7 +4,7 @@
 [![Version](https://badgen.net/github/release/mamori-i-japan/mamori-i-japan-api)](https://github.com/mamori-i-japan/mamori-i-japan-api/releases)
 [![License](https://badgen.net/github/license/mamori-i-japan/mamori-i-japan-api)](./LICENSE)
 
-REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJAPAN\".
+REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJapan\".
 
 ## Architecture
 
