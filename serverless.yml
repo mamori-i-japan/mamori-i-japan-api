@@ -83,11 +83,11 @@ custom:
   SUBDOMAIN:
     dev: api-dev
     stg: api-stg
-    prd: api
+    demo: api-demo
   LOG_RETENTION_IN_DAYS:
     dev: '7'
     stg: '7'
-    prd: ''  # Never expire
+    demo: '30'
 
 resources:
   extensions:

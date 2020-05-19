@@ -2,7 +2,7 @@
   "projects": {
     "dev": "contact-tracing-26716",
     "stg": "contact-tracing-37126",
-    "prd": "contact-tracing-49368"
+    "demo": "contact-tracing-49368"
   },
   "targets": {
     "contact-tracing-26716": {

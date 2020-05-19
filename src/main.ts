@@ -18,7 +18,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('mamori-i-japan-api')
-    .setDescription('SwaggerUI for mamori-i-japan-api API')
+    .setDescription('Swagger UI for mamori-i-japan-api API')
     .setVersion('1.0')
     .addBearerAuth()
     .build()
