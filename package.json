@@ -1,7 +1,7 @@
 {
   "name": "mamori-i-japan-api",
   "version": "0.0.1",
-  "description": "REST API Application for Japanese Contact Tracing App a.k.a. \"まもりあいJAPAN\".",
+  "description": "REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJAPAN\".",
   "author": {
     "name": "まもりあいJAPAN",
     "url": "https://github.com/mamori-i-japan"

@@ -1,6 +1,6 @@
 # mamori-i-japan-api
 
-REST API Application for Japanese Contact Tracing App a.k.a. \"まもりあいJAPAN\".
+REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJAPAN\".
 
 ## Architecture
 
