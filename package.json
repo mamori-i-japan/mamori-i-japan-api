@@ -1,9 +1,9 @@
 {
   "name": "mamori-i-japan-api",
   "version": "0.1.0",
-  "description": "REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJAPAN\".",
+  "description": "REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJapan\".",
   "author": {
-    "name": "まもりあいJAPAN",
+    "name": "まもりあいJapan",
     "url": "https://github.com/mamori-i-japan"
   },
   "contributors": [
