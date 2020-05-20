@@ -130,8 +130,20 @@ As mentioned briefly in the project layout for `users`, to keep layout clean, we
 
 - [Contact Form](https://docs.google.com/forms/d/e/1FAIpQLSfcGM9itQ3i--GN9FUsQpdlW58Ug4Y6lcnE11N-igILDJdZlw/viewform)
 
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/mamori-i-japan/mamori-i-japan-api. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+
 ## Contributors
 
 - [Yash Murty](https://github.com/yashmurty)
 - [Shogo Mitomo](https://github.com/shogo-mitomo)
 - [Daisuke Hirata](https://github.com/DaisukeHirata)
+
+## Code of Conduct
+
+Everyone interacting in the mamori-i-japan-api project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](./CODE_OF_CONDUCT.md).
+
+## License
+
+The app is available as open source under the terms of the [2-Clause BSD License](https://opensource.org/licenses/BSD-2-Clause).
