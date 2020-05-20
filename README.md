@@ -1,8 +1,8 @@
 # mamori-i-japan-api
 
-[![Build Status](https://badgen.net/circleci/github/mamori-i-japan/mamori-i-japan-api?icon=circleci)](https://app.circleci.com/pipelines/github/mamori-i-japan/mamori-i-japan-api)
+[![Build Status](https://badgen.net/circleci/github/mamori-i-japan/mamori-i-japan-api?icon=circleci)](https://circleci.com/gh/mamori-i-japan/mamori-i-japan-api)
 [![Version](https://badgen.net/github/release/mamori-i-japan/mamori-i-japan-api)](https://github.com/mamori-i-japan/mamori-i-japan-api/releases)
-[![License](https://badgen.net/github/license/mamori-i-japan/mamori-i-japan-api)](https://github.com/mamori-i-japan/mamori-i-japan-api/blob/master/LICENSE)
+[![License](https://badgen.net/github/license/mamori-i-japan/mamori-i-japan-api)](./LICENSE)
 
 REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJAPAN\".
 
