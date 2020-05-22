@@ -4,7 +4,7 @@
 [![Version](https://badgen.net/github/release/mamori-i-japan/mamori-i-japan-api)](https://github.com/mamori-i-japan/mamori-i-japan-api/releases)
 [![License](https://badgen.net/github/license/mamori-i-japan/mamori-i-japan-api)](./LICENSE)
 
-REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあいJapan\".
+REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあい Japan\".
 
 ## Architecture
 
@@ -52,6 +52,27 @@ npm install
 ### Running the Application on Local
 
 Make sure you add the env vars in `.env` file. Just copy the `.env.template` file.
+
+```
+# Used by serverless framework to deploy to AWS Lambda.
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+# Used by Firebase Admin SDK. Obtained via serviceAccount.json file in Firebase Console.
+FIREBASE_type
+FIREBASE_project_id
+FIREBASE_private_key_id
+FIREBASE_private_key
+FIREBASE_client_email
+FIREBASE_client_id
+FIREBASE_auth_uri
+FIREBASE_token_uri
+FIREBASE_auth_provider_x509_cert_url
+FIREBASE_client_x509_cert_url
+
+# Used for getting Firebase Token via Custom token in e2e tests. Obtained in Firebase Console.
+FIREBASE_WEB_API_KEY
+```
 
 And then execute:
 
@@ -112,9 +133,9 @@ As mentioned briefly in the project layout for `users`, to keep layout clean, we
 
 1. **Controllers**: HTTP routes map to handler functions in controllers.
 1. **Services**: Controllers call their service function.  
-    A) A `user controller` must call only a `user service`, and not any other service if it can be avoided.  
-    B) A `user service` can call other services like `cats service`, etc.  
-    C) A `user service` must call only a `user repository`, and not any other repository if it can be avoided. If a `user service` wants to modify data in `cats repository`, it must call corresponding `cats service` funtion to do it.
+   A) A `user controller` must call only a `user service`, and not any other service if it can be avoided.  
+   B) A `user service` can call other services like `cats service`, etc.  
+   C) A `user service` must call only a `user repository`, and not any other repository if it can be avoided. If a `user service` wants to modify data in `cats repository`, it must call corresponding `cats service` funtion to do it.
 1. **Repositories**: Repositories have data layer implementation, ex: `Firestore` in this project. They must be called only by their direct parent service, ex: A `user repository` is called by a `user service`.
 
 ## Demo
