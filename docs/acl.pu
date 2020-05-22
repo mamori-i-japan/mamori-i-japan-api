@@ -6,7 +6,7 @@ title ACL
 autonumber 1
 
 actor AdminUser
-AdminUser  -> "NestJS Guard": GET /admins/organizations
+AdminUser  -> "NestJS Guard": GET /admins/prefectures
 note over "NestJS Guard" 
 Expects JWT Payload:
 - isAdminUser 
@@ -14,13 +14,13 @@ Expects JWT Payload:
 - userAccessKey
 end note
 
-"NestJS Guard" -> "Service":  Pass userAccessKey to organization service
+"NestJS Guard" -> "Service":  Pass userAccessKey to prefecture service
 note left "Service" 
 Example value: 
 - userAccessKey: SUPER_ADMIN_KEY
 end note
 
-"Service" -> "Firestore": Fetch all accessible documents \n in organizations collection
+"Service" -> "Firestore": Fetch all accessible documents \n in prefectures collection
 note over "Firestore" 
 .where(
   accessControlList, 
@@ -29,15 +29,15 @@ note over "Firestore"
 )
 end note
 
-"Firestore" -> "Service": Return array of organizations
+"Firestore" -> "Service": Return array of prefectures
 
-"Service" -> "AdminUser": Organizations LIST based on ACL
+"Service" -> "AdminUser": prefectures LIST based on ACL
 
 
 == ACL on GET by ID endpoints ==
 autonumber 1
 
-AdminUser  -> "NestJS Guard": GET /admins/organizations/ABC
+AdminUser  -> "NestJS Guard": GET /admins/prefectures/ABC
 note over "NestJS Guard" 
 Expects JWT Payload:
 - isAdminUser 
@@ -45,7 +45,7 @@ Expects JWT Payload:
 - userAccessKey
 end note
 
-"NestJS Guard" -> "Service":  Pass userAccessKey to organization service
+"NestJS Guard" -> "Service":  Pass userAccessKey to prefecture service
 note left "Service" 
 Example value: 
 - userAccessKey: SUPER_ADMIN_KEY
@@ -53,14 +53,14 @@ end note
 
 "Service" -> "Firestore": Fetch single document \n based on ID ABC
 
-"Firestore" -> "Service": Return ABC organization
+"Firestore" -> "Service": Return ABC prefecture
 note over "Service" 
 canUserAccessResource(
   userAccessKey, 
-  organization
+  prefecture
 )
 end note
 
-"Service" -> "AdminUser": Organizations GET by ID based on ACL
+"Service" -> "AdminUser": prefectures GET by ID based on ACL
 
 @enduml
