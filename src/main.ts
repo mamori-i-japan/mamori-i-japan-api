@@ -12,6 +12,7 @@ async function bootstrap() {
 
   app.useLogger(new AppLogger())
   app.use(RequestIdMiddleware)
+  app.enableCors()
 
   const configService = app.get(ConfigService)
   const backendAppPort = configService.get('BACKEND_APP_PORT')
