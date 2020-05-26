@@ -6,6 +6,19 @@
 
 REST API Server for Japanese Exposure Notification App to fight against COVID-19 a.k.a. \"まもりあい Japan\".
 
+## Table of Contents
+
+1. [Architecture](#Architecture)
+1. [Technology Stack](#Technology-Stack)
+1. [Getting Started](#Getting-Started)
+1. [Development Guideline](#Development-Guideline)
+1. [Demo](#Demo)
+1. [Test Reports](#Test-Reports)
+1. [Contact](#Contact)
+1. [Contributing](#Contributing)
+1. [Code of Conduct](#Code-of-Conduct)
+1. [License](#License)
+
 ## Architecture
 
 ### Overview and Data Flow Diagram
@@ -110,7 +123,7 @@ npm run test:cov
 npm run deploy:dev
 ```
 
-## Development
+## Development Guideline
 
 ### Project Layout (Brief Explaination)
 
@@ -123,10 +136,14 @@ npm run deploy:dev
 │   ├── auth (module)
 │   │   ├── guards
 │   │   └── strategies (Implementation of Firebase Auth access token check)
-│   └── users (module)
-│       ├── users.service.ts (Services can call other services and their own repository)
-│       └── user.repository.ts (Repositroy should be called only by its parent service)
-
+│   ├── users (module)
+│   │   ├── users.controller.ts (Controllers call their services)
+│   │   ├── users.service.ts (Services can call other services and their own repository)
+│   │   └── user.repository.ts (Repositroy should be called only by its parent service)
+│   └── shared (module with shared business logic)
+├── test (Contains the end-to-end (e2e) tests)
+├── fdt-generator-webapp (Optional web app to generate firebase access tokens for testing)
+└── serverless.yml (Serverless framework config file for infrastructure deployment)
 ```
 
 As mentioned briefly in the project layout for `users`, to keep layout clean, we follow this convention:
@@ -142,7 +159,7 @@ As mentioned briefly in the project layout for `users`, to keep layout clean, we
 
 - Swagger UI: https://api-demo.mamori-i.jp/swagger
 
-## Testing Report
+## Test Reports
 
 - [Load Testing](https://docs.google.com/spreadsheets/d/1qiYa7g6ridHUalt3PVmS8lluR9VV3Y5EkMeMFpvx2AI/edit?usp=sharing)
 - [Internal Penetration Testing](https://docs.google.com/document/d/1OfCHe0gPAP1MTm5kr68lDkvBgg1JImvt7TguHLq5NUs/edit?usp=sharing)
