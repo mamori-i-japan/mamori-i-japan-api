@@ -125,7 +125,7 @@ npm run deploy:dev
 
 ## Development Guideline
 
-### Project Layout (Brief Explaination)
+### Project Layout (Brief Explanation)
 
 ```
 .
