@@ -27,6 +27,20 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "diagnosisKeys",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "positiveFlag",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "validFrom",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
