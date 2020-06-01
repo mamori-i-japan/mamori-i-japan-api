@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.1.1](https://github.com/mamori-i-japan/mamori-i-japan-api/tree/v0.1.1) (2020-06-01)
+
+[Full Changelog](https://github.com/mamori-i-japan/mamori-i-japan-api/compare/v0.1.0...v0.1.1)
+
+**Fixed bugs:**
+
+- 🐛 Add an index to diagnosisKeys collection [\#171](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/171) ([shogo-mitomo](https://github.com/shogo-mitomo))
+- Update README.md [\#170](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/170) ([TeepaBlue](https://github.com/TeepaBlue))
+- \[feature\]add cors setting for local environment [\#168](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/168) ([daisuke-fukuda](https://github.com/daisuke-fukuda))
+- \[fix\]`package-lock.json` version is old [\#167](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/167) ([daisuke-fukuda](https://github.com/daisuke-fukuda))
+
+**Merged pull requests:**
+
+- 📚 Update README doc [\#169](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/169) ([yashmurty](https://github.com/yashmurty))
+- 📚 Add env info to README [\#166](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/166) ([yashmurty](https://github.com/yashmurty))
+- 📚 Update ACL flow example [\#165](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/165) ([yashmurty](https://github.com/yashmurty))
+
 ## [v0.1.0](https://github.com/mamori-i-japan/mamori-i-japan-api/tree/v0.1.0) (2020-05-20)
 
 [Full Changelog](https://github.com/mamori-i-japan/mamori-i-japan-api/compare/6dadf1cdfccff61e54c50ea2222c0279f11e2167...v0.1.0)
@@ -20,6 +37,7 @@
 - \[feature\] /v1/login [\#6](https://github.com/mamori-i-japan/mamori-i-japan-api/issues/6)
 - \[feature\] /v1/users/me/temp\_ids [\#5](https://github.com/mamori-i-japan/mamori-i-japan-api/issues/5)
 - 📝 Fix the CircleCI link to a public one [\#164](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/164) ([shogo-mitomo](https://github.com/shogo-mitomo))
+- 🆙 Add CHANGELOG.md [\#163](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/163) ([shogo-mitomo](https://github.com/shogo-mitomo))
 - 🎉 Add demo environment instead of prd [\#161](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/161) ([shogo-mitomo](https://github.com/shogo-mitomo))
 - 📛 Change the descriptions [\#158](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/158) ([shogo-mitomo](https://github.com/shogo-mitomo))
 - 📝 Testing report [\#157](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/157) ([DaisukeHirata](https://github.com/DaisukeHirata))
@@ -68,7 +86,6 @@
 - 🚿 Remove POST /users/me/close\_contacts endpoint [\#93](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/93) ([shogo-mitomo](https://github.com/shogo-mitomo))
 - 🚿 Remove GET /users/me/temp\_ids endpoint [\#92](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/92) ([shogo-mitomo](https://github.com/shogo-mitomo))
 - Organization - Update API [\#87](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/87) ([yashmurty](https://github.com/yashmurty))
-- Profile Update - Handle prefecture data [\#86](https://github.com/mamori-i-japan/mamori-i-japan-api/pull/86) ([yashmurty](https://github.com/yashmurty))
 
 **Fixed bugs:**
 
