@@ -185,3 +185,17 @@ Everyone interacting in the mamori-i-japan-api project’s codebases, issue trac
 ## License
 
 The app is available as open source under the terms of the [2-Clause BSD License](https://opensource.org/licenses/BSD-2-Clause).
+
+## External links/posts
+
+Links to some external articles and blog posts that talk about the backend in more detail.
+
+In Japanese language (日本語で):
+
+- Mamoriai Japan Official - [まもりあい JAPAN 公式](https://note.com/mamoriai)
+- Takuya Kawatsu - [Overall design of the application](https://note.com/_takukawa_/n/n12b816168ca2)
+- Daisuke Hirata - [Development story](https://note.com/daisukehirata/n/n896f633b08ad)
+
+In English:
+
+- Yash Murty - [Backend for Japan's Contact Tracing App](https://yashmurty.com/blog/japans-contact-tracing-app/)
