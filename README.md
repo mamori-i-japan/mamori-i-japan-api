@@ -139,7 +139,7 @@ npm run deploy:dev
 │   ├── users (module)
 │   │   ├── users.controller.ts (Controllers call their services)
 │   │   ├── users.service.ts (Services can call other services and their own repository)
-│   │   └── user.repository.ts (Repositroy should be called only by its parent service)
+│   │   └── user.repository.ts (Repository should be called only by its parent service)
 │   └── shared (module with shared business logic)
 ├── test (Contains the end-to-end (e2e) tests)
 ├── fdt-generator-webapp (Optional web app to generate firebase access tokens for testing)
