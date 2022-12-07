@@ -86,7 +86,7 @@
     "eslint-plugin-import": "^2.20.1",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
-    "serverless": "^1.70.0",
+    "serverless": "^3.25.1",
     "serverless-deployment-bucket": "^1.1.2",
     "serverless-domain-manager": "^3.3.2",
     "serverless-layers": "^2.2.2",
